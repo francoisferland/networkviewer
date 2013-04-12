@@ -1,4 +1,4 @@
-    #include <QDebug>
+#include <QDebug>
 #include "ModuleConfiguration.h"
 #include <QTextStream>
 #include <QIODevice>
@@ -170,6 +170,10 @@ void write_variable_interface(const ModuleConfiguration &conf, QTextStream &out,
             out << "\t\tmessage.msg_data_length=1;\n";
             break;
 
+        default:
+            qWarning("write_variable_interface - unhandled type : ",var->getType());
+            break;
+
         }
 
         out << "\t}\n";
@@ -334,6 +338,10 @@ void read_variable_interface(const ModuleConfiguration &conf, QTextStream &out, 
                 out << "\t\t\tsize="<<path.size() + 8<<";\n";
                 break;
 
+            default:
+                qWarning("read_variable_interface - unhandled type : ",var->getType());
+                break;
+
             }
 
 
@@ -399,6 +407,10 @@ void print_documentation(ModuleConfiguration &conf, QTextStream &out)
         case ModuleVariable::UINT8:
             out << "| i (unsigned int8)\n";
             break;
+
+        default:
+            qWarning("print_documentation - unhandled type : ",var->getType());
+        break;
         }
 
 
@@ -427,7 +439,7 @@ int main(int argc, char* argv[])
         QTextStream qout(&output);
 
         qDebug("Processing : %s",argv[1]);
-        if (config.loadConfiguration(argv[1],true));
+        if (config.loadConfiguration(argv[1],true))
         {
             qDebug("Configuration loaded : %s",argv[1]);
             qout << "#include <string.h>\n";

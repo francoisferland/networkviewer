@@ -476,7 +476,7 @@ void ModuleVariable::setValue (const QString &value, bool userUpdate, QDateTime 
 
     case BYTEARRAY8:
         ok = true;
-        setValue(value.toAscii(), userUpdate, updateTime);
+        setValue(value.toLatin1(), userUpdate, updateTime);
         break;
 
     case INVALID:

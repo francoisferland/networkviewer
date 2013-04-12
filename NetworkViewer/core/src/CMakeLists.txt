@@ -1,8 +1,4 @@
-#core/src
-SET(QT_USE_QTNETWORK TRUE)
-SET(QT_USE_QTXML TRUE)
-
-include(${QT_USE_FILE})
+find_package(Qt5Core)
 
 SET(NETV_CORE_SRCS
     NETVInterfaceHandler.cpp
@@ -34,14 +30,11 @@ SET(NETV_CORE_HEADERS
     NETVBroadcaster.h
 )
 
-
-
-
 #This will generate moc_* for Qt
-QT4_WRAP_CPP(NETV_CORE_MOC_SRCS ${NETV_CORE_HEADERS})
+QT5_WRAP_CPP(NETV_CORE_MOC_SRCS ${NETV_CORE_HEADERS})
 
 #Include directories
-INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR}
+INCLUDE_DIRECTORIES(
                 ${PROJECT_SOURCE_DIR}
                 ${CMAKE_CURRENT_BINARY_DIR}
                 ${QWT_SRC_DIR}
@@ -51,7 +44,9 @@ INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR}
 
 #NetworkViewer Library
 add_library(networkViewerCore SHARED ${NETV_CORE_SRCS} ${NETV_CORE_MOC_SRCS} ${NETV_CORE_HEADERS})
-target_link_libraries(networkViewerCore ${QT_LIBRARIES})
+qt5_use_modules(networkViewerCore Core Network Xml XmlPatterns Widgets)
+
+#Install
 INSTALL(TARGETS networkViewerCore DESTINATION bin)
 INSTALL(TARGETS networkViewerCore DESTINATION lib EXPORT networkViewerCore-export-targets)
 INSTALL(EXPORT networkViewerCore-export-targets DESTINATION share/cmake)

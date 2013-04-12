@@ -1,24 +1,16 @@
-SET(QT_USE_QTNETWORK TRUE)
-SET(QT_USE_QTXML TRUE)
+MESSAGE( STATUS "Buiding console and osc_generator applications")
 
-
-include(${QT_USE_FILE})
-
-INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/core/src)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/core/src)
 
 #netvconsole application
 add_executable(netvconsole main.cpp)
-IF(WIN32)
-	set_target_properties(netvconsole PROPERTIES LINK_FLAGS "--enable-auto-import")
-ENDIF(WIN32)
-target_link_libraries(netvconsole networkViewerCore ${QT_LIBRARIES})
+target_link_libraries(netvconsole networkViewerCore)
+qt5_use_modules(netvconsole Core Xml Network)
 INSTALL(TARGETS netvconsole DESTINATION bin)
 
 
 #osc_generator application
 add_executable(osc_generator osc_generator.cpp osc_generator.h)
-IF(WIN32)
-        set_target_properties(osc_generator PROPERTIES LINK_FLAGS "--enable-auto-import")
-ENDIF(WIN32)
-target_link_libraries(osc_generator networkViewerCore ${QT_LIBRARIES})
+target_link_libraries(osc_generator networkViewerCore)
+qt5_use_modules(osc_generator Core Xml Network)
 INSTALL(TARGETS osc_generator DESTINATION bin)

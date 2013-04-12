@@ -3,10 +3,9 @@
 
 #include "ModuleConfiguration.h"
 #include <QFile>
-#include <QMessageBox>
 #include <QCoreApplication>
-#include <QIcon>
 #include <QMimeData>
+#include <QIcon>
 
 ModuleConfiguration::ModuleConfiguration(QObject *parent)
     : QAbstractItemModel(parent), m_projectID(-1), m_codeVersion(0), m_processorID(0), m_moduleState(0), m_tableVersion(0), m_deviceID(0), m_name("Untitled")
@@ -535,7 +534,8 @@ bool ModuleConfiguration::loadConfiguration(const QString &filename, bool variab
     //Open the file
     if(!file.open(QIODevice::ReadOnly))
     {
-        QMessageBox::warning(0, "Warning", QString("Unable to open file : ") + filename, QMessageBox::Ok);
+        //QMessageBox::warning(0, "Warning", QString("Unable to open file : ") + filename, QMessageBox::Ok);
+        qWarning() << "Unable to open file : " << filename;
         return false;
     }
 
@@ -555,7 +555,8 @@ bool ModuleConfiguration::loadConfiguration(const QString &filename, bool variab
     //Set XML content
     if (!doc.setContent(&file)) {
         file.close();
-        QMessageBox::warning(0, "Warning", QString("Unable to read XML content from file : ") + filename, QMessageBox::Ok);
+        //QMessageBox::warning(0, "Warning", QString("Unable to read XML content from file : ") + filename, QMessageBox::Ok);
+        qWarning() << "Unable to read XML content from file : " << filename;
         return false;
     }
 

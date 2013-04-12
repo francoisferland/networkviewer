@@ -127,6 +127,9 @@ void NETVInterfaceManager::requestVariable(ModuleVariable *variable)
         case ModuleVariable::EEPROM_VARIABLE:
             message.msg_boot = (NETV_REQUEST_EEPROM << 1) | (NETV_REQUEST_READ);
             break;
+         default:
+            qWarning("Unhandled memory type : ",variable->getMemType());
+            break;
 
         }
 
@@ -172,6 +175,10 @@ void NETVInterfaceManager::writeVariable(ModuleVariable *variable)
         case ModuleVariable::EEPROM_VARIABLE:
             message.msg_boot = (NETV_REQUEST_EEPROM << 1) | (NETV_REQUEST_WRITE);
             break;
+
+        default:
+           qWarning("Unhandled memory type : ",variable->getMemType());
+           break;
         }
 
         message.msg_cmd = variable->getOffset();

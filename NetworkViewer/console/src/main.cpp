@@ -1,5 +1,5 @@
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDebug>
 #include <QEvent>
 #include "ModuleConfiguration.h"
@@ -9,12 +9,12 @@
 #include "NETVInterfaceManager.h"
 #include "NETVRemoteServer.h"
 
-class NETVConsoleApp : public QApplication
+class NETVConsoleApp : public QCoreApplication
 {
 public:
 
     NETVConsoleApp(int argc, char** argv)
-        : QApplication(argc,argv,false), m_remoteServer(NULL) //GUI Disabled
+        : QCoreApplication(argc,argv,false), m_remoteServer(NULL) //GUI Disabled
     {
         qDebug("Starting netvconsole...");
 
