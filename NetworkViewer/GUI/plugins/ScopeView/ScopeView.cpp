@@ -353,7 +353,5 @@ void ScopeView::saveCurves()
     {
         qDebug("Error saving!");
     }
-
-
 }
 

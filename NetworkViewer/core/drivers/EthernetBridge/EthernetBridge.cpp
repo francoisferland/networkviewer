@@ -111,8 +111,8 @@ NETVDevice::State EthernetBridge::recvMessage(NETV_MESSAGE &message)
 
 bool EthernetBridge::newMessageReady()
 {
-
-
+    qWarning("EthernetBridge::newMessageReady() not implemented");
+    return false;
 }
 
 
