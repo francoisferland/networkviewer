@@ -172,14 +172,14 @@ void NetworkView::sortModuleItems()
         //Let's find the item associated with the module
         for (QMap<NetworkModuleItem*, NetworkModule *>::iterator iter = m_modules.begin(); iter != m_modules.end(); iter++)
         {
-	    
+
 
             if (iter.value() == allModules[index])
             {
                 //Found it, placing it at the right index
                 NetworkModuleItem *item = iter.key();
                 QRectF rect = item->boundingRect();
-		rect = rect.unite(item->childrenBoundingRect());
+                rect = rect.united(item->childrenBoundingRect());
 
 
                 if (m_moduleDockWidgetArea == Qt::LeftDockWidgetArea || m_moduleDockWidgetArea == Qt::RightDockWidgetArea)
@@ -190,9 +190,9 @@ void NetworkView::sortModuleItems()
                 {
                     item->setPos(cum_width + (rect.width() / 2) * 0.35, 0);
                 }
-		
-		//cumulate and pad...
-		cum_width += rect.width() * 0.35 + 10;
+
+                //cumulate and pad...
+                cum_width += rect.width() * 0.35 + 10;
                 cum_height += rect.height() * 0.35 + 10;
                 break;
             }
@@ -317,7 +317,7 @@ void NetworkView::createPluginMenu()
 
 
     for (QMap<QString, BasePlugin::BasePluginFactory*>::iterator iter = plugins.begin();
-    iter != plugins.end(); iter++)
+         iter != plugins.end(); iter++)
     {
         QAction *action = menuPlugin->addAction(iter.key());
 
@@ -345,7 +345,7 @@ void NetworkView::pluginActivated(const QString& name)
 
         //Create MDI window
         QMdiSubWindow *subWindow = createSubWindow("Plugin : " + name);
-        subWindow->setWidget(plugin);    
+        subWindow->setWidget(plugin);
         m_mdiArea->addSubWindow(subWindow);
         subWindow->show();
     }
@@ -540,7 +540,7 @@ void NetworkView::saveTextEdit()
 {
 
     QString fileName = QFileDialog::getSaveFileName(this,
-         tr("Save Debug"), ".", tr("Text Files (*.txt)"));
+                                                    tr("Save Debug"), ".", tr("Text Files (*.txt)"));
 
     if (fileName.size())
     {

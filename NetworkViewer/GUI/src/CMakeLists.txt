@@ -1,16 +1,8 @@
 #GUI/src
-SET(QT_USE_QTNETWORK TRUE)
-SET(QT_USE_QTSVG TRUE)
-SET(QT_USE_QTXML TRUE)
-SET(QT_USE_QTSCRIPT TRUE)
-SET(QT_USE_QTWEBKIT TRUE)
-SET(QT_USE_QTDECLARATIVE TRUE)
-
-include(${QT_USE_FILE})
-
+find_package(Qt5Gui REQUIRED)
 
 #Include directories
-INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR}
+INCLUDE_DIRECTORIES(
                 ${PROJECT_SOURCE_DIR}
                 ${CMAKE_CURRENT_BINARY_DIR}
                 ${QWT_SRC_DIR}
@@ -60,17 +52,19 @@ SET(NetworkViewer_Base_QRC
 )
 
 #Generate rules for building source files from the resources
-QT4_ADD_RESOURCES(SRCS_QRC ${NetworkViewer_Base_QRC})
+QT5_ADD_RESOURCES(SRCS_QRC ${NetworkViewer_Base_QRC})
 
 #This will generate ui_* for Qt
-QT4_WRAP_UI(NetworkViewer_Base_UI_SRCS ${NetworkViewer_Base_UIS})
+QT5_WRAP_UI(NetworkViewer_Base_UI_SRCS ${NetworkViewer_Base_UIS})
 
 #This will generate moc_* for Qt
-QT4_WRAP_CPP(NetworkViewer_Base_MOC_SRCS ${NetworkViewer_Base_HEADERS})
+QT5_WRAP_CPP(NetworkViewer_Base_MOC_SRCS ${NetworkViewer_Base_HEADERS})
 
 #NetworkViewer Base Library
 add_library(networkViewerBase SHARED ${NetworkViewer_Base_SRCS} ${NetworkViewer_Base_HEADERS} ${NetworkViewer_Base_MOC_SRCS} ${NetworkViewer_Base_UI_SRCS} ${SRCS_QRC})
-target_link_libraries(networkViewerBase networkViewerCore ${QT_LIBRARIES} QextSerialPort)
+target_link_libraries(networkViewerBase networkViewerCore QextSerialPort)
+qt5_use_modules(networkViewerBase Core Widgets Gui OpenGL Xml Concurrent Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+
 INSTALL(TARGETS networkViewerBase DESTINATION bin)
 INSTALL(TARGETS networkViewerBase DESTINATION lib)
 
@@ -87,9 +81,7 @@ INSTALL( FILES ${NetworkViewer_Base_UI_SRCS} DESTINATION include/ui)
 
 #NetworkViewer Executable
 add_executable(NetworkViewer WIN32 main.cpp)
-IF(WIN32)
-	set_target_properties(NetworkViewer PROPERTIES LINK_FLAGS "--enable-auto-import")
-ENDIF(WIN32)
-target_link_libraries(NetworkViewer networkViewerCore networkViewerBase ${QT_LIBRARIES})
+target_link_libraries(NetworkViewer networkViewerCore networkViewerBase)
+qt5_use_modules(NetworkViewer Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
 INSTALL(TARGETS NetworkViewer DESTINATION bin)
 

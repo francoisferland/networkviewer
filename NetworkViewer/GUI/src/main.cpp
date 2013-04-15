@@ -29,7 +29,7 @@
 #include "NetworkViewerSplashScreen.h"
 #include "UserPreferences.h"
 
-void NetworkViewerMsgHandler(QtMsgType type, const char *msg);
+void NetworkViewerMsgHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 class ConsoleMessageEvent : public QEvent    
 {
@@ -112,7 +112,7 @@ public:
 
 
         //Restore message handler
-        qInstallMsgHandler(0);
+        qInstallMessageHandler(0);
 
         qDebug("Restoring message handlers...");
 
@@ -150,24 +150,28 @@ protected:
 
 
 
-void NetworkViewerMsgHandler(QtMsgType type, const char *msg)
+void NetworkViewerMsgHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     NetworkViewerApp *app = dynamic_cast<NetworkViewerApp*>(QCoreApplication::instance());
 
     if (app)
     {
+        //Keep only file name (not complete path)
+        QStringList myList = QString(context.file).split("/");
+        QString contextString = QString("[") + myList.last() + ":" + QString::number(context.line) + "] ";
+
         switch (type) {
         case QtDebugMsg:
-            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[DEBUG] ") + msg));
+            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[DEBUG]") + contextString + msg));
             break;
         case QtWarningMsg:
-            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[WARNING] ") + msg));
+            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[WARNING] ") + contextString + msg));
             break;
         case QtCriticalMsg:
-            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[CRITICAL] ") + msg));
+            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[CRITICAL] ") + contextString + msg));
             break;
         case QtFatalMsg:
-            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[FATAL] ") + msg));
+            QCoreApplication::postEvent(app,new ConsoleMessageEvent(QString("[FATAL] ") + contextString + msg));
             abort();
         }
     }
@@ -181,7 +185,7 @@ int main(int argc, char* argv[])
     app.init();
 
     //Install handlers
-    qInstallMsgHandler(NetworkViewerMsgHandler);
+    qInstallMessageHandler(NetworkViewerMsgHandler);
 
     return app.exec();
 }
