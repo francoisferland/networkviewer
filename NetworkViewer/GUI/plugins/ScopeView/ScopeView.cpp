@@ -29,6 +29,7 @@
 #include "qwt_legend.h"
 #include <QImage>
 #include <QFileDialog>
+#include <QMimeData>
 #include "qwt_plot_renderer.h"
 
 //This will insert the plugin in the dictionary...
@@ -47,7 +48,7 @@ ScopeView::ScopeView(NetworkView *parent)
 
     //Plot background color & grid
     QwtPlotGrid *grid = new QwtPlotGrid;
-    grid->setMajPen(QPen(Qt::gray, 0, Qt::DotLine));
+    grid->setMajorPen(QPen(Qt::gray, 0, Qt::DotLine));
     grid->attach(m_plot);
     m_plot->setCanvasBackground(QColor(29, 100, 141)); // nice blue
 
@@ -75,7 +76,7 @@ ScopeView::ScopeView(NetworkView *parent)
     //Create Legend at bottom
     QwtLegend *legend = new QwtLegend(this);
     m_plot->insertLegend(legend,QwtPlot::BottomLegend);
-    legend->setItemMode(QwtLegend::ClickableItem);
+    legend->setDefaultItemMode(QwtLegendData::Clickable);
     connect(m_plot,SIGNAL(legendClicked(QwtPlotItem*)),this,SLOT(legendItemClicked(QwtPlotItem*)));
 
 

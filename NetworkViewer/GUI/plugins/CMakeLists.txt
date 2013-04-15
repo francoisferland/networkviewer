@@ -1,5 +1,7 @@
 #DEFINE PLUGIN INCLUDES
 
+find_package(Qt5Gui REQUIRED)
+
 SET(PLUGIN_INCLUDES	
         ${QWT_INCLUDES}
         ${PROJECT_SOURCE_DIR}/core/src
@@ -8,9 +10,8 @@ SET(PLUGIN_INCLUDES
 )	
 
 SET (PLUGIN_LIBRARIES
-        networkViewerCore
+	networkViewerCore
 	networkViewerBase
-	${QT_LIBRARIES}
 )
 
 

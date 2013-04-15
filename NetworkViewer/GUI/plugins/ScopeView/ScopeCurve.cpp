@@ -19,7 +19,7 @@
 #include "ScopeCurve.h"
 #include "qwt_symbol.h"
 #include "qwt_legend.h"
-#include "qwt_legend_item.h"
+//#include "qwt_legend_item.h"
 #include <math.h>
 #include <algorithm>
 
