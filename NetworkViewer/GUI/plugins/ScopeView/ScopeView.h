@@ -80,6 +80,8 @@ protected slots:
 
     void legendItemClicked(QwtPlotItem *plotItem);
 
+    void legendClicked(QVariant itemInfo, int index);
+
     void updateTimer();
 
     /**

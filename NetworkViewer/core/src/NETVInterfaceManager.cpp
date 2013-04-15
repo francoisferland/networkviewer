@@ -128,7 +128,7 @@ void NETVInterfaceManager::requestVariable(ModuleVariable *variable)
             message.msg_boot = (NETV_REQUEST_EEPROM << 1) | (NETV_REQUEST_READ);
             break;
          default:
-            qWarning("Unhandled memory type : ",variable->getMemType());
+            qWarning("Unhandled memory type : %i",variable->getMemType());
             break;
 
         }

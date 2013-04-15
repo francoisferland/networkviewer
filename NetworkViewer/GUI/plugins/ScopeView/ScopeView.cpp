@@ -77,8 +77,9 @@ ScopeView::ScopeView(NetworkView *parent)
     QwtLegend *legend = new QwtLegend(this);
     m_plot->insertLegend(legend,QwtPlot::BottomLegend);
     legend->setDefaultItemMode(QwtLegendData::Clickable);
-    connect(m_plot,SIGNAL(legendClicked(QwtPlotItem*)),this,SLOT(legendItemClicked(QwtPlotItem*)));
 
+    //connect(m_plot,SIGNAL(legendClicked(QwtPlotItem*)),this,SLOT(legendClicked(QwtPlotItem*)));
+    connect(legend,SIGNAL(clicked(QVariant,int)),this,SLOT(legendClicked(QVariant,int)));
 
     //Connect tool buttons & spinbox
     connect(m_clearToolButton,SIGNAL(clicked()),this,SLOT(clearCurves()));
@@ -89,6 +90,14 @@ ScopeView::ScopeView(NetworkView *parent)
 
 }
 
+void ScopeView::legendClicked(QVariant itemInfo, int index)
+{
+    QwtPlotItem *plotItem = itemInfo.value<QwtPlotItem*>();
+    if (plotItem)
+    {
+        legendItemClicked(plotItem);
+    }
+}
 
 void ScopeView::legendItemClicked(QwtPlotItem *plotItem)
 {
