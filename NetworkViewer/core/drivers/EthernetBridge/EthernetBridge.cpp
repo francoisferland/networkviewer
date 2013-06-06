@@ -36,6 +36,7 @@ NETVDevice::State EthernetBridge::initialize(const char* args)
         Q_ASSERT(config.size() == 2);
 	connect(this,SIGNAL(connected()),this,SLOT(socketConnected()));
         connectToHost(config[0],config[1].toInt());
+        return NETVDevice::NETVDEVICE_OK;
 }
 
 EthernetBridge::EthernetBridge(QString host, int port)

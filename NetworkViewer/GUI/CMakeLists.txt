@@ -4,8 +4,8 @@ find_package(Qt5Gui REQUIRED)
 
 #QWT LIBRARY FROM QWT SUBMODULE
 
-SET(QWT_SRC_DIR ${PROJECT_SOURCE_DIR}/GUI/qwt/qwt/src)
-SET(QWT_INCLUDES ${PROJECT_SOURCE_DIR}/GUI/qwt/qwt/src)
+SET(QWT_SRC_DIR ${PROJECT_SOURCE_DIR}/GUI/qwt/src)
+SET(QWT_INCLUDES ${PROJECT_SOURCE_DIR}/GUI/qwt/src)
 
 #Create a library with the sources and headers
 FILE(GLOB QWT_SRCS "${QWT_SRC_DIR}/*.cpp")
