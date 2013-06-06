@@ -1,0 +1,11 @@
+-IC:/WORK-QT5/networkviewer/NetworkViewer/GUI/qwt/src
+-IC:/WORK-QT5/networkviewer/NetworkViewer/GUI/plugins/ScopeView
+-IC:/WORK-QT5/networkviewer/NetworkViewer
+-IC:/WORK-QT5/networkviewer/NetworkViewer-build/GUI/src
+-IC:/WORK-QT5/networkviewer/NetworkViewer/GUI/qwt/src
+-IC:/WORK-QT5/networkviewer/NetworkViewer/core/src
+-DNETWORKVIEWER_VERSION="1.1.17"
+-DWIN32
+-o
+C:/WORK-QT5/networkviewer/NetworkViewer-build/GUI/src/moc_NetworkViewerSplashScreen.cpp
+C:/WORK-QT5/networkviewer/NetworkViewer/GUI/src/NetworkViewerSplashScreen.h

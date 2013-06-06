@@ -80,15 +80,25 @@ NETVDevice::State SerialEmulator::initialize(const char* args)
     QStringList config = QString(args).split(";");
     Q_ASSERT(config.size() >= 2);
 
-    //Port configuration
-    PortSettings s;
-    s.BaudRate = (BaudRateType) config[1].toInt();
-    s.DataBits =  DATA_8;
-    s.FlowControl = FLOW_OFF;
-    s.Parity = PAR_NONE;
-    s.StopBits = STOP_1;
-    s.Timeout_Millisec = 1;
-    m_serialPort = new QextSerialPort(config[0], s);
+    //No parent
+    m_serialPort = new QSerialPort(config[0], 0);
+
+    //Set baud rate, all directions
+    m_serialPort->setBaudRate(config[1].toInt());
+
+    //Set data bits
+    m_serialPort->setDataBits(QSerialPort::Data8);
+
+    //Set flow control
+    m_serialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+    //Set parity
+    m_serialPort->setParity(QSerialPort::NoParity);
+
+    //Set stopbits
+    m_serialPort->setStopBits(QSerialPort::OneStop);
+
+
 
 
     if (config.size() == 3)
@@ -114,7 +124,7 @@ NETVDevice::State SerialEmulator::initialize(const char* args)
         m_openTime.start();
 
         //connect signals
-        qDebug("SerialEmulator::initialize() : Opening config : %s, baudrate : %i",args,s.BaudRate);
+        qDebug("SerialEmulator::initialize() : Opening config : %s, baudrate : %i",args,m_serialPort->baudRate());
         connect(m_serialPort,SIGNAL(readyRead()),this,SLOT(serialReadyRead()));
         connect(m_serialPort,SIGNAL(bytesWritten(qint64)),this,SLOT(serialBytesWritten(qint64)));
         m_testTimer = new QTimer(this);

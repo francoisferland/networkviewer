@@ -1,0 +1,5 @@
+-DNETWORKVIEWER_VERSION="1.1.17"
+-DWIN32
+-o
+C:/WORK-QT5/networkviewer/NetworkViewer-build/core/drivers/EthernetBridge/moc_EthernetBridge.cpp
+C:/WORK-QT5/networkviewer/NetworkViewer/core/drivers/EthernetBridge/EthernetBridge.h

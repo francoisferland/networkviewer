@@ -1,0 +1,7 @@
+-IC:/WORK-QT5/networkviewer/NetworkViewer/GUI/qwt/src
+-IC:/WORK-QT5/networkviewer/NetworkViewer/GUI/plugins/ScopeView
+-DNETWORKVIEWER_VERSION="1.1.17"
+-DWIN32
+-o
+C:/WORK-QT5/networkviewer/NetworkViewer-build/GUI/plugins/Console/moc_ConsolePlugin.cpp
+C:/WORK-QT5/networkviewer/NetworkViewer/GUI/plugins/Console/ConsolePlugin.h

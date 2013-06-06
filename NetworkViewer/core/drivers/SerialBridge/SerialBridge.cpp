@@ -68,15 +68,24 @@ NETVDevice::State SerialBridge::initialize(const char* args)
     QStringList config = QString(args).split(";");
     Q_ASSERT(config.size() == 2);
 
-    //Port configuration
-    PortSettings s;
-    s.BaudRate = (BaudRateType) config[1].toInt();
-    s.DataBits =  DATA_8;
-    s.FlowControl = FLOW_OFF;
-    s.Parity = PAR_NONE;
-    s.StopBits = STOP_1;
-    s.Timeout_Millisec = 1;
-    m_serialPort = new QextSerialPort(config[0], s);
+    //No parent
+    m_serialPort = new QSerialPort(config[0], 0);
+
+    //Set baud rate, all directions
+    m_serialPort->setBaudRate(config[1].toInt());
+
+    //Set data bits
+    m_serialPort->setDataBits(QSerialPort::Data8);
+
+    //Set flow control
+    m_serialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+    //Set parity
+    m_serialPort->setParity(QSerialPort::NoParity);
+
+    //Set stopbits
+    m_serialPort->setStopBits(QSerialPort::OneStop);
+
 
     if (!m_serialPort->open(QIODevice::ReadWrite))
     {
@@ -88,7 +97,7 @@ NETVDevice::State SerialBridge::initialize(const char* args)
     else
     {
         //connect signals
-        qDebug("SerialBridge::initialize() : Opening config : %s, baudrate : %i",args,s.BaudRate);
+        qDebug("SerialBridge::initialize() : Opening config : %s, baudrate : %i",args,m_serialPort->baudRate());
 
         connect(m_serialPort,SIGNAL(readyRead()),this,SLOT(serialReadyRead()));
         connect(m_serialPort,SIGNAL(bytesWritten(qint64)),this,SLOT(serialBytesWritten(qint64)));
@@ -107,9 +116,9 @@ NETVDevice::State SerialBridge::sendMessage(NETV_MESSAGE &message)
     //BE CAREFUL THIS FUNCTION RUNS IN ANOTHER THREAD
     if (m_serialPort)
     {
-	//We need to post the event so the message is processed in the right thread
+        //We need to post the event so the message is processed in the right thread
         QCoreApplication::postEvent(this,new SerialBridgeSendEvent(message));
-	
+
         return NETVDevice::NETVDEVICE_OK;
     }
     else
@@ -130,12 +139,12 @@ NETVDevice::State SerialBridge::recvMessage(NETV_MESSAGE &message)
         //not yet received messages
         returnState = NETVDevice::NETVDEVICE_UNDERFLOW;
 
-	m_recvQueueMutex.lock();
+        m_recvQueueMutex.lock();
 
-	int recvSize = m_recvQueue.size();
-	
-	if (recvSize > 0)
-	{
+        int recvSize = m_recvQueue.size();
+
+        if (recvSize > 0)
+        {
             CANRxMessageBuffer msg;
             msg = m_recvQueue.front();
             m_recvQueue.pop_front();
@@ -166,9 +175,9 @@ NETVDevice::State SerialBridge::recvMessage(NETV_MESSAGE &message)
             message.msg_timestamp = QDateTime::currentDateTime().toMSecsSinceEpoch();
 
             //NETVDevice::printMessage(message);
-	}
-	
-	m_recvQueueMutex.unlock();
+        }
+
+        m_recvQueueMutex.unlock();
     }//if serialport
 
 
@@ -203,12 +212,12 @@ void SerialBridge::serialReadyRead()
 
 
         //qDebug("SerialBridge::serialReadyRead() available messages : %i",available);
-	//Let's verify if we have received messages that are well aligned with the size of the
-	//CANRxMessageBuffer data structure size
-	Q_ASSERT(array.size() % sizeof(CANRxMessageBuffer) == 0);
-	
-	for (int i = 0; i < array.size(); i+= sizeof(CANRxMessageBuffer))
-	{
+        //Let's verify if we have received messages that are well aligned with the size of the
+        //CANRxMessageBuffer data structure size
+        Q_ASSERT(array.size() % sizeof(CANRxMessageBuffer) == 0);
+
+        for (int i = 0; i < array.size(); i+= sizeof(CANRxMessageBuffer))
+        {
 
             CANRxMessageBuffer msg;
             memcpy((char*) &msg.messageWord[0], &array.data()[i],sizeof(CANRxMessageBuffer));
@@ -227,9 +236,9 @@ void SerialBridge::serialReadyRead()
             //qDebug("CANRxMessageBuffer word 2 : 0x%8x",msg.messageWord[2]);
             //qDebug("CANRxMessageBuffer word 3 : 0x%8x",msg.messageWord[3]);
             //qDebug("CANRxMessageBuffer DATA LENGTH : %i",msg.msgEID.DLC);
-	}
-	
-	//qDebug("MsgCnt : %i",msgCnt);
+        }
+
+        //qDebug("MsgCnt : %i",msgCnt);
     }//if m_serialPort
 }
 
@@ -314,10 +323,10 @@ bool SerialBridge::event(QEvent *event)
     return QObject::event(event);
 }
 
- void SerialBridge::testTimer()
- {
+void SerialBridge::testTimer()
+{
     qDebug("IN: %li OUT: %li",serialBytesIn,serialBytesOut);
 
     serialBytesIn = 0;
     serialBytesOut = 0;
- }
+}

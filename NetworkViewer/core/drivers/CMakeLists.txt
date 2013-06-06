@@ -4,7 +4,6 @@
 
 SET(DRIVER_INCLUDES
         ${PROJECT_SOURCE_DIR}/core/src
-        ${PROJECT_SOURCE_DIR}/core/QextSerialPort/src
         ${PROJECT_SOURCE_DIR}/core/drivers/Common
         ${CMAKE_CURRENT_BINARY_DIR}/Common
 )

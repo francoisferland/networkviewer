@@ -1,4 +1,5 @@
 #package
+find_package(Qt5Core REQUIRED)
 
 ########################
 # Configurations
@@ -13,32 +14,15 @@ IF (WIN32)
 
 
         #Installing Qt libraries...
+        MESSAGE("QT_LIBRARY_DIR : ${QT_LIBRARY_DIR}")
+        FILE(GLOB QT_DLL "${QT_LIBRARY_DIR}/*.dll")
 
-
-	SET (QT_DLL
-			"${QT_BINARY_DIR}/Qt3Support4.dll"
-			"${QT_BINARY_DIR}/QtCore4.dll"
-			"${QT_BINARY_DIR}/QtDesigner4.dll"
-			"${QT_BINARY_DIR}/QtDesignerComponents4.dll"
-			"${QT_BINARY_DIR}/QtGui4.dll"
-			"${QT_BINARY_DIR}/QtHelp4.dll"
-			"${QT_BINARY_DIR}/QtNetwork4.dll"
-			"${QT_BINARY_DIR}/QtOpenGL4.dll"
-			"${QT_BINARY_DIR}/QtScript4.dll"
-			"${QT_BINARY_DIR}/QtSql4.dll"
-			"${QT_BINARY_DIR}/QtSvg4.dll"
-			"${QT_BINARY_DIR}/QtTest4.dll"
-			"${QT_BINARY_DIR}/QtWebKit4.dll"
-			"${QT_BINARY_DIR}/QtXml4.dll"
-			"${QT_BINARY_DIR}/QtXmlPatterns4.dll"
-			"${QT_BINARY_DIR}/QtDeclarative4.dll"
-			"${QT_BINARY_DIR}/phonon4.dll"
-                        "C:/QtSDK/mingw/bin/mingwm10.dll"
-                        "C:/QtSDK/mingw/bin/libgcc_s_dw2-1.dll"
-	    )
+        #Installing MinGW libraries
+        #FILE(GLOB MINGW_DLL "*.dll")
 
         #Install DLLS
-        INSTALL( FILES ${QT_DLL} DESTINATION bin)
+        #INSTALL( FILES ${QT_DLL} DESTINATION bin)
+        #INSTALL( FILES ${MINGW_DLL} DESTINATION bin)
 
         ###########################
         # Packaging stuff for WIN32

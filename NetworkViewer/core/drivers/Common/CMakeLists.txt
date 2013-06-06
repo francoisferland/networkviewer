@@ -31,7 +31,7 @@ QT5_WRAP_CPP(DriverCommon_MOC_SRCS ${DriverCommon_HEADERS})
 INCLUDE_DIRECTORIES(${DRIVER_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_library(DriverCommon SHARED ${DriverCommon_SRCS} ${DriverCommon_HEADERS} ${DriverCommon_QRC_SRCS} ${DriverCommon_MOC_SRCS} ${DriverCommon_UI_SRCS}  )
-target_link_libraries(DriverCommon networkViewerCore QextSerialPort)
-qt5_use_modules(DriverCommon Core Network Xml XmlPatterns Widgets)
+target_link_libraries(DriverCommon networkViewerCore)
+qt5_use_modules(DriverCommon Core Network Xml XmlPatterns Widgets SerialPort)
 
 INSTALL(TARGETS DriverCommon DESTINATION lib)

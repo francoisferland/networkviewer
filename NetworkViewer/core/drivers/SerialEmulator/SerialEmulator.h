@@ -27,120 +27,119 @@
 #include <QEvent>
 #include <QTimer>
 #include <QTime>
-#include "qextserialport.h"
-#include "qextserialenumerator.h"
+#include <QSerialPort>
 
 #define START_BYTE 0xF2
 
 typedef union
 {
-        struct {
-                unsigned char start_byte;
-                unsigned char pri_boot_rtr;
-                unsigned char type;
-                unsigned char cmd;
-                unsigned char dest;
-                unsigned char data_length_iface;
-                unsigned char data[8];
-                unsigned char checksum;
-        };
+    struct {
+        unsigned char start_byte;
+        unsigned char pri_boot_rtr;
+        unsigned char type;
+        unsigned char cmd;
+        unsigned char dest;
+        unsigned char data_length_iface;
+        unsigned char data[8];
+        unsigned char checksum;
+    };
 
-        unsigned char messageBytes[15];
+    unsigned char messageBytes[15];
 } CANSerialMessage;
 
 
 inline unsigned char serial_calculate_checksum(const CANSerialMessage *message)
 {
-        unsigned char checksum = 0;
-        int i = 0;
+    unsigned char checksum = 0;
+    int i = 0;
 
-        //simple accumulation of bytes from start until checksum (excluded)
-        for (i = 0; i < (sizeof(CANSerialMessage) - 1); i++)
-        {
-                checksum += message->messageBytes[i];
-        }
+    //simple accumulation of bytes from start until checksum (excluded)
+    for (i = 0; i < (sizeof(CANSerialMessage) - 1); i++)
+    {
+        checksum += message->messageBytes[i];
+    }
 
-        return checksum;
+    return checksum;
 
 }
 
 class SerialEmulator : public QObject, public NETVDevice
 {
-	Q_OBJECT;
+    Q_OBJECT;
 
-	public:
-
-
-        class SerialEmulatorSendEvent : public QEvent
-	{
-		public:
-		
-                SerialEmulatorSendEvent(const NETV_MESSAGE &message)
-			:	QEvent(QEvent::User)
-		{
-			m_message = message;
-		}
-		
-		NETV_MESSAGE m_message;
-	
-	};
-
-        SerialEmulator(const char* params);
-
-	
-	virtual NETVDevice::State initialize(const char* args);
+public:
 
 
-	  /** send a NETV_MESSAGE
-		   \param message The message to send
-		   \return int The status after the message has been sent
-	  */
-	  virtual NETVDevice::State sendMessage(NETV_MESSAGE &message);
+    class SerialEmulatorSendEvent : public QEvent
+    {
+    public:
 
-	  /** receive a NETV_MESSAGE
-		   \param message The message to receive (will be filled)
-		   \return int The status after the message has been received
-	  */
-	  virtual NETVDevice::State recvMessage(NETV_MESSAGE &message);
+        SerialEmulatorSendEvent(const NETV_MESSAGE &message)
+            :	QEvent(QEvent::User)
+        {
+            m_message = message;
+        }
 
-	  /** Verify if a message is ready to receive
-		   \return bool true if a message is ready to be received
-	  */
-	  virtual bool newMessageReady();
+        NETV_MESSAGE m_message;
 
-          /** Destructor */
-          virtual ~SerialEmulator();
-	
-        protected slots:
-	
-        void serialReadyRead();
-        void serialBytesWritten(qint64 nbBytes);
-        void testTimer();
-	
-	
-	protected:
-	
-	//Internal event processing...
-	bool event(QEvent *event);
-	
-        QextSerialPort *m_serialPort;
+    };
 
-	QTimer *m_pollTimer;
+    SerialEmulator(const char* params);
 
 
-        QList<CANSerialMessage> m_sendQueue;
-        QList<CANSerialMessage> m_recvQueue;
-	QMutex m_sendQueueMutex;
-	QMutex m_recvQueueMutex;
-        QSemaphore m_recvSemaphore;
-        
-        long serialBytesIn;
-        long serialBytesOut;
-        long serialBytesFlushed;
-        QTimer *m_testTimer;
-        bool m_debug;
-        unsigned int m_timeDelay;
-        QTime m_openTime;
+    virtual NETVDevice::State initialize(const char* args);
+
+
+    /** send a NETV_MESSAGE
+       \param message The message to send
+       \return int The status after the message has been sent
+    */
+    virtual NETVDevice::State sendMessage(NETV_MESSAGE &message);
+
+    /** receive a NETV_MESSAGE
+       \param message The message to receive (will be filled)
+       \return int The status after the message has been received
+    */
+    virtual NETVDevice::State recvMessage(NETV_MESSAGE &message);
+
+    /** Verify if a message is ready to receive
+        \return bool true if a message is ready to be received
+    */
+    virtual bool newMessageReady();
+
+    /** Destructor */
+    virtual ~SerialEmulator();
+
+protected slots:
+
+    void serialReadyRead();
+    void serialBytesWritten(qint64 nbBytes);
+    void testTimer();
+
+
+protected:
+
+    //Internal event processing...
+    bool event(QEvent *event);
+
+    QSerialPort *m_serialPort;
+
+    QTimer *m_pollTimer;
+
+
+    QList<CANSerialMessage> m_sendQueue;
+    QList<CANSerialMessage> m_recvQueue;
+    QMutex m_sendQueueMutex;
+    QMutex m_recvQueueMutex;
+    QSemaphore m_recvSemaphore;
+
+    long serialBytesIn;
+    long serialBytesOut;
+    long serialBytesFlushed;
+    QTimer *m_testTimer;
+    bool m_debug;
+    unsigned int m_timeDelay;
+    QTime m_openTime;
 };
 
 

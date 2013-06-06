@@ -7,7 +7,6 @@ INCLUDE_DIRECTORIES(
                 ${CMAKE_CURRENT_BINARY_DIR}
                 ${QWT_SRC_DIR}
                 ${PROJECT_SOURCE_DIR}/core/src
-                ${PROJECT_SOURCE_DIR}/core/QextSerialPort/src
                 )
 
 #CREATE THE SHARED LIBRARY FOR PLUGINS
@@ -62,7 +61,7 @@ QT5_WRAP_CPP(NetworkViewer_Base_MOC_SRCS ${NetworkViewer_Base_HEADERS})
 
 #NetworkViewer Base Library
 add_library(networkViewerBase SHARED ${NetworkViewer_Base_SRCS} ${NetworkViewer_Base_HEADERS} ${NetworkViewer_Base_MOC_SRCS} ${NetworkViewer_Base_UI_SRCS} ${SRCS_QRC})
-target_link_libraries(networkViewerBase networkViewerCore QextSerialPort)
+target_link_libraries(networkViewerBase networkViewerCore)
 qt5_use_modules(networkViewerBase Core Widgets Gui OpenGL Xml Concurrent Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
 
 INSTALL(TARGETS networkViewerBase DESTINATION bin)

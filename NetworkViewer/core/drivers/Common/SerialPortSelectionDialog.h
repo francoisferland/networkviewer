@@ -20,6 +20,7 @@
 #define _SERIAL_PORT_SELECTION_DIALOG_H_
 
 #include <QDialog>
+#include <QSerialPortInfo>
 
 #include "ui_SerialPortSelectionDialog.h"
 
@@ -39,6 +40,7 @@ protected slots:
 
     void portIndexChanged (int index );
     void baudRateIndexChanged (int index);
+    void updateInfo(const QSerialPortInfo &info);
 
 protected:
 

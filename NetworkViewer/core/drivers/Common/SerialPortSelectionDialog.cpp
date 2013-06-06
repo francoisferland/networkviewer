@@ -1,5 +1,5 @@
 /**
-     Copyright (C) 2009-2012 IntRoLab
+     Copyright (C) 2009-2013 IntRoLab
      http://introlab.gel.usherbrooke.ca
      Dominic Letourneau, ing. M.Sc.A.
      Dominic.Letourneau@USherbrooke.ca
@@ -17,7 +17,7 @@
  */
 
 #include "SerialPortSelectionDialog.h"
-#include <qextserialenumerator.h>
+#include <QSerialPortInfo>
 #include <QList>
 
 
@@ -31,7 +31,9 @@ SerialPortSelectionDialog::SerialPortSelectionDialog(QWidget *parent)
     connect(m_baudComboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(baudRateIndexChanged(int)));
 
     //Fill combo box with available ports
-    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    //QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
+    QList<QSerialPortInfo>	ports = QSerialPortInfo::availablePorts();
+
 
     for (unsigned int i = 0; i < ports.size(); i++)
     {
@@ -40,17 +42,11 @@ SerialPortSelectionDialog::SerialPortSelectionDialog(QWidget *parent)
             m_currentPortIndex = 0;
 
             //Update info
-            m_textEdit->append("port name:" + ports.at(i).portName);
-            m_textEdit->append("friendly name:" + ports.at(i).friendName);
-            m_textEdit->append("physical name:" +  ports.at(i).physName);
-            m_textEdit->append("enumerator name:" + ports.at(i).enumName);
-            m_textEdit->append("vendor ID:" + QString::number(ports.at(i).vendorID, 16));
-            m_textEdit->append("product ID:" + QString::number(ports.at(i).productID, 16));
-            m_textEdit->append("===================================");
+            updateInfo(ports[i]);
         }
 
         //Add port to combo list
-        m_portComboBox->addItem(ports.at(i).portName);
+        m_portComboBox->addItem(ports[i].portName());
     }
 
     //Set Combo box @ 9600 baud
@@ -79,24 +75,45 @@ void SerialPortSelectionDialog::portIndexChanged ( int index )
     m_currentPortIndex = index;
 
     //Fill combo box with available ports
-    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();
-
+    QList<QSerialPortInfo>	ports = QSerialPortInfo::availablePorts();
 
     if (index < ports.size())
     {
-        m_textEdit->clear();
-
-        //Update info
-        m_textEdit->append("port name:" + ports.at(index).portName);
-        m_textEdit->append("friendly name:" + ports.at(index).friendName);
-        m_textEdit->append("physical name:" +  ports.at(index).physName);
-        m_textEdit->append("enumerator name:" + ports.at(index).enumName);
-        m_textEdit->append("vendor ID:" + QString::number(ports.at(index).vendorID, 16));
-        m_textEdit->append("product ID:" + QString::number(ports.at(index).productID, 16));
-        m_textEdit->append("===================================");
-
+        updateInfo(ports[index]);
     }
+}
 
+void SerialPortSelectionDialog::updateInfo(const QSerialPortInfo &info)
+{
+    /*
+        QString	description() const
+        bool	hasProductIdentifier() const
+        bool	hasVendorIdentifier() const
+        bool	isBusy() const
+        bool	isNull() const
+        bool	isValid() const
+        QString	manufacturer() const
+        QString	portName() const
+        quint16	productIdentifier() const
+        void	swap(QSerialPortInfo & other)
+        QString	systemLocation() const
+        quint16	vendorIdentifier() const
+
+    */
+    m_textEdit->clear();
+
+    m_textEdit->append("Port name: " + info.portName());
+    m_textEdit->append("Manufacturer: " + info.manufacturer());
+    m_textEdit->append("Description: " + info.description());
+    m_textEdit->append("Location: " +  info.systemLocation());
+
+    if (info.hasVendorIdentifier())
+        m_textEdit->append("Vendor ID: " + QString::number(info.vendorIdentifier(),16));
+
+    if (info.hasProductIdentifier())
+        m_textEdit->append("Product ID: " + QString::number(info.productIdentifier(), 16));
+
+    m_textEdit->append("===================================");
 }
 
 void SerialPortSelectionDialog::baudRateIndexChanged ( int index )
