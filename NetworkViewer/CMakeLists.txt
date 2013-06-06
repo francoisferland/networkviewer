@@ -1,4 +1,4 @@
-OJECT (OpenECoSys-NetworkViewer)
+PROJECT (OpenECoSys-NetworkViewer)
 
 cmake_minimum_required(VERSION 2.8)
 
