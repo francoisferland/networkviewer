@@ -7,6 +7,8 @@ find_package(Qt5Gui REQUIRED)
 SET(QWT_SRC_DIR ${PROJECT_SOURCE_DIR}/GUI/qwt/src)
 SET(QWT_INCLUDES ${PROJECT_SOURCE_DIR}/GUI/qwt/src)
 
+#add_definitions(-DQT_DLL -DQWT_DLL -DQWT_MAKEDLL)
+
 #Create a library with the sources and headers
 FILE(GLOB QWT_SRCS "${QWT_SRC_DIR}/*.cpp")
 FILE(GLOB QWT_HEADERS "${QWT_INCLUDES}/*.h")

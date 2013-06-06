@@ -43,18 +43,25 @@ ScopeView::ScopeView(NetworkView *parent)
 
     setAcceptDrops(true);
 
+    m_frame->setLayout(new QVBoxLayout());
+
     //Create (empty) Plot
     m_plot = new QwtPlot(this);
+    m_frame->layout()->addWidget(m_plot);
+
 
     //Plot background color & grid
-    QwtPlotGrid *grid = new QwtPlotGrid;
+    //For some reason, the grid is not working yet with qwt 6.1 & Qt5.1 on Windows.
+#ifndef WIN32
+    QwtPlotGrid *grid = new QwtPlotGrid();
     grid->setMajorPen(QPen(Qt::gray, 0, Qt::DotLine));
     grid->attach(m_plot);
+#endif
+
     m_plot->setCanvasBackground(QColor(29, 100, 141)); // nice blue
 
 
-    m_frame->setLayout(new QVBoxLayout());
-    m_frame->layout()->addWidget(m_plot);
+
 
     //Create magnifier for plot
     //m_zoomer = new QwtPlotZoomer(m_plot->canvas());
@@ -65,12 +72,11 @@ ScopeView::ScopeView(NetworkView *parent)
 
     m_picker = new QwtPlotPicker(m_plot->canvas());
     m_picker->setTrackerMode(QwtPicker::AlwaysOn);
-
     m_plot->setAutoReplot(true);
 
     m_updateTimer = new QTimer(this);
     connect(m_updateTimer,SIGNAL(timeout()),this,SLOT(updateTimer()));
-    m_updateTimer->start(50);//50ms timer
+    m_updateTimer->start(20);//20ms timer
 
 
     //Create Legend at bottom
@@ -85,8 +91,6 @@ ScopeView::ScopeView(NetworkView *parent)
     connect(m_clearToolButton,SIGNAL(clicked()),this,SLOT(clearCurves()));
     connect(m_saveToolButton,SIGNAL(clicked()),this,SLOT(saveCurves()));
     connect(m_bufferSizeSpinbox,SIGNAL(valueChanged(int)),this,SLOT(setCurveMaxBufferSize(int)));
-
-
 
 }
 

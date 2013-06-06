@@ -56,8 +56,7 @@ NetworkView::NetworkView(QWidget *parent)
     //Setup MDI
     m_mdiArea->setDocumentMode(true);
 
-    //Add scope
-    createScopeView();
+
 
     m_label = new QLabel("0",this);
     statusbar->addPermanentWidget(m_label);
@@ -111,6 +110,9 @@ NetworkView::NetworkView(QWidget *parent)
 
     //testing broadcaster...
     m_broadcaster = new NETVBroadcaster(8888,12345,this);
+
+    //Add scope
+    createScopeView();
 
 }
 
@@ -355,24 +357,32 @@ BasePlugin* NetworkView::createCustomPluginWindow(const QString &pluginName, con
 {
     QMap<QString, BasePlugin::BasePluginFactory*> & plugins = BasePlugin::loadedPlugins();
 
-    BasePlugin::BasePluginFactory* factory = plugins[pluginName];
-
     BasePlugin *plugin = NULL;
 
-    if (factory)
+    if (plugins.contains(pluginName))
     {
-        plugin = factory->create(this);
+        BasePlugin::BasePluginFactory* factory = plugins[pluginName];
 
-        //initialize plugin
-        plugin->init();
+        BasePlugin *plugin = NULL;
 
-        //Create MDI window
-        QMdiSubWindow *subWindow = createSubWindow(windowTitle);
-        subWindow->setWidget(plugin);
-        m_mdiArea->addSubWindow(subWindow);
-        subWindow->show();
+        if (factory)
+        {
+            plugin = factory->create(this);
+
+            //initialize plugin
+            plugin->init();
+
+            //Create MDI window
+            QMdiSubWindow *subWindow = createSubWindow(windowTitle);
+            subWindow->setWidget(plugin);
+            m_mdiArea->addSubWindow(subWindow);
+            subWindow->show();
+        }
     }
-
+    else
+    {
+        qWarning() << "Trying to load unknown plugin :"<<pluginName;
+    }
     return plugin;
 }
 
