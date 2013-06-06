@@ -1,8 +1,0 @@
--DNETWORKVIEWER_VERSION="1.1.17"
--DQEXTSERIALPORT_BUILD_SHARED
--DQT_CORE_LIB
--DQESP_NO_QT4_PRIVATE
--DWIN32
--o
-C:/WORK-QT5/networkviewer/NetworkViewer-build/core/QextSerialPort/src/moc_qextserialport_p.cpp
-C:/WORK-QT5/networkviewer/NetworkViewer/core/QextSerialPort/src/qextserialport_p.h

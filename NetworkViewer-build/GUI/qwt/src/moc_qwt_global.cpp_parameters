@@ -1,5 +1,0 @@
--DNETWORKVIEWER_VERSION="1.1.17"
--DWIN32
--o
-C:/WORK-QT5/networkviewer/NetworkViewer-build/GUI/qwt/src/moc_qwt_global.cpp
-C:/WORK-QT5/networkviewer/NetworkViewer/GUI/qwt/src/qwt_global.h
