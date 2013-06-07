@@ -1,4 +1,4 @@
-networkviewer
+NetworkViewer
 =============
 
 NetworkViewer is a cross-platform Qt5 GUI used to interact with distributed nodes on multi-protocol Networks. It can be seen as an information aggregator where variables from multiple network types such as CAN bus or RS-232/422/485 
