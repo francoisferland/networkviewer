@@ -4,8 +4,9 @@ networkviewer
 NetworkViewer is a cross-platform Qt5 GUI used to interact with distributed nodes on multi-protocol Networks. It can be seen as an information aggregator where variables from multiple network types such as CAN bus or RS-232/422/485 
 networks are combined in a single GUI application. The tool is used at the IntRoLab (http://introlab.3it.usherbrooke.ca) mobile robotics lab to monitor, configure and quick prototyping of distributed robot controllers.
 
+Specifications
+==============
 
-== Specifications ==
 * Support multiple modules/nodes on the bus with multiple types of microcontrollers
 * Easy read/write access to distributed variables
 ** Each module contains its own configuration and variables
