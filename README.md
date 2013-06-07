@@ -9,11 +9,11 @@ Specifications
 
 * Support multiple modules/nodes on the bus with multiple types of microcontrollers
 * Easy read/write access to distributed variables
-** Each module contains its own configuration and variables
-** Configurations can be made dynamic and change over time
+ * Each module contains its own configuration and variables
+ * Configurations can be made dynamic and change over time
 * Support visualization of multiple variables simultaneously
-** Textual visualization is also supported
-** Real-Time plot
+ * Textual visualization is also supported
+ * Real-Time plot
 * User-defined graphical plugins for easier interaction with modules
 * Support multiple communication protocols through plug-in drivers
 
