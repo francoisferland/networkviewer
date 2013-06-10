@@ -56,8 +56,6 @@ NetworkView::NetworkView(QWidget *parent)
     //Setup MDI
     m_mdiArea->setDocumentMode(true);
 
-
-
     m_label = new QLabel("0",this);
     statusbar->addPermanentWidget(m_label);
 
@@ -131,6 +129,7 @@ NetworkView::~NetworkView()
 
 void NetworkView::createScopeView()
 {
+    qDebug("CreateScopeView");
     m_scopeView = createCustomPluginWindow("ScopeView","ScopeView (MAIN)");
 
     if (m_scopeView)
@@ -241,7 +240,7 @@ void NetworkView::moduleDoubleClicked(NetworkModuleItem* module)
 
 void NetworkView::scopeRequest(ModuleVariable *variable)
 {
-    qDebug("NetworkView::scopeRequest(const ModuleVariable &variable)");
+    qDebug("NetworkView::scopeRequest(const ModuleVariable &variable) scopeView : %p",m_scopeView);
 
     if (!m_scopeView)
     {
@@ -363,8 +362,6 @@ BasePlugin* NetworkView::createCustomPluginWindow(const QString &pluginName, con
     {
         BasePlugin::BasePluginFactory* factory = plugins[pluginName];
 
-        BasePlugin *plugin = NULL;
-
         if (factory)
         {
             plugin = factory->create(this);
@@ -383,6 +380,8 @@ BasePlugin* NetworkView::createCustomPluginWindow(const QString &pluginName, con
     {
         qWarning() << "Trying to load unknown plugin :"<<pluginName;
     }
+
+    qDebug("Creating plugin : (%s) %p",pluginName.toLatin1().constData(),plugin);
     return plugin;
 }
 
