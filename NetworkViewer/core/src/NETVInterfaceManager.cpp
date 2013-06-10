@@ -177,7 +177,7 @@ void NETVInterfaceManager::writeVariable(ModuleVariable *variable)
             break;
 
         default:
-           qWarning("Unhandled memory type : ",variable->getMemType());
+           qWarning("Unhandled memory type : %i",variable->getMemType());
            break;
         }
 

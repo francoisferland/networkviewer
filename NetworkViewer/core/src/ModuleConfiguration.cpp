@@ -199,6 +199,10 @@ User roles:
             return var->getValue();
             break;
 
+        case VARIABLE_ELAPSED:
+            return QString::number(var->getElapsedTime());
+            break;
+
         case VARIABLE_DESCRIPTION:
             return QVariant(var->getDescription());
             break;
@@ -278,6 +282,10 @@ QVariant ModuleConfiguration::headerData ( int section, Qt::Orientation orientat
                 return "Value";
                 break;
 
+            case VARIABLE_ELAPSED:
+                return "Elapsed";
+                break;
+
             case VARIABLE_DESCRIPTION:
                 return "Description";
                 break;
@@ -334,6 +342,10 @@ Qt::ItemFlags ModuleConfiguration::flags (const QModelIndex & index ) const
 
     case VARIABLE_VALUE:
         return Qt::ItemIsEditable | Qt::ItemIsEnabled;
+        break;
+
+    case VARIABLE_ELAPSED:
+        return Qt::ItemIsEnabled;
         break;
 
     case VARIABLE_DESCRIPTION:

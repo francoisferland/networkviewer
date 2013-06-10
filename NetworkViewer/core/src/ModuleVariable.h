@@ -129,75 +129,75 @@ public slots:
         \param value The QVariant containing the value
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue(QVariant value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue(QVariant value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (float value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue(float value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue(float value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (double value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue(double value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue(double value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (sint32 value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (int value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (int value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (uint32 value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (unsigned int value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (unsigned int value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (sint16 value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (short value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (short value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (uint16 value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (unsigned short value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (unsigned short value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value (sint8 value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (char value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (char value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param unsigned char (uint8 value)
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (unsigned char value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (unsigned char value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param value The string containing the formatted value
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue (const QString &value, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue (const QString &value, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param data the string data (formatted value)
         \param size the string size
         \param userUpdate TRUE if the value has been changed from the user, default = false
     */
-    void setValue(const unsigned char* data, int size, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue(const unsigned char* data, int size, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param byteArray a byte array of size = 8
         \param userUpdate TRUE if the value has been changed from the user, default = false
         \param updateTime the time the variable has been updated
     */
-    void setValue(const QByteArray &byteArray, bool userUpdate = false, QDateTime updateTime = QDateTime::currentDateTime());
+    void setValue(const QByteArray &byteArray, bool userUpdate = false, QDateTime time = QDateTime::currentDateTime());
 
     /**
         \param
@@ -297,16 +297,21 @@ public:
     */
     Q_INVOKABLE bool getActivated() const;
 
-
+    /**
+        \return QDateTime the update time of the variable
+    */
     Q_INVOKABLE QDateTime getUpdateTime() const;
+
+    /**
+        \return qint64 Ms to last update.
+    */
+    Q_INVOKABLE qint64 getElapsedTime() const;
 
     /**
         Conversion to binary format (little endian) according to \ref VARIABLE_TYPE
         \return QByteArray the binary format
     */
     QByteArray toByteArray() const;
-
-
 
 
 signals:
@@ -367,7 +372,13 @@ protected:
     ///Update time
     QDateTime m_updateTime;
 
+    ///Elapsed time
+    qint64 m_elapsedTime;
+
 private:
+
+    void updateTime(QDateTime time = QDateTime::currentDateTime());
+
     /**
         Constructor (with default arg)
         This constructor is private and cannot be called. This will avoid variables that are undefined or incomplete.

@@ -21,8 +21,17 @@
 
 //This constructor is private
 ModuleVariable::ModuleVariable(QObject *parent)
-    : QObject(parent), m_type(INVALID), m_name("Invalid"), m_memType(RAM_VARIABLE)
-    , m_offset(-1), m_description("Invalid variable"), m_deviceID(-1), m_interfaceID(-1), m_activated(true), m_updateTime(QDateTime::currentDateTime())
+    : QObject(parent),
+      m_type(INVALID),
+      m_name("Invalid"),
+      m_memType(RAM_VARIABLE),
+      m_offset(-1),
+      m_description("Invalid variable"),
+      m_deviceID(-1),
+      m_interfaceID(-1),
+      m_activated(true),
+      m_updateTime(QDateTime::currentDateTime()),
+      m_elapsedTime(0)
 {
 
 }
@@ -30,16 +39,23 @@ ModuleVariable::ModuleVariable(QObject *parent)
 
 
 ModuleVariable::ModuleVariable(VARIABLE_TYPE _type, const QString &_name, VARIABLE_MEMORY_TYPE _memType, int _offset, const QString &_description , QObject *parent)
-    : QObject(parent), m_type(_type), m_name(_name), m_memType(_memType)
-    , m_offset(_offset), m_description(_description), m_activated(true)
+    : QObject(parent),
+      m_type(_type),
+      m_name(_name),
+      m_memType(_memType),
+      m_offset(_offset),
+      m_description(_description),
+      m_activated(true)
 {
-
-
     //Set deviceID to -1
     m_deviceID = -1;
 
     //Set interfaceID to -1
     m_interfaceID = -1;
+
+    //Set time
+    m_updateTime = QDateTime::currentDateTime();
+    m_elapsedTime = 0;
 
     setProperty("name",QString("ModuleVariable:") + QString(m_name));
 }
@@ -52,7 +68,12 @@ ModuleVariable& ModuleVariable::invalid()
 }
 
 ModuleVariable::ModuleVariable(const ModuleVariable &variable)
-    : m_type(INVALID), m_name("Invalid"), m_offset(-1), m_description("Invalid variable"), m_deviceID(-1), m_activated(true)
+    : m_type(INVALID),
+      m_name("Invalid"),
+      m_offset(-1),
+      m_description("Invalid variable"),
+      m_deviceID(-1),
+      m_activated(true)
 {
     m_type = variable.m_type;
     m_name = variable.m_name;
@@ -64,13 +85,22 @@ ModuleVariable::ModuleVariable(const ModuleVariable &variable)
     m_interfaceID = variable.m_interfaceID;
     m_activated = variable.m_activated;
     m_updateTime = variable.m_updateTime;
+    m_elapsedTime = variable.m_elapsedTime;
 
     setProperty("name",QString("ModuleVariable:") + QString(m_name));
 }
 
 ModuleVariable::ModuleVariable(QDomElement &element)
-    : m_type(INVALID), m_name("Invalid"), m_memType(RAM_VARIABLE), m_offset(-1), m_description("Invalid variable")
-    , m_deviceID(-1), m_interfaceID(-1), m_activated(true)
+    : m_type(INVALID),
+      m_name("Invalid"),
+      m_memType(RAM_VARIABLE),
+      m_offset(-1),
+      m_description("Invalid variable"),
+      m_deviceID(-1),
+      m_interfaceID(-1),
+      m_activated(true),
+      m_updateTime(QDateTime::currentDateTime()),
+      m_elapsedTime(0)
 {
 
     loadXML(element);
@@ -131,12 +161,6 @@ bool ModuleVariable::loadXML(QDomElement &element)
 
 }
 
-
-
-
-
-
-
 ModuleVariable& ModuleVariable::operator= (const ModuleVariable &variable)
 {
     m_type = variable.m_type;
@@ -148,6 +172,7 @@ ModuleVariable& ModuleVariable::operator= (const ModuleVariable &variable)
     m_deviceID = variable.m_deviceID;
     m_interfaceID = variable.m_interfaceID;
     m_updateTime = variable.m_updateTime;
+    m_elapsedTime = variable.m_elapsedTime;
 
     setProperty("name",QString("ModuleVariable:") + QString(m_name));
 
@@ -291,10 +316,10 @@ ModuleVariable::VARIABLE_TYPE ModuleVariable::stringToType(const QString &typeSt
 }
 
 
-void ModuleVariable::setValue(float value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue(float value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -303,10 +328,10 @@ void ModuleVariable::setValue(float value, bool userUpdate, QDateTime updateTime
     }
 }
 
-void ModuleVariable::setValue(double value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue(double value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);;
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -315,10 +340,10 @@ void ModuleVariable::setValue(double value, bool userUpdate, QDateTime updateTim
     }
 }
 
-void ModuleVariable::setValue (int value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue (int value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -347,10 +372,10 @@ void ModuleVariable::setUserValue(double value)
     setValue(value,true);
 }
 
-void ModuleVariable::setValue (unsigned int value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue (unsigned int value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -359,10 +384,10 @@ void ModuleVariable::setValue (unsigned int value, bool userUpdate, QDateTime up
     }
 }
 
-void ModuleVariable::setValue (short value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue (short value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -371,10 +396,10 @@ void ModuleVariable::setValue (short value, bool userUpdate, QDateTime updateTim
     }
 }
 
-void ModuleVariable::setValue (unsigned short value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue (unsigned short value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -383,10 +408,10 @@ void ModuleVariable::setValue (unsigned short value, bool userUpdate, QDateTime 
     }
 }
 
-void ModuleVariable::setValue (char value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue (char value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -395,10 +420,10 @@ void ModuleVariable::setValue (char value, bool userUpdate, QDateTime updateTime
     }
 }
 
-void ModuleVariable::setValue (unsigned char value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue (unsigned char value, bool userUpdate, QDateTime time)
 {
     m_value = QVariant(value);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -408,10 +433,10 @@ void ModuleVariable::setValue (unsigned char value, bool userUpdate, QDateTime u
 }
 
 
-void ModuleVariable::setValue(QVariant value, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue(QVariant value, bool userUpdate, QDateTime time)
 {
     m_value = value;
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -420,7 +445,7 @@ void ModuleVariable::setValue(QVariant value, bool userUpdate, QDateTime updateT
     }
 }
 
-void ModuleVariable::setValue(const QByteArray &byteArray, bool userUpdate, QDateTime updateTime)
+void ModuleVariable::setValue(const QByteArray &byteArray, bool userUpdate, QDateTime time)
 {
 
     //Make sure we have the right length
@@ -428,7 +453,7 @@ void ModuleVariable::setValue(const QByteArray &byteArray, bool userUpdate, QDat
     myValue.resize(getLength());
 
     m_value = QVariant(myValue);
-    m_updateTime = updateTime;
+    updateTime(time);
     emit valueChanged(this);
     if (userUpdate)
     {
@@ -785,6 +810,7 @@ void ModuleVariable::setActivated(bool activated)
     if (activated != m_activated)
     {
         m_activated = activated;
+        updateTime(m_updateTime);
         emit variableActivated(m_activated,this);
     }
 }
@@ -804,4 +830,17 @@ QDateTime ModuleVariable::getUpdateTime() const
 {
     return m_updateTime;
 }
+
+qint64 ModuleVariable::getElapsedTime() const
+{
+    return m_elapsedTime;
+}
+
+void ModuleVariable::updateTime(QDateTime time)
+{
+    m_elapsedTime = m_updateTime.msecsTo(time);
+    m_updateTime = time;
+}
+
+
 

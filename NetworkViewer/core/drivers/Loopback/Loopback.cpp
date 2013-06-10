@@ -138,8 +138,8 @@ NETVDevice::State Loopback::sendMessage(NETV_MESSAGE &message)
 
             m_mutex.unlock();
 
-            //Signal semaphore
-            m_semaphore.release(m_moduleList.size());
+            //Signal semaphore (2 msgs sent in the above loop)
+            m_semaphore.release(m_moduleList.size() * 2);
         }
 
     }
