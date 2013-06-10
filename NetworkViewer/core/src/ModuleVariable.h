@@ -340,6 +340,12 @@ signals:
     */
     void variableActivated(bool state, ModuleVariable* var=NULL);
 
+
+    /**
+        Signal sent when the update time changes
+    */
+    void updateTimeChanged(ModuleVariable* variable);
+
 protected:
 
     ///Variable type (int, float, etc.)

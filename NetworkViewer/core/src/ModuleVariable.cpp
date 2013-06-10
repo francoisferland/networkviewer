@@ -840,6 +840,7 @@ void ModuleVariable::updateTime(QDateTime time)
 {
     m_elapsedTime = m_updateTime.msecsTo(time);
     m_updateTime = time;
+    emit updateTimeChanged(this);
 }
 
 

@@ -66,7 +66,7 @@ ModuleConfiguration::~ModuleConfiguration()
     //Destroy variables
     while (m_variables.size() > 0)
     {
-	removeVariable(m_variables.front());
+        removeVariable(m_variables.front());
     }
 
 
@@ -484,7 +484,7 @@ void ModuleConfiguration::addVariable(ModuleVariable *variable)
     //Abstract model notification
     connect(variable,SIGNAL(valueChanged(ModuleVariable*)),this,SLOT(variableInternalUpdate(ModuleVariable*)));
     connect(variable,SIGNAL(variableActivated(bool,ModuleVariable*)),this,SLOT(variableInternalActivated(bool,ModuleVariable*)));
-
+    connect(variable,SIGNAL(updateTimeChanged(ModuleVariable*)),this,SLOT(variableInternalTimeUpdated(ModuleVariable*)));
 
     //Emit variable added
     emit variableAdded(variable);
@@ -756,6 +756,8 @@ void ModuleConfiguration::removeVariable(ModuleVariable *variable)
         //This must occur in this order...
         m_variables.removeAll(variable);
         emit variableRemoved(variable);
+
+        //All signals will be disconnected
         delete variable;
 
         //QAbstractItemModel signal
@@ -778,3 +780,12 @@ void ModuleConfiguration::setConfigName(const QString &name)
     m_name = name;
 }
 
+void ModuleConfiguration::variableInternalTimeUpdated(ModuleVariable *var)
+{
+    if (var)
+    {
+        //Update time
+        QModelIndex myIndex(index(indexOf(var),VARIABLE_ELAPSED));
+        emit dataChanged (myIndex,myIndex) ;
+    }
+}

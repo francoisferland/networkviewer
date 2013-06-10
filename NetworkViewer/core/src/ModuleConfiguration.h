@@ -267,6 +267,8 @@ protected slots:
 
     void variableInternalActivated(bool state, ModuleVariable *var);
 
+    void variableInternalTimeUpdated(ModuleVariable *var);
+
 protected:
 
     /**
