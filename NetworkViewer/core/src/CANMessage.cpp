@@ -29,7 +29,7 @@ namespace netcore
     }
 
     CANMessage::CANMessage(const CANMessage &cpy)
-        :   CoreMessage(cpy.timestamp(),CoreProtocols::RAW_CAN,cpy.interfaceID())
+        :   CoreMessage(cpy.timestamp(),cpy.protocolType(),cpy.interfaceID())
     {
         m_eid = cpy.m_eid;
         m_flags = cpy.m_flags;
@@ -44,6 +44,20 @@ namespace netcore
         m_flags = flags;
         m_data = data;
         validityCheck();
+    }
+
+    CANMessage& CANMessage::operator=(const CANMessage& cpy)
+    {
+        m_eid = cpy.m_eid;
+        m_flags = cpy.m_flags;
+        m_data = cpy.m_data;
+
+        //Must copy base class information
+        //Can we do better?
+        m_timestamp = cpy.m_timestamp;
+        m_protocolType = cpy.m_protocolType;
+        m_interfaceID = cpy.m_interfaceID;
+        return *this;
     }
 
     void CANMessage::setFlags(quint32 flags)

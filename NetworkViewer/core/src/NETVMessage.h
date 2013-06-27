@@ -17,16 +17,26 @@
 #ifndef _NETV_MESSAGE_H_
 #define _NETV_MESSAGE_H_
 
-#include "CoreMessage.h"
+#include "CANMessage.h"
 
-namespace netvcore
+namespace netcore
 {
 
-    class NETVMessage : public CoreMessage
+    class NETVMessage : public CANMessage
     {
+
     public:
 
+        NETVMessage(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest, quint32 flags, QByteArray payload);
+
+        NETVMessage(const NETVMessage &cpy);
+
+        void setEID(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest);
+
+        virtual CoreMessage* clone();
+
     protected:
+
 
     };
 

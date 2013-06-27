@@ -37,6 +37,8 @@ namespace netcore
         CANMessage(const CANMessage &cpy);
         CANMessage(quint32 eid, quint32 flags, const QByteArray &data);
 
+        //Operators
+        CANMessage& operator=(const CANMessage& cpy);
 
         ///Message serialized form, needs to be implemented
         virtual QByteArray serializedData();
