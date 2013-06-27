@@ -17,6 +17,7 @@
 
 #include "CANMessage.h"
 #include <QDebug>
+#include <QBuffer>
 
 namespace netcore
 {
@@ -27,15 +28,9 @@ namespace netcore
 
     }
 
-
     CANMessage::CANMessage(const CANMessage &cpy)
         :   CoreMessage(cpy.timestamp(),CoreProtocols::RAW_CAN,cpy.interfaceID())
     {
-        /*
-        quint32 m_eid;
-        quint32 m_flags;
-        QByteArray m_data;
-        */
         m_eid = cpy.m_eid;
         m_flags = cpy.m_flags;
         m_data = cpy.m_data;
@@ -59,7 +54,7 @@ namespace netcore
     bool CANMessage::setPayload(const QByteArray &data)
     {
         m_data = data;
-        validityCheck();
+        return validityCheck();
     }
 
     QByteArray CANMessage::payload() const
@@ -74,32 +69,85 @@ namespace netcore
 
     bool CANMessage::isExtended() const
     {
-
-        return (m_flags | CANMessageExtendedFlag);
+        return (m_flags | ExtendedFlag);
     }
 
     bool CANMessage::isError() const
     {
-        return (m_flags | CANMessageErrorFlag);
+        return (m_flags | ErrorFlag);
     }
 
     bool CANMessage::isRemote() const
     {
-        return (m_flags | CANMessageRTRFlag);
+        return (m_flags | RTRFlag);
     }
 
     bool CANMessage::isValid() const
     {
-        return !(m_flags | CANMessageInvalidFlag);
+        return !(m_flags | InvalidFlag);
     }
 
-    void CANMessage::validityCheck()
+    bool CANMessage::validityCheck()
     {
-        if (m_data.size() > CANMessageMaxPayloadSize)
+        bool retval = true;
+
+        if (m_data.size() > MaxPayloadSize)
         {
             qWarning("Maximum CANMessage payload size reached (%i), marking invalid",m_data.size());
-            m_flags |= CANMessageInvalidFlag;
+            m_flags |= InvalidFlag;
+            retval = false;
         }
+
+        return retval;
+    }
+
+    QByteArray CANMessage::serializedData()
+    {
+        QBuffer buf;
+        buf.write((char*) &m_eid, sizeof(m_eid));
+        buf.write((char*) &m_flags, sizeof(m_flags));
+        int size = m_data.size();
+        buf.write((char*) &size,sizeof(size));
+        buf.write(m_data);
+        return buf.data();
+    }
+
+
+    bool CANMessage::setSerializedData(const QByteArray &data)
+    {
+        QByteArray array(data);
+        QBuffer buf(&array);
+
+        buf.read((char*) &m_eid,sizeof(m_eid));
+        buf.read((char*) &m_flags,sizeof(m_flags));
+
+        int size = 0;
+        buf.read((char*) &size, sizeof(size));
+
+        m_data = buf.read(size);
+
+        if (m_data.size() == size)
+        {
+            return validityCheck();
+        }
+
+        return false;
+    }
+
+
+    void CANMessage::clear()
+    {
+        m_data.resize(0);
+    }
+
+    int CANMessage::maxPayloadSize() const
+    {
+        return MaxPayloadSize;
+    }
+
+    CoreMessage* CANMessage::clone()
+    {
+        return new CANMessage(*this);
     }
 
 

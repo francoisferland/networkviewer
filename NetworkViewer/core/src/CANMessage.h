@@ -25,13 +25,13 @@ namespace netcore
     class CANMessage : public CoreMessage
     {
     public:
-        static const quint32 CANMessageMaxPayloadSize = 8;
+        static const quint32 MaxPayloadSize = 8;
 
         //flags must be bit maskable
-        static const quint32 CANMessageRTRFlag      = 0x00000001;
-        static const quint32 CANMessageExtendedFlag = 0x00000002;
-        static const quint32 CANMessageErrorFlag    = 0x00000004;
-        static const quint32 CANMessageInvalidFlag  = 0x00000008;
+        static const quint32 RTRFlag      = 0x00000001;
+        static const quint32 ExtendedFlag = 0x00000002;
+        static const quint32 ErrorFlag    = 0x00000004;
+        static const quint32 InvalidFlag  = 0x00000008;
 
         //Constructors
         CANMessage(const CANMessage &cpy);
@@ -39,15 +39,15 @@ namespace netcore
 
 
         ///Message serialized form, needs to be implemented
-        virtual QByteArray data() = 0;
+        virtual QByteArray serializedData();
         ///Set message data from serialized form
-        virtual bool setData(const QByteArray &data) = 0;
+        virtual bool setSerializedData(const QByteArray &data);
         ///Clear message
-        virtual void clear() = 0;
+        virtual void clear();
         ///Max data size
-        virtual int maxSize() = 0;
+        virtual int maxPayloadSize() const;
         ///Cloning message
-        virtual CoreMessage* clone() = 0;
+        virtual CoreMessage* clone();
 
         //Setters
         void setFlags(quint32 flags);
@@ -69,7 +69,7 @@ namespace netcore
     private:
 
         CANMessage();
-        void validityCheck();
+        bool validityCheck();
     };
 
 }

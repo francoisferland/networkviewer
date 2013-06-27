@@ -19,28 +19,25 @@
 
 namespace netcore
 {
-
-
-
     CoreMessage::CoreMessage(QDateTime timestamp, CoreProtocols::CORE_PROTOCOL_TYPE id, int interfaceID)
         :   m_timestamp(timestamp), m_protocolType(id), m_interfaceID(interfaceID)
     {
 
     }
 
-    bool CoreMessage::setData(const char* data, int size)
+    bool CoreMessage::setSerializedData(const char* data, int size)
     {
-        return setData(QByteArray(data,size));
+        return setSerializedData(QByteArray(data,size));
     }
 
     int CoreMessage::serialize(QIODevice &dev)
     {
-        return dev.write(this->data());
+        return dev.write(serializedData());
     }
 
     bool CoreMessage::unserialize(QIODevice &dev)
     {
-        return setData(dev.readAll());
+        return setSerializedData(dev.readAll());
     }
 
     CoreProtocols::CORE_PROTOCOL_TYPE CoreMessage::protocolType() const
@@ -48,12 +45,10 @@ namespace netcore
         return m_protocolType;
     }
 
-
     int CoreMessage::interfaceID() const
     {
         return m_interfaceID;
     }
-
 
     void CoreMessage::setInterfaceID(int id)
     {

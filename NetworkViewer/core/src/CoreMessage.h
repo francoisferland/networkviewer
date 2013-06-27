@@ -33,18 +33,18 @@ namespace netcore
         int size();
 
         ///Message serialized form, needs to be implemented
-        virtual QByteArray data() = 0;
+        virtual QByteArray serializedData() = 0;
         ///Set message data from serialized form
-        virtual bool setData(const QByteArray &data) = 0;
+        virtual bool setSerializedData(const QByteArray &data) = 0;
         ///Clear message
         virtual void clear() = 0;
         ///Max data size
-        virtual int maxSize() = 0;
+        virtual int maxPayloadSize() const = 0;
         ///Cloning message
         virtual CoreMessage* clone() = 0;
 
         ///Overloaded function to set data, will call setData(const QByteArray &data)
-        virtual bool setData(const char* data, int size);
+        virtual bool setSerializedData(const char* data, int size);
         int serialize(QIODevice &dev);
         bool unserialize(QIODevice &dev);
 
