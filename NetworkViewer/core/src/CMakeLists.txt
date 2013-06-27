@@ -1,6 +1,8 @@
 find_package(Qt5Core)
 
 SET(NETV_CORE_SRCS
+    CoreDriver.cpp
+    CoreDriverFactory.cpp
     CoreMessage.cpp
     NETVMessage.cpp
     CANMessage.cpp
@@ -19,6 +21,9 @@ SET(NETV_CORE_SRCS
 )
 
 SET(NETV_CORE_HEADERS
+    CoreDriverInfo.h
+    CoreDriver.h
+    CoreDriverFactory.h
     CoreProtocols.h
     CoreMessage.h
     NETVMessage.h
