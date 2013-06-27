@@ -1,6 +1,10 @@
 find_package(Qt5Core)
 
 SET(NETV_CORE_SRCS
+    CoreMessage.cpp
+    NETVMessage.cpp
+    CANMessage.cpp
+    SerialMessage.cpp
     NETVInterfaceHandler.cpp
     ModuleVariable.cpp
     ModuleConfiguration.cpp
@@ -15,6 +19,11 @@ SET(NETV_CORE_SRCS
 )
 
 SET(NETV_CORE_HEADERS
+    CoreProtocols.h
+    CoreMessage.h
+    NETVMessage.h
+    CANMessage.h
+    SerialMessage.h
     ModuleConfiguration.h
     ModuleVariable.h
     NETV_define.h
