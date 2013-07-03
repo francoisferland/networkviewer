@@ -14,46 +14,23 @@
      You should have received a copy of the GNU General Public License along with
      OpenECoSys/NetworkViewer. If not, see http://www.gnu.org/licenses/.
  */
-#ifndef _CORE_PROTOCOLS_H_
-#define _CORE_PROTOCOLS_H_
+#ifndef _CORE_DESERIALIZER_H_
+#define _CORE_DESERIALIZER_H_
 
-#include <QString>
-#include <QDebug>
+#include <QByteArray>
 
 namespace netcore
 {
-    class CoreProtocols
+
+    class CoreMessage;
+
+    class CoreDeserializer
     {
     public:
-        typedef enum {RAW_CAN, NETV_CAN, RAW_ETHERNET, NETV_ETHERNET, RAW_SERIAL, NETV_SERIAL} CORE_PROTOCOL_TYPE;
-
-        static QString typeToString(CORE_PROTOCOL_TYPE type)
-        {
-            QString typeName = "UNKNOWN";
-
-            switch(type)
-            {
-            case RAW_CAN:
-                typeName = "RAW_CAN";
-                break;
-
-            case NETV_CAN:
-                typeName = "NETV_CAN";
-                break;
-
-            case RAW_ETHERNET:
-                typeName = "RAW_ETHERNET";
-                break;
-
-            default:
-                qCritical("Unhandled protocol type : %i",type);
-                break;
-            }
-
-
-            return typeName;
-        }
+        virtual CoreMessage* deserialize(const QByteArray &data) = 0;
     };
-}
 
-#endif //_CORE_PROTOCOLS_H_
+
+} //namespace netcore
+
+#endif //_CORE_DESERIALIZER_H_

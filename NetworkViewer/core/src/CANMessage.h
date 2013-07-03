@@ -28,6 +28,7 @@ namespace netcore
         static const quint32 MaxPayloadSize = 8;
 
         //flags must be bit maskable
+        static const quint32 NoFlag       = 0x00000000;
         static const quint32 RTRFlag      = 0x00000001;
         static const quint32 ExtendedFlag = 0x00000002;
         static const quint32 ErrorFlag    = 0x00000004;

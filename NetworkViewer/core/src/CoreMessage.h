@@ -27,6 +27,9 @@ namespace netcore
 {
     class CoreMessage
     {
+        friend class CoreSerializer;
+        friend class CoreDeserializer;
+
     public:
 
 

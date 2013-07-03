@@ -4,6 +4,8 @@ SET(NETV_CORE_SRCS
     CoreDriver.cpp
     CoreDriverFactory.cpp
     CoreMessage.cpp
+    CoreSerializer.cpp
+    CoreDeserializer.cpp
     NETVMessage.cpp
     CANMessage.cpp
     SerialMessage.cpp
@@ -26,6 +28,8 @@ SET(NETV_CORE_HEADERS
     CoreDriverFactory.h
     CoreProtocols.h
     CoreMessage.h
+    CoreSerializer.h
+    CoreDeserializer.h
     NETVMessage.h
     CANMessage.h
     SerialMessage.h
