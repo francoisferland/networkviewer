@@ -23,7 +23,7 @@ namespace netcore
 {
     bool CoreSerializer::serialize(const CoreMessage &message, QIODevice &dev)
     {
-        qWarning("Unimplemented serializer for type ? : %i",message.protocolType());
+        qWarning("Unimplemented serializer for type : %s",typeid(&message).name());
         return false;
     }
 

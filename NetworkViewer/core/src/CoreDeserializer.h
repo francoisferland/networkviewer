@@ -17,17 +17,22 @@
 #ifndef _CORE_DESERIALIZER_H_
 #define _CORE_DESERIALIZER_H_
 
-#include <QByteArray>
+#include <QIODevice>
 
 namespace netcore
 {
 
+    class CANMessage;
+    class NETVMessage;
     class CoreMessage;
 
     class CoreDeserializer
     {
     public:
-        virtual CoreMessage* deserialize(const QByteArray &data) = 0;
+        //Convert a message to a series of bytes
+        virtual bool deserialize(CoreMessage &message, QIODevice &dev);
+        virtual bool deserialize(CANMessage &message, QIODevice &dev);
+        virtual bool deserialize(NETVMessage &message, QIODevice &dev);
     };
 
 

@@ -26,6 +26,7 @@ public:
         qDebug("QByteArray serialize(const NETVMessage &message)");
         return true;
     }
+
 };
 
 int main(int argc, char* argv[])

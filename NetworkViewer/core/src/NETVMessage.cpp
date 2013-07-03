@@ -67,5 +67,10 @@ namespace netcore
         return ser.serialize(*this,dev);
     }
 
+    bool NETVMessage::deserialize(CoreDeserializer &des, QIODevice &dev)
+    {
+        return des.deserialize(*this,dev);
+    }
+
 }//namespace netcore
 

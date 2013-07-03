@@ -170,5 +170,10 @@ namespace netcore
         return ser.serialize(*this,dev);
     }
 
+    bool CANMessage::deserialize(CoreDeserializer &des, QIODevice &dev)
+    {
+        return des.deserialize(*this,dev);
+    }
+
 
 } //namespace netcore

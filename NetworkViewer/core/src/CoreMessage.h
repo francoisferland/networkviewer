@@ -23,12 +23,10 @@
 #include <QDateTime>
 #include <QIODevice>
 #include "CoreSerializer.h"
+#include "CoreDeserializer.h"
 
 namespace netcore
 {
-    class CoreSerializer;
-    class CoreDeserializer;
-
     class CoreMessage
     {
         friend class CoreSerializer;
@@ -36,9 +34,9 @@ namespace netcore
 
     public:
 
-        //Visitor pattern for serialization
+        //Visitor pattern for serialization / deserialization
         virtual bool serialize(CoreSerializer& ser, QIODevice &dev) = 0;
-
+        virtual bool deserialize(CoreDeserializer &des, QIODevice &dev) = 0;
 
         int size();
 

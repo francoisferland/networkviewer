@@ -14,4 +14,30 @@
      You should have received a copy of the GNU General Public License along with
      OpenECoSys/NetworkViewer. If not, see http://www.gnu.org/licenses/.
  */
+#include <typeinfo>
 #include "CoreDeserializer.h"
+#include "CoreMessage.h"
+#include "CANMessage.h"
+#include "NETVMessage.h"
+
+namespace netcore
+{
+    bool CoreDeserializer::deserialize(CoreMessage &message, QIODevice &dev)
+    {
+        qWarning("Unimplemented deserializer for type : %s",typeid(&message).name());
+        return false;
+    }
+
+    bool CoreDeserializer::deserialize(CANMessage &message, QIODevice &dev)
+    {
+        qWarning("Unimplemented deserializer for CANMessage? type : %i",message.protocolType());
+        return false;
+    }
+
+    bool CoreDeserializer::deserialize(NETVMessage &message, QIODevice &dev)
+    {
+        qWarning("Unimplemented deserializer for NETVMessage? type : %i",message.protocolType());
+        return false;
+    }
+
+}
