@@ -15,21 +15,28 @@
      OpenECoSys/NetworkViewer. If not, see http://www.gnu.org/licenses/.
  */
 #include "CoreSerializer.h"
-
+#include "CoreMessage.h"
+#include "CANMessage.h"
+#include "NETVMessage.h"
 
 namespace netcore
 {
-
-
-
-
-
-    void test_CANMessageSerializer()
+    bool CoreSerializer::serialize(const CoreMessage &message, QIODevice &dev)
     {
+        qWarning("Unimplemented serializer for type ? : %i",message.protocolType());
+        return false;
+    }
 
+    bool CoreSerializer::serialize(const CANMessage &message, QIODevice &dev)
+    {
+        qWarning("Unimplemented serializer for CANMessage? type : %i",message.protocolType());
+        return false;
+    }
+
+    bool CoreSerializer::serialize(const NETVMessage &message, QIODevice &dev)
+    {
+        qWarning("Unimplemented serializer for NETVMessage? type : %i",message.protocolType());
+        return false;
     }
 
 } //namespace netcore
-
-
-

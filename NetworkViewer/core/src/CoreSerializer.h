@@ -18,20 +18,23 @@
 #define _CORE_SERIALIZER_H_
 
 #include <QIODevice>
+#include <QDebug>
+
 
 namespace netcore
 {
-    class CoreMessage;
+
     class CANMessage;
     class NETVMessage;
+    class CoreMessage;
 
     class CoreSerializer
     {
     public:
         //Convert a message to a series of bytes
-        virtual bool serialize(const CoreMessage &message, QIODevice &dev) = 0;
-        virtual bool serialize(const CANMessage &message, QIODevice &dev) = 0;
-        virtual bool serialize(const NETVMessage &message, QIODevice &dev) = 0;
+        virtual bool serialize(const CoreMessage &message, QIODevice &dev);
+        virtual bool serialize(const CANMessage &message, QIODevice &dev);
+        virtual bool serialize(const NETVMessage &message, QIODevice &dev);
     };
 
 } //namespace netcore
