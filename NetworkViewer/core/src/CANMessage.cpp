@@ -165,4 +165,10 @@ namespace netcore
     }
 
 
+    QByteArray CANMessage::serialize(CoreSerializer& ser)
+    {
+        return ser.serialize(*this);
+    }
+
+
 } //namespace netcore

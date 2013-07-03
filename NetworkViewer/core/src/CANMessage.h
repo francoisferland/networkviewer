@@ -36,10 +36,13 @@ namespace netcore
 
         //Constructors
         CANMessage(const CANMessage &cpy);
-        CANMessage(quint32 eid, quint32 flags, const QByteArray &data);
+        CANMessage(quint32 eid, quint32 flags, const QByteArray &data = QByteArray());
 
         //Operators
         CANMessage& operator=(const CANMessage& cpy);
+
+        //Visitor pattern for serialization
+        virtual QByteArray serialize(CoreSerializer& ser);
 
         ///Message serialized form, needs to be implemented
         virtual QByteArray serializedData();

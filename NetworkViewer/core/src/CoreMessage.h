@@ -22,15 +22,22 @@
 #include <QByteArray>
 #include <QDateTime>
 #include <QIODevice>
+#include "CoreSerializer.h"
 
 namespace netcore
 {
+    class CoreSerializer;
+    class CoreDeserializer;
+
     class CoreMessage
     {
         friend class CoreSerializer;
         friend class CoreDeserializer;
 
     public:
+
+        //Visitor pattern for serialization
+        virtual QByteArray serialize(CoreSerializer& ser) = 0;
 
 
         int size();

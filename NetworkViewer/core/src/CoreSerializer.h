@@ -22,14 +22,16 @@
 namespace netcore
 {
     class CoreMessage;
+    class CANMessage;
+    class NETVMessage;
 
     class CoreSerializer
     {
-
     public:
-
         //Convert a message to a series of bytes
         virtual QByteArray serialize(const CoreMessage &message) = 0;
+        virtual QByteArray serialize(const CANMessage &message) = 0;
+        virtual QByteArray serialize(const NETVMessage &message) = 0;
     };
 
 } //namespace netcore

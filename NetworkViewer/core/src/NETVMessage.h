@@ -31,6 +31,9 @@ namespace netcore
 
         NETVMessage(const NETVMessage &cpy);
 
+        //Visitor pattern for serialization
+        virtual QByteArray serialize(CoreSerializer& ser);
+
         void setEID(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest);
 
         virtual CoreMessage* clone();

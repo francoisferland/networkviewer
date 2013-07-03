@@ -62,5 +62,10 @@ namespace netcore
         return new NETVMessage(*this);
     }
 
+    QByteArray NETVMessage::serialize(CoreSerializer& ser)
+    {
+        return ser.serialize(*this);
+    }
+
 }//namespace netcore
 
