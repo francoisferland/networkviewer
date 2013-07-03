@@ -32,7 +32,7 @@ namespace netcore
         NETVMessage(const NETVMessage &cpy);
 
         //Visitor pattern for serialization
-        virtual QByteArray serialize(CoreSerializer& ser);
+        virtual bool serialize(CoreSerializer& ser, QIODevice &dev);
 
         void setEID(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest);
 

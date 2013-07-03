@@ -9,43 +9,22 @@ using namespace netcore;
 class mySerializer : public CoreSerializer
 {
 public:
-    virtual QByteArray serialize(const CoreMessage &message)
+    virtual bool serialize(const CoreMessage &message,QIODevice &dev)
     {
         qDebug("virtual QByteArray serialize(const CoreMessage &message)");
-        QBuffer buf;
-        buf.open(QIODevice::WriteOnly);
-
-        QDateTime timestamp = message.timestamp();
-
-        CoreProtocols::CORE_PROTOCOL_TYPE type = message.protocolType();
-
-        int interfaceID = message.interfaceID();
-
-        QDataStream stream(&buf);
-
-
-
-        stream << timestamp;
-        stream << type;
-        stream << interfaceID;
-
-
-
-        return buf.data();
+        return true;
     }
 
-    virtual QByteArray serialize(const CANMessage &message)
+    virtual bool serialize(const CANMessage &message, QIODevice &dev)
     {
         qDebug("QByteArray serialize(const CANMessage &message)");
-        QBuffer buf;
-        return buf.data();
+        return true;
     }
 
-    virtual QByteArray serialize(const NETVMessage &message)
+    virtual bool serialize(const NETVMessage &message, QIODevice &dev)
     {
         qDebug("QByteArray serialize(const NETVMessage &message)");
-        QBuffer buf;
-        return buf.data();
+        return true;
     }
 };
 
@@ -56,9 +35,11 @@ int main(int argc, char* argv[])
     CoreMessage* message2 = new NETVMessage(0,0,0,0,0,0,QByteArray());
 
     mySerializer ser;
+    QBuffer buf;
+    buf.open(QIODevice::ReadWrite);
 
-    message1->serialize(ser);
-    message2->serialize(ser);
+    message1->serialize(ser,buf);
+    message2->serialize(ser,buf);
 
 
     return 0;

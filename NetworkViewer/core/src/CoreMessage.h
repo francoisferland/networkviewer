@@ -37,7 +37,7 @@ namespace netcore
     public:
 
         //Visitor pattern for serialization
-        virtual QByteArray serialize(CoreSerializer& ser) = 0;
+        virtual bool serialize(CoreSerializer& ser, QIODevice &dev) = 0;
 
 
         int size();

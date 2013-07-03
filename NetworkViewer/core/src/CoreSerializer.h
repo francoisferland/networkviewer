@@ -29,9 +29,9 @@ namespace netcore
     {
     public:
         //Convert a message to a series of bytes
-        virtual QByteArray serialize(const CoreMessage &message) = 0;
-        virtual QByteArray serialize(const CANMessage &message) = 0;
-        virtual QByteArray serialize(const NETVMessage &message) = 0;
+        virtual bool serialize(const CoreMessage &message, QIODevice &dev) = 0;
+        virtual bool serialize(const CANMessage &message, QIODevice &dev) = 0;
+        virtual bool serialize(const NETVMessage &message, QIODevice &dev) = 0;
     };
 
 } //namespace netcore

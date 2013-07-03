@@ -42,7 +42,7 @@ namespace netcore
         CANMessage& operator=(const CANMessage& cpy);
 
         //Visitor pattern for serialization
-        virtual QByteArray serialize(CoreSerializer& ser);
+        virtual bool serialize(CoreSerializer& ser, QIODevice &dev);
 
         ///Message serialized form, needs to be implemented
         virtual QByteArray serializedData();

@@ -165,9 +165,9 @@ namespace netcore
     }
 
 
-    QByteArray CANMessage::serialize(CoreSerializer& ser)
+    bool CANMessage::serialize(CoreSerializer& ser, QIODevice &dev)
     {
-        return ser.serialize(*this);
+        return ser.serialize(*this,dev);
     }
 
 
