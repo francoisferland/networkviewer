@@ -99,6 +99,7 @@ namespace netcore
         //Send & Receive from queue
         virtual bool sendMessage(CoreMessage *message);
         virtual CoreMessage* recvMessage();
+        virtual QList<CoreMessage*> recvAllMessages();
         virtual int sendQueueSize();
         virtual int recvQueueSize();
         virtual bool sendQueueFull();

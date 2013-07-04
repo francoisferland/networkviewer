@@ -146,6 +146,15 @@ namespace netcore
         return message;
     }
 
+    QList<CoreMessage*> CoreDriver::recvAllMessages()
+    {
+         QMutexLocker lock(&m_recvMutex);
+         QList<CoreMessage*> myList = m_recvQueue;
+         m_recvQueue.clear();
+         return myList;
+    }
+
+
     int CoreDriver::sendQueueSize()
     {
         QMutexLocker lock(&m_sendMutex);
