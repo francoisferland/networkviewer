@@ -32,6 +32,14 @@ OpenECoSys/NetworkViewer. If not, see http://www.gnu.org/licenses/.
 RELEASE NOTES
 _____________ 
 
+1.1.17
+______
+* Updated to qwt 6.1
+* Updated to Qt 5.1 
+* Now using QSerialPort instead of QExtSerialPort
+* Core refactoring to support multiple protocols, serialization
+
+
 1.1.16
 ______
 * Updated to qwt 6.x

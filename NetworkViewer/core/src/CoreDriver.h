@@ -21,13 +21,48 @@
 #include "CoreMessage.h"
 #include "CoreDriverFactory.h"
 #include <QStringList>
+#include <QThread>
+#include <QQueue>
+#include <QMutex>
 
 namespace netcore
 {
+    class CoreDriver;
 
-    class CoreDriver
+    class CoreDriverRecvThread : public QThread
     {
+        Q_OBJECT
+
     public:
+        CoreDriverRecvThread(CoreDriver *parent);
+        virtual void run();
+    protected:
+        CoreDriver *m_driver;
+    };
+
+    class  CoreDriverSendThread : public QThread
+    {
+        Q_OBJECT
+
+    public:
+        CoreDriverSendThread(CoreDriver *parent);
+        virtual void run();
+    protected:
+        CoreDriver *m_driver;
+    };
+
+    class CoreDriver : public QObject
+    {
+
+        Q_OBJECT
+
+        friend class CoreDriverRecvThread;
+        friend class CoreDriverSendThread;
+
+    public:
+
+        static const int MAX_RECV_QUEUE_SIZE=5000;
+        static const int MAX_SEND_QUEUE_SIZE=5000;
 
         ///Driver states
         typedef enum {DRIVER_OK,
@@ -38,9 +73,9 @@ namespace netcore
                       DRIVER_NOT_INITIALIZED} CoreDriverState;
 
 
-        CoreDriver();
+        CoreDriver(QObject *parent = NULL, int maxRecvQueueSize = MAX_RECV_QUEUE_SIZE, int maxSendQueueSize=MAX_SEND_QUEUE_SIZE);
 
-        ~CoreDriver();
+        virtual ~CoreDriver();
 
         //Naming and loading
         virtual int version() = 0;
@@ -49,15 +84,46 @@ namespace netcore
         //Init & config
         virtual CoreDriverState initialize(QStringList args) = 0;
 
-        //Send & Receive
-        virtual CoreDriverState sendMessage(CoreMessage &message) = 0;
-        virtual CoreDriverState recvMessage(CoreMessage &message) = 0;
-        virtual bool newMessageReady() = 0;
+        virtual void terminate() = 0;
+
+        //state
+        virtual CoreDriverState state() = 0;
+
+        //Start & Stop
+        virtual void start();
+        virtual void stop();
+
+
+
+
+        //Send & Receive from queue
+        virtual bool sendMessage(CoreMessage *message);
+        virtual CoreMessage* recvMessage();
+        virtual int sendQueueSize();
+        virtual int recvQueueSize();
+        virtual bool sendQueueFull();
+        virtual bool recvQueueFull();
+        void setSendQueueMaxSize(int size);
+        void setRecvQueueMaxSize(int size);
+
 
 
 
     protected:
 
+        virtual bool internalThreadRecvFunction() = 0;
+        virtual bool internalThreadSendFunction() = 0;
+        bool pushRecvMessage(CoreMessage *message);
+        bool pushSendMessage(CoreMessage *message);
+
+        int m_maxSendQueueSize;
+        int m_maxRecvQueueSize;
+        QMutex m_recvMutex;
+        QMutex m_sendMutex;
+        CoreDriverSendThread *m_sendWorkerThread;
+        CoreDriverRecvThread *m_recvWorkerThread;
+        QQueue<CoreMessage*> m_sendQueue;
+        QQueue<CoreMessage*> m_recvQueue;
 
     };
 

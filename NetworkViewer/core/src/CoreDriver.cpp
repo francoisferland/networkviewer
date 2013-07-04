@@ -19,4 +19,153 @@
 namespace netcore
 {
 
+    CoreDriverRecvThread::CoreDriverRecvThread(CoreDriver *parent)
+        : QThread(parent), m_driver(parent)
+    {
+        Q_ASSERT(m_driver != NULL);
+    }
+
+    void CoreDriverRecvThread::run()
+    {
+        while(isRunning())
+        {
+            m_driver->internalThreadRecvFunction();
+            yieldCurrentThread();
+        }
+        //Execute event loop
+        exec();
+    }
+
+
+    CoreDriverSendThread::CoreDriverSendThread(CoreDriver *parent)
+        : QThread(parent), m_driver(parent)
+    {
+        Q_ASSERT(m_driver != NULL);
+    }
+
+
+    void CoreDriverSendThread::run()
+    {
+
+        while(isRunning())
+        {
+            m_driver->internalThreadSendFunction();
+            yieldCurrentThread();
+        }
+        //Execute event loop
+        exec();
+    }
+
+
+    CoreDriver::CoreDriver(QObject *parent, int maxRecvQueueSize, int maxSendQueueSize)
+        : QObject(parent),
+          m_maxRecvQueueSize(maxRecvQueueSize),
+          m_maxSendQueueSize(maxSendQueueSize),
+          m_sendMutex(QMutex::Recursive),
+          m_recvMutex(QMutex::Recursive)
+    {
+        m_sendWorkerThread = new CoreDriverSendThread(this);
+        m_recvWorkerThread = new CoreDriverRecvThread(this);
+    }
+
+    CoreDriver::~CoreDriver()
+    {
+        stop();
+    }
+
+    void CoreDriver::start()
+    {
+        m_sendWorkerThread->start();
+        m_recvWorkerThread->start();
+    }
+
+    void CoreDriver::stop()
+    {
+        m_sendWorkerThread->quit();
+        m_sendWorkerThread->wait();
+        m_recvWorkerThread->quit();
+        m_sendWorkerThread->wait();
+    }
+
+    bool CoreDriver::pushRecvMessage(CoreMessage *message)
+    {
+        QMutexLocker lock(&m_recvMutex);
+
+        if (message && m_recvQueue.size() < m_maxRecvQueueSize)
+        {
+            m_recvQueue.push_back(message);
+            return true;
+        }
+
+        return false;
+    }
+
+    bool CoreDriver::pushSendMessage(CoreMessage *message)
+    {
+        QMutexLocker lock(&m_sendMutex);
+
+        if (message && m_sendQueue.size() < m_maxSendQueueSize)
+        {
+            m_sendQueue.push_back(message);
+            return true;
+        }
+
+        return false;
+    }
+
+    bool CoreDriver::sendMessage(CoreMessage *message)
+    {
+        return pushSendMessage(message);
+    }
+
+    CoreMessage* CoreDriver::recvMessage()
+    {
+        QMutexLocker lock(&m_recvMutex);
+        CoreMessage *message = NULL;
+
+        if (m_recvQueue.size() > 0)
+        {
+            message = m_recvQueue.front();
+            m_recvQueue.pop_front();
+        }
+
+        return message;
+    }
+
+    int CoreDriver::sendQueueSize()
+    {
+        QMutexLocker lock(&m_sendMutex);
+        return m_sendQueue.size();
+    }
+
+    int CoreDriver::recvQueueSize()
+    {
+        QMutexLocker lock(&m_recvMutex);
+        return m_recvQueue.size();
+    }
+
+    bool CoreDriver::sendQueueFull()
+    {
+        QMutexLocker lock(&m_sendMutex);
+        return (m_sendQueue.size() > m_maxSendQueueSize);
+    }
+
+    bool CoreDriver::recvQueueFull()
+    {
+        QMutexLocker lock(&m_recvMutex);
+        return (m_recvQueue.size() > m_maxRecvQueueSize);
+    }
+
+    void CoreDriver::setSendQueueMaxSize(int size)
+    {
+        QMutexLocker lock(&m_sendMutex);
+        m_maxSendQueueSize = size;
+    }
+
+    void CoreDriver::setRecvQueueMaxSize(int size)
+    {
+        QMutexLocker lock(&m_recvMutex);
+        m_maxRecvQueueSize = size;
+    }
+
 }//namespace netcore
