@@ -25,6 +25,11 @@ namespace netcore
 
     }
 
+    CoreMessage::~CoreMessage()
+    {
+
+    }
+
     bool CoreMessage::setSerializedData(const char* data, int size)
     {
         return setSerializedData(QByteArray(data,size));

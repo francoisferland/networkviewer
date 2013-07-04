@@ -71,6 +71,20 @@ namespace netcore
     CoreDriver::~CoreDriver()
     {
         stop();
+
+        //Should delete remaining messages
+        while (m_sendQueue.size() > 0)
+        {
+            delete m_sendQueue.front();
+            m_sendQueue.pop_front();
+        }
+
+        while(m_recvQueue.size() > 0)
+        {
+            delete m_recvQueue.front();
+            m_recvQueue.pop_front();
+        }
+
     }
 
     void CoreDriver::start()

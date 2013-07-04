@@ -38,6 +38,8 @@ namespace netcore
         virtual bool serialize(CoreSerializer& ser, QIODevice &dev) = 0;
         virtual bool deserialize(CoreDeserializer &des, QIODevice &dev) = 0;
 
+        virtual ~CoreMessage();
+
         int size();
 
         ///Message serialized form, needs to be implemented
