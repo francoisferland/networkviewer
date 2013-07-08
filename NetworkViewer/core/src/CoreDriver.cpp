@@ -27,6 +27,7 @@ namespace netcore
 
     void CoreDriverRecvThread::run()
     {
+        qDebug("CoreDriverRecvThread::run()");
         while(isRunning())
         {
             m_driver->internalThreadRecvFunction();
@@ -46,7 +47,7 @@ namespace netcore
 
     void CoreDriverSendThread::run()
     {
-
+        qDebug("CoreDriverSendThread::run()");
         while(isRunning())
         {
             m_driver->internalThreadSendFunction();
