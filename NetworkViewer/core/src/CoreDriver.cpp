@@ -31,7 +31,7 @@ namespace netcore
         while(isRunning())
         {
             m_driver->internalThreadRecvFunction();
-            yieldCurrentThread();
+            usleep(100); //100us sleep
         }
         //Execute event loop
         exec();
@@ -51,7 +51,7 @@ namespace netcore
         while(isRunning())
         {
             m_driver->internalThreadSendFunction();
-            yieldCurrentThread();
+            usleep(100); //100us sleep
         }
         //Execute event loop
         exec();
@@ -190,6 +190,30 @@ namespace netcore
     {
         QMutexLocker lock(&m_recvMutex);
         m_maxRecvQueueSize = size;
+    }
+
+    CoreMessage* CoreDriver::pullRecvMessage()
+    {
+        QMutexLocker lock(&m_recvMutex);
+        CoreMessage *message = NULL;
+        if (m_recvQueue.size() > 0)
+        {
+            message = m_recvQueue.front();
+            m_recvQueue.pop_front();
+        }
+        return message;
+    }
+
+    CoreMessage* CoreDriver::pullSendMessage()
+    {
+        QMutexLocker lock(&m_sendMutex);
+        CoreMessage *message = NULL;
+        if (m_sendQueue.size() > 0)
+        {
+            message = m_sendQueue.front();
+            m_sendQueue.pop_front();
+        }
+        return message;
     }
 
 }//namespace netcore

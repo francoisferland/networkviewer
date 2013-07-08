@@ -96,7 +96,7 @@ namespace netcore
 
 
 
-        //Send & Receive from queue
+        //Send & Receive from queue (external to driver usage)
         virtual bool sendMessage(CoreMessage *message);
         virtual CoreMessage* recvMessage();
         virtual QList<CoreMessage*> recvAllMessages();
@@ -112,15 +112,21 @@ namespace netcore
 
     protected:
 
+        //Driver internals
         virtual bool internalThreadRecvFunction() = 0;
         virtual bool internalThreadSendFunction() = 0;
         bool pushRecvMessage(CoreMessage *message);
+        CoreMessage* pullRecvMessage();
         bool pushSendMessage(CoreMessage *message);
+        CoreMessage* pullSendMessage();
 
         int m_maxSendQueueSize;
         int m_maxRecvQueueSize;
+
+    private:
+
         QMutex m_recvMutex;
-        QMutex m_sendMutex;
+        QMutex m_sendMutex;      
         CoreDriverSendThread *m_sendWorkerThread;
         CoreDriverRecvThread *m_recvWorkerThread;
         QQueue<CoreMessage*> m_sendQueue;

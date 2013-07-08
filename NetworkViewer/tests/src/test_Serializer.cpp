@@ -2,23 +2,39 @@
 
 using namespace netcore;
 
+class testApp : public QCoreApplication
+{
+public:
+    testApp(int argc, char* argv[])
+        : QCoreApplication(argc,argv), m_driver(this)
+    {
+
+        CoreMessage* message1 = new CANMessage(0,CANMessage::NoFlag,QByteArray());
+        CoreMessage* message2 = new NETVMessage(0,0,0,0,0,0,QByteArray());
+
+        m_driver.sendMessage(message1);
+        m_driver.sendMessage(message2);
+
+        m_driver.start();
+    }
+
+    ~testApp()
+    {
+        qDebug("~testApp...");
+    }
+
+protected:
+    myDriver m_driver;
+};
+
+
+
+
 int main(int argc, char* argv[])
 {
-    QCoreApplication app(argc, argv);
-    CoreMessage* message1 = new CANMessage(0,CANMessage::NoFlag,QByteArray());
-    CoreMessage* message2 = new NETVMessage(0,0,0,0,0,0,QByteArray());
-
-    mySerializer ser;
-    QBuffer buf;
-    buf.open(QIODevice::ReadWrite);
-
-    message1->serialize(ser,buf);
-    message2->serialize(ser,buf);
+    testApp app(argc, argv);
 
 
-    myDriver driver(NULL);
-
-    driver.start();
 
     return app.exec();
 }

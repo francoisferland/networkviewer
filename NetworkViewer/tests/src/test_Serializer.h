@@ -5,6 +5,8 @@
 #include <QDataStream>
 #include <QCoreApplication>
 #include <CoreDriver.h>
+#include <QTimer>
+#include "NETVMessage.h"
 
 namespace netcore
 {
@@ -14,19 +16,19 @@ namespace netcore
     public:
         virtual bool serialize(const CoreMessage &message,QIODevice &dev)
         {
-            qDebug("virtual QByteArray serialize(const CoreMessage &message)");
+            qDebug("bool mySerializer::serialize(const CoreMessage &message)");
             return true;
         }
 
         virtual bool serialize(const CANMessage &message, QIODevice &dev)
         {
-            qDebug("QByteArray serialize(const CANMessage &message)");
+            qDebug("bool mySerializer::serialize(const CANMessage &message)");
             return true;
         }
 
         virtual bool serialize(const NETVMessage &message, QIODevice &dev)
         {
-            qDebug("QByteArray serialize(const NETVMessage &message)");
+            qDebug("bool mySerializer::serialize(const NETVMessage &message)");
             return true;
         }
 
@@ -49,7 +51,7 @@ namespace netcore
 
         ~myDriver()
         {
-
+            qDebug("~myDriver()");
         }
 
         virtual int version()
@@ -81,15 +83,43 @@ namespace netcore
     protected:
         virtual bool internalThreadRecvFunction()
         {
-            qDebug("myDriver::internalThreadRecvFunction()");
+            //Will fill queue
+            //qDebug("myDriver::internalThreadRecvFunction()");
+            NETVMessage *message = new NETVMessage(0,0,0,0,0,0,QByteArray());
+            if (!this->pushRecvMessage(message))
+            {
+                    //qDebug("Unable to push Recv Message, queue sized : %i",recvQueueSize());
+                    delete message;
+            }
+
             return true;
         }
 
         virtual bool internalThreadSendFunction()
         {
-            qDebug("myDriver::internalThreadSendFunction()");
+            //qDebug("myDriver::internalThreadSendFunction()");
+            //Will send every message on the queue
+            while(sendQueueSize() > 0)
+            {
+                //We own it now
+                CoreMessage *message = pullSendMessage();
+
+                QBuffer buf;
+                buf.open(QIODevice::WriteOnly);
+
+                message->serialize(ser,buf);
+
+
+                qDebug("myDriver::internalThreadSendFunction() sending %p",message);
+                //Write it somewhere
+
+                //Delete message
+                delete message;
+            }
             return true;
         }
+
+        mySerializer ser;
     };
 
 }//namespace netcore
