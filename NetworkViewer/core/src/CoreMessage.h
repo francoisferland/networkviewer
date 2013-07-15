@@ -75,12 +75,7 @@ namespace netcore
 
     private:
         CoreMessage();
-        /*
-        CoreMessage(const QByteArray &data);
-        CoreMessage(const char*, int size);
-        CoreMessage(const CoreMessage &message);
-        CoreMessage& operator= (const CoreMessage &message);
-        */
+
 
     };
 }

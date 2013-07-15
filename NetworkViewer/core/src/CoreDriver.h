@@ -123,6 +123,7 @@ namespace netcore
         int m_maxSendQueueSize;
         int m_maxRecvQueueSize;
 
+
     private:
 
         QMutex m_recvMutex;

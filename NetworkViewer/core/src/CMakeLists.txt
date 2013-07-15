@@ -3,6 +3,7 @@ find_package(Qt5Core)
 SET(NETV_CORE_SRCS
     CoreDriver.cpp
     CoreDriverFactory.cpp
+    CoreDriverManager.cpp
     CoreMessage.cpp
     CoreSerializer.cpp
     CoreDeserializer.cpp
@@ -10,6 +11,11 @@ SET(NETV_CORE_SRCS
     CANMessage.cpp
     SerialMessage.cpp
     NETVInterfaceHandler.cpp
+    NETVDriverManager.cpp
+    NETVScheduler.cpp
+    NETVVariable.cpp
+    NETVModule.cpp
+    NETVModuleConfiguration.cpp
     ModuleVariable.cpp
     ModuleConfiguration.cpp
     NetworkModule.cpp
@@ -26,6 +32,7 @@ SET(NETV_CORE_HEADERS
     CoreDriverInfo.h
     CoreDriver.h
     CoreDriverFactory.h
+    CoreDriverManager.h
     CoreProtocols.h
     CoreMessage.h
     CoreSerializer.h
@@ -35,9 +42,14 @@ SET(NETV_CORE_HEADERS
     SerialMessage.h
     ModuleConfiguration.h
     ModuleVariable.h
+    NETVVariable.h
+    NETVModule.h
+    NETVModuleConfiguration.h
     NETV_define.h
     NETVDevice.h
     NETVInterfaceHandler.h
+    NETVDriverManager.h
+    NETVScheduler.h
     NETVInterfaceManager.h
     NETVMessageEvent.h
     NetworkModule.h

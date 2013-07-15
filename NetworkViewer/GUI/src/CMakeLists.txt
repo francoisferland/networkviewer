@@ -18,6 +18,7 @@ SET(NetworkViewer_Base_UIS
     PreferencesDialog.ui
     AddVariableDialog.ui
     NETVInterfaceManagerView.ui
+    networkviewer.ui
 )
 
 SET(NetworkViewer_Base_SRCS
@@ -43,6 +44,7 @@ SET(NetworkViewer_Base_HEADERS
     PreferencesDialog.h
     AddVariableDialog.h
     NETVInterfaceManagerView.h
+    networkviewer.h
 )
 
 
@@ -84,3 +86,8 @@ target_link_libraries(NetworkViewer networkViewerCore networkViewerBase)
 qt5_use_modules(NetworkViewer Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
 INSTALL(TARGETS NetworkViewer DESTINATION bin)
 
+#NetworkViewer Executable
+add_executable(networkviewer-test WIN32 networkviewer.cpp)
+target_link_libraries(networkviewer-test networkViewerCore networkViewerBase)
+qt5_use_modules(networkviewer-test Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+INSTALL(TARGETS networkviewer-test DESTINATION bin)

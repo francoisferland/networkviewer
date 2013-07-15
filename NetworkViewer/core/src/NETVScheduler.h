@@ -14,28 +14,29 @@
      You should have received a copy of the GNU General Public License along with
      OpenECoSys/NetworkViewer. If not, see http://www.gnu.org/licenses/.
  */
-#ifndef _CORE_DESERIALIZER_H_
-#define _CORE_DESERIALIZER_H_
+#ifndef _NETV_SCHEDULER_H_
+#define _NETV_SCHEDULER_H_
 
-#include <QIODevice>
+#include <QObject>
 
 namespace netcore
 {
+    class NETVDriverManager;
 
-    class CANMessage;
-    class NETVMessage;
-    class CoreMessage;
-
-    class CoreDeserializer
+    class NETVScheduler : QObject
     {
+        Q_OBJECT
     public:
-        //Convert a series of bytes to a message
-        virtual bool deserialize(CoreMessage &message, QIODevice &dev);
-        virtual bool deserialize(CANMessage &message, QIODevice &dev);
-        virtual bool deserialize(NETVMessage &message, QIODevice &dev);
+
+        NETVScheduler(NETVDriverManager *manager);
+
+    protected:
+
+
+        NETVDriverManager *m_manager;
     };
 
 
-} //namespace netcore
+}//namespace netcore
 
-#endif //_CORE_DESERIALIZER_H_
+#endif // _NETV_SCHEDULER_H_
