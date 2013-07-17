@@ -20,6 +20,10 @@
 #include "CoreDriverInfo.h"
 #include <QStringList>
 #include <QMap>
+#include <QDir>
+#include <QLibrary>
+#include <QFileInfoList>
+#include <QList>
 
 namespace netcore
 {
@@ -33,6 +37,8 @@ namespace netcore
 
     public:
 
+        typedef QMap<CoreDriverInfo,CoreDriverFactoryBase*> CoreDriverFactoryMap;
+
         CoreDriverFactoryBase();
 
         ///Driver creation
@@ -40,12 +46,15 @@ namespace netcore
 
         ///Driver configuration (before creation)
         virtual void configure(QStringList args);
-
         static bool registerDriverFactory(const CoreDriverInfo &info, CoreDriverFactoryBase* factory);
         static void scanDrivers(const QString &basePath);
-        static QMap<CoreDriverInfo,CoreDriverFactoryBase*>& getFactoryMap();
+        static bool getInfo(QString driverName, CoreDriverInfo &info);
+        static QMap<CoreDriverInfo,CoreDriverFactoryBase*> registeredDrivers();
 
      protected:
+
+        static QMap<CoreDriverInfo,CoreDriverFactoryBase*>& getFactoryMap();
+        static void recursiveScan(QDir directory, int level = 0);
 
     };
 
@@ -66,7 +75,6 @@ namespace netcore
         {
             //Create driver with no parent
             CoreDriver* driver = new T(NULL);
-            //driver->initialize(args);
             return driver;
         }
 

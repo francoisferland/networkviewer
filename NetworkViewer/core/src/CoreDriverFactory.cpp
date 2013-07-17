@@ -18,6 +18,7 @@
 #include "CoreDriverFactory.h"
 #include "CoreDriver.h"
 
+
 namespace netcore
 {
 
@@ -38,6 +39,11 @@ namespace netcore
 
     }
 
+    QMap<CoreDriverInfo,CoreDriverFactoryBase*> CoreDriverFactoryBase::registeredDrivers()
+    {
+        //Returning a copy of the map...
+        return getFactoryMap();
+    }
 
     bool CoreDriverFactoryBase::registerDriverFactory(const CoreDriverInfo &info, CoreDriverFactoryBase* factory)
     {
@@ -54,7 +60,87 @@ namespace netcore
 
     void CoreDriverFactoryBase::scanDrivers(const QString &basePath)
     {
+        qDebug() << "CoreDriverFactoryBase::scanDrivers basePath: "<<basePath;
 
+        //Plugins directory
+        QDir dir(basePath);
+
+        if (!dir.exists())
+        {
+            qWarning("CoreDriverFactoryBase::scanDrivers() : drivers directory not found");
+            qWarning() << "CoreDriverFactoryBase::scanDrivers()  : Current path : " << dir.absolutePath();
+        }
+        else
+        {
+            qDebug() << "CoreDriverFactoryBase::scanDrivers()  : Scanning : " << dir.absolutePath();
+            recursiveScan(dir);
+        }
+    }
+
+    void CoreDriverFactoryBase::recursiveScan(QDir directory, int level)
+    {
+        qDebug() << "CoreDriverFactoryBase::recursiveScan :  Path :" << directory.path();
+
+        if (level < 10 && directory.exists())
+        {
+
+            QFileInfoList myInfoList = directory.entryInfoList();
+
+            for (int i = 0; i < myInfoList.size(); i++)
+            {
+
+                if (!myInfoList[i].fileName().startsWith("."))
+                {
+                    if (myInfoList[i].isDir())
+                    {
+                        recursiveScan(QDir(directory.path() + QDir::separator() + myInfoList[i].fileName()), level + 1);
+                    }
+                    else
+                    {
+                        //standard file
+                        //TODO Unix dlls
+    #ifdef WIN32
+                        if (myInfoList[i].fileName().contains(".dll") && !myInfoList[i].fileName().contains(".dll.a")) {
+    #else
+                        if (myInfoList[i].fileName().contains(".so") || myInfoList[i].fileName().contains(".dylib")) {
+    #endif
+                            qDebug() << "CoreDriverFactoryBase::recursiveScan : Loading library : " << directory.path() + QDir::separator() + myInfoList[i].fileName();
+
+                            QLibrary *library = new QLibrary(directory.path() + QDir::separator() + myInfoList[i].fileName());
+
+                            if (library->load())
+                            {
+                                qDebug() << "CoreDriverFactoryBase::recursiveScan : Loaded : " << directory.path() + QDir::separator() + myInfoList[i].fileName();
+                            }
+                            else
+                            {
+                                qDebug() << "CoreDriverFactoryBase::recursiveScan : Error : " << library->errorString();
+                                delete library;
+                            }
+                        }
+                    }
+                }//starts with "."
+            }//for infoList
+        }
+        else
+        {
+            qWarning("BasePlugin::recursiveScan : error level : %i",level);
+        }
+    }
+
+    bool CoreDriverFactoryBase::getInfo(QString driverName, CoreDriverInfo &info)
+    {
+        for (QMap<CoreDriverInfo,CoreDriverFactoryBase*>::iterator iter = getFactoryMap().begin(); iter != getFactoryMap().end(); iter++)
+        {
+
+            if (iter.key().m_name == driverName)
+            {
+                info = iter.key();
+                return true;
+            }
+        }
+
+        return false;
     }
 
 } //namespace netcore

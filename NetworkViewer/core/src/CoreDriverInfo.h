@@ -19,6 +19,7 @@
 #define _CORE_DRIVER_INFO_H_
 
 #include <QStringList>
+#include <QDebug>
 
 namespace netcore
 {
@@ -90,15 +91,23 @@ namespace netcore
             }
         }
 
-    private:
-
         ///Should never be used
+    protected:
         CoreDriverInfo()
         {
 
         }
-};
 
+
+    };//class CoreDriverInfo
+
+    inline QDebug operator<< (QDebug d, const CoreDriverInfo &info)
+    {
+        d << info.m_name << " " << info.m_major<<"."<<info.m_minor<<"."<<info.m_micro;
+        d << info.m_description;
+        d << info.m_defaultArgs;
+        return d;
+    }
 
 } //namespace netcore
 
