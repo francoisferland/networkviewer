@@ -54,14 +54,9 @@ namespace netcore
             qDebug("~myDriver()");
         }
 
-        virtual int version()
+        virtual CoreDriverInfo info()
         {
-            return 0;
-        }
-
-        virtual QString name()
-        {
-            return "myDriver";
+            return CoreDriverInfo("myDriver",0,0,0,"Test driver",QStringList());
         }
 
         //Init & config

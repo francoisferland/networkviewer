@@ -18,6 +18,7 @@
 #include "CoreMessage.h"
 #include "CANMessage.h"
 #include "NETVMessage.h"
+#include <typeinfo>
 
 namespace netcore
 {

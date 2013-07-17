@@ -1,4 +1,4 @@
-    /**
+/**
      Copyright (C) 2009-2013 IntRoLab
      http://introlab.3it.usherbrooke.ca
      Dominic Letourneau, ing. M.Sc.A.
@@ -15,46 +15,51 @@
      OpenECoSys/NetworkViewer. If not, see http://www.gnu.org/licenses/.
  */
 
-#include "CoreDriverFactory.h"
+#ifndef _LOOPBACK_H_
+#define _LOOPBACK_H_
+
+
 #include "CoreDriver.h"
+#include <QSemaphore>
+#include <QMutex>
+#include <QList>
+#include <QEvent>
+#include <QTimer>
+#include <QTime>
+#include "NETV_define.h"
 
 namespace netcore
 {
-
-    QMap<CoreDriverInfo,CoreDriverFactoryBase*>& CoreDriverFactoryBase::getFactoryMap()
+    class Loopback : public CoreDriver
     {
-        static QMap<CoreDriverInfo,CoreDriverFactoryBase*> factory;
-        return factory;
-    }
+        friend class LoopbackDriverRegistry;
 
-    ///Driver configuration (before creation)
-    void CoreDriverFactoryBase::configure(QStringList args)
-    {
+        Q_OBJECT;
 
-    }
+        public:
 
-    CoreDriverFactoryBase::CoreDriverFactoryBase()
-    {
+        Loopback(QObject *parent=NULL);
 
-    }
+        virtual CoreDriverInfo info();
+
+        //Init & config
+        virtual CoreDriver::CoreDriverState initialize(QStringList args);
+
+        virtual void terminate();
+
+        //state
+        virtual CoreDriver::CoreDriverState state();
 
 
-    bool CoreDriverFactoryBase::registerDriverFactory(const CoreDriverInfo &info, CoreDriverFactoryBase* factory)
-    {
-        //Already inserted?
-        if (getFactoryMap().contains(info))
-        {
-            return false;
-        }
+    protected:
 
-        //Insert factory
-        getFactoryMap().insert(info,factory);
-        return true;
-    }
+        virtual bool internalThreadRecvFunction();
+        virtual bool internalThreadSendFunction();
+        static CoreDriverInfo internalInfo();
 
-    void CoreDriverFactoryBase::scanDrivers(const QString &basePath)
-    {
 
-    }
+    };
 
-} //namespace netcore
+}//namespace netcore
+#endif
+

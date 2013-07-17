@@ -77,7 +77,26 @@ namespace netcore
             return *this;
         }
 
+        ///Useful to compare keys in factory maps
+        bool operator<(const CoreDriverInfo &op) const
+        {
+            if(m_name < op.m_name)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
+    private:
+
+        ///Should never be used
+        CoreDriverInfo()
+        {
+
+        }
 };
 
 

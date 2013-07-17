@@ -19,7 +19,7 @@
 
 #include "CoreProtocols.h"
 #include "CoreMessage.h"
-#include "CoreDriverFactory.h"
+#include "CoreDriverInfo.h"
 #include <QStringList>
 #include <QThread>
 #include <QQueue>
@@ -78,8 +78,7 @@ namespace netcore
         virtual ~CoreDriver();
 
         //Naming and loading
-        virtual int version() = 0;
-        virtual QString name() = 0;
+        virtual CoreDriverInfo info() = 0;
 
         //Init & config
         virtual CoreDriverState initialize(QStringList args) = 0;

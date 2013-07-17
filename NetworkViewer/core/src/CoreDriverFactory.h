@@ -33,6 +33,8 @@ namespace netcore
 
     public:
 
+        CoreDriverFactoryBase();
+
         ///Driver creation
         virtual CoreDriver* create(QStringList args) = 0;
 
@@ -45,7 +47,6 @@ namespace netcore
 
      protected:
 
-
     };
 
 
@@ -55,9 +56,18 @@ namespace netcore
 
     public:
 
+        //Default constructor
+        CoreDriverFactory()
+        {
+
+        }
+
         virtual CoreDriver* create(QStringList args)
         {
-            return new T(args);
+            //Create driver with no parent
+            CoreDriver* driver = new T(NULL);
+            //driver->initialize(args);
+            return driver;
         }
 
 
