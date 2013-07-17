@@ -23,6 +23,8 @@
 
 namespace netcore
 {
+    //Forward declaration
+    class CoreDriverFactoryBase;
 
     class CoreDriverInfo
     {
@@ -33,14 +35,29 @@ namespace netcore
         quint32 m_micro;
         QString m_description;
         QStringList m_defaultArgs;
+        CoreDriverFactoryBase *m_factory;
 
-        CoreDriverInfo(QString name, quint32 major, quint32 minor, quint32 micro, QString description, QStringList defaultArgs)
+
+        CoreDriverInfo()
+            : m_name("Invalid"),
+              m_major(0),
+              m_minor(0),
+              m_micro(0),
+              m_description("Invalid info."),
+              m_factory(NULL)
+        {
+
+        }
+
+
+        CoreDriverInfo(QString name, quint32 major, quint32 minor, quint32 micro, QString description, QStringList defaultArgs, CoreDriverFactoryBase *factory)
             : m_name(name),
               m_major(major),
               m_minor(minor),
               m_micro(micro),
               m_description(description),
-              m_defaultArgs(defaultArgs)
+              m_defaultArgs(defaultArgs),
+              m_factory(factory)
         {
 
         }
@@ -51,7 +68,8 @@ namespace netcore
               m_minor(cpy.m_minor),
               m_micro(cpy.m_micro),
               m_description(cpy.m_description),
-              m_defaultArgs(cpy.m_defaultArgs)
+              m_defaultArgs(cpy.m_defaultArgs),
+              m_factory(cpy.m_factory)
         {
 
         }
@@ -63,7 +81,8 @@ namespace netcore
                     (m_minor == op.m_minor) &&
                     (m_micro == op.m_micro) &&
                     (m_description == op.m_description) &&
-                    (m_defaultArgs == op.m_defaultArgs);
+                    (m_defaultArgs == op.m_defaultArgs) &&
+                    (m_factory == op.m_factory);
 
         }
 
@@ -75,6 +94,7 @@ namespace netcore
             m_micro = op.m_micro;
             m_description = op.m_description;
             m_defaultArgs = op.m_defaultArgs;
+            m_factory = op.m_factory;
             return *this;
         }
 
@@ -83,20 +103,15 @@ namespace netcore
         {
             if(m_name < op.m_name)
             {
-                return false;
+                return true;
             }
             else
             {
-                return true;
+                return false;
             }
         }
 
-        ///Should never be used
-    protected:
-        CoreDriverInfo()
-        {
 
-        }
 
 
     };//class CoreDriverInfo
@@ -104,8 +119,9 @@ namespace netcore
     inline QDebug operator<< (QDebug d, const CoreDriverInfo &info)
     {
         d << info.m_name << " " << info.m_major<<"."<<info.m_minor<<"."<<info.m_micro;
-        d << info.m_description;
-        d << info.m_defaultArgs;
+        d << "Description : "<< info.m_description;
+        d << "Default args: "<< info.m_defaultArgs;
+        d << "Factory     : "<<info.m_factory;
         return d;
     }
 

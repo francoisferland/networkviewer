@@ -8,6 +8,7 @@
 #include <QTimer>
 #include "NETVMessage.h"
 
+
 namespace netcore
 {
 
@@ -56,7 +57,7 @@ namespace netcore
 
         virtual CoreDriverInfo info()
         {
-            return CoreDriverInfo("myDriver",0,0,0,"Test driver",QStringList());
+            return CoreDriverInfo("myDriver",0,0,0,"Test driver",QStringList(), NULL);
         }
 
         //Init & config

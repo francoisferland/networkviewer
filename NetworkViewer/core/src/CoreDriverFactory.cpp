@@ -31,7 +31,26 @@ namespace netcore
     ///Driver configuration (before creation)
     void CoreDriverFactoryBase::configure(QStringList args)
     {
+        qDebug("void CoreDriverFactoryBase::configure(QStringList args) - Nothing to do!");
+    }
 
+    CoreDriver* CoreDriverFactoryBase::create(const QString &name, QStringList args, QObject* parent)
+    {
+        CoreDriver *driver = NULL;
+        CoreDriverInfo info;
+        if (CoreDriverFactoryBase::getInfo(name,info))
+        {
+            if (info.m_factory)
+            {
+                driver = info.m_factory->create(args,parent);
+            }
+            else
+            {
+                qWarning("CoreDriver* CoreDriverFactoryBase::create(...) No factory for driver : %s",name.toStdString().c_str());
+            }
+        }
+
+        return driver;
     }
 
     CoreDriverFactoryBase::CoreDriverFactoryBase()

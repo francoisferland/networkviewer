@@ -24,14 +24,10 @@
 #include <QLibrary>
 #include <QFileInfoList>
 #include <QList>
+#include "CoreDriver.h"
 
 namespace netcore
 {
-    //Forward declaration of CoreDriver
-    class CoreDriver;
-
-
-
     class CoreDriverFactoryBase
     {
 
@@ -42,7 +38,9 @@ namespace netcore
         CoreDriverFactoryBase();
 
         ///Driver creation
-        virtual CoreDriver* create(QStringList args) = 0;
+        virtual CoreDriver* create(QStringList args, QObject *parent = NULL) = 0;
+
+        static CoreDriver* create(const QString &name, QStringList args, QObject* parent=NULL);
 
         ///Driver configuration (before creation)
         virtual void configure(QStringList args);
@@ -71,10 +69,13 @@ namespace netcore
 
         }
 
-        virtual CoreDriver* create(QStringList args)
+        //virtual void configure(QStringList args);
+
+        virtual CoreDriver* create(QStringList args, QObject *parent = NULL)
         {
             //Create driver with no parent
-            CoreDriver* driver = new T(NULL);
+            CoreDriver* driver = new T(parent);
+            driver->initialize(args);
             return driver;
         }
 

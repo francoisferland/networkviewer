@@ -41,7 +41,7 @@ namespace netcore
 
     CoreDriverInfo Loopback::internalInfo()
     {
-        static CoreDriverInfo info("Loopback",1,0,0,"Description",QStringList());
+        static CoreDriverInfo info("Loopback",1,0,0,"Description",QStringList(), new CoreDriverFactory<Loopback>());
         return info;
     }
 
@@ -67,11 +67,13 @@ namespace netcore
 
     bool Loopback::internalThreadRecvFunction()
     {
+        qDebug("Loopback::internalThreadRecvFunction()");
         return true;
     }
 
     bool Loopback::internalThreadSendFunction()
     {
+        qDebug("Loopback::internalThreadSendFunction()");
         return true;
     }
 
