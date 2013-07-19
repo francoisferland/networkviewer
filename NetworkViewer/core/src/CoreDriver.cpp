@@ -66,6 +66,7 @@ namespace netcore
         while(m_running)
         {
             m_driver->internalThreadSendFunction();
+            this->eventDispatcher();
             usleep(100); //100us sleep
         }
 
@@ -91,10 +92,11 @@ namespace netcore
           m_maxRecvQueueSize(maxRecvQueueSize),
           m_maxSendQueueSize(maxSendQueueSize),
           m_sendMutex(QMutex::Recursive),
-          m_recvMutex(QMutex::Recursive)
+          m_recvMutex(QMutex::Recursive),
+          m_sendWorkerThread(NULL),
+          m_recvWorkerThread(NULL)
     {
-        m_sendWorkerThread = new CoreDriverSendThread(this);
-        m_recvWorkerThread = new CoreDriverRecvThread(this);
+
     }
 
     CoreDriver::~CoreDriver()
@@ -118,14 +120,38 @@ namespace netcore
 
     void CoreDriver::start()
     {
-        m_sendWorkerThread->start();
-        m_recvWorkerThread->start();
+        if (m_sendWorkerThread == NULL)
+        {
+            m_sendWorkerThread = new CoreDriverSendThread(this);
+            m_sendWorkerThread->start();
+        }
+        else
+        {
+            qWarning("CoreDriver::start() - sendWorkerThread already started");
+        }
+
+        if (m_recvWorkerThread == NULL)
+        {
+            m_recvWorkerThread = new CoreDriverRecvThread(this);
+            m_recvWorkerThread->start();
+        }
+        else
+        {
+            qWarning("CoreDriver::start() - recvWorkerThread already started");
+        }
     }
 
     void CoreDriver::stop()
     {
-        m_sendWorkerThread->stop();
-        m_recvWorkerThread->stop();
+        if (m_sendWorkerThread)
+            m_sendWorkerThread->stop();
+
+        m_sendWorkerThread = NULL;
+
+        if (m_recvWorkerThread)
+            m_recvWorkerThread->stop();
+
+        m_recvWorkerThread = NULL;
     }
 
     bool CoreDriver::pushRecvMessage(CoreMessage *message)
@@ -240,6 +266,18 @@ namespace netcore
             m_sendQueue.pop_front();
         }
         return message;
+    }
+
+    void CoreDriver::sendThreadDestroyed()
+    {
+        qDebug("CoreDriver::sendThreadDestroyed()");
+        m_sendWorkerThread = NULL;
+    }
+
+    void CoreDriver::recvThreaddestroyed()
+    {
+        qDebug("CoreDriver::recvThreaddestroyed()");
+        m_recvWorkerThread = NULL;
     }
 
 }//namespace netcore

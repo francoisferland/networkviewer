@@ -126,6 +126,10 @@ namespace netcore
         int m_maxSendQueueSize;
         int m_maxRecvQueueSize;
 
+    private slots:
+
+        void sendThreadDestroyed();
+        void recvThreaddestroyed();
 
     private:
 
