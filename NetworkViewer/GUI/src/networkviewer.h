@@ -3,6 +3,8 @@
 
 #include "ui_networkviewer.h"
 #include "NetworkView.h"
+#include "CoreDriver.h"
+#include "CoreDriverFactory.h"
 
 class NetworkViewer : public QMainWindow
 {
@@ -10,11 +12,20 @@ class NetworkViewer : public QMainWindow
 public:
 
     NetworkViewer(QWidget *parent = NULL)
-        : QMainWindow(parent), m_view(NULL)
+        : QMainWindow(parent), m_view(NULL), m_driver(NULL)
     {
         m_ui.setupUi(this);
         setWindowTitle(QString("NetworkViewer-") + QString(NETWORKVIEWER_VERSION));
         connect(m_ui.pushButton,SIGNAL(clicked()),this,SLOT(onButtonClicked()));
+        connect(m_ui.m_stopButton,SIGNAL(clicked()),this,SLOT(onStopButtonClicked()));
+
+        m_driver = netcore::CoreDriverFactoryBase::create("Loopback",QStringList(),NULL);
+
+        if (m_driver)
+        {
+            m_driver->start();
+        }
+
     }
 
 public slots:
@@ -29,6 +40,15 @@ public slots:
         }
     }
 
+    void onStopButtonClicked()
+    {
+        if (m_driver)
+        {
+            m_driver->stop();
+        }
+
+    }
+
     void onNetworkViewDestroyed()
     {
         m_view = NULL;
@@ -37,7 +57,7 @@ public slots:
 protected:
 
     Ui::networkviewer m_ui;
-
+    netcore::CoreDriver *m_driver;
     NetworkView *m_view;
 
 };

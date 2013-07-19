@@ -19,12 +19,6 @@ int main(int argc, char* argv[])
         qDebug() << iter.key();
     }
 
-    netcore::CoreDriver *driver = netcore::CoreDriverFactoryBase::create("Loopback",QStringList(),NULL);
-
-    if(driver)
-    {
-        driver->start();
-    }
 
     NetworkViewer nv;
     nv.show();

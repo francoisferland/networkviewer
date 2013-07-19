@@ -20,7 +20,7 @@ namespace netcore
 {
 
     CoreDriverRecvThread::CoreDriverRecvThread(CoreDriver *parent)
-        : QThread(parent), m_driver(parent)
+        : QThread(parent), m_driver(parent), m_running(false)
     {
         Q_ASSERT(m_driver != NULL);
     }
@@ -28,18 +28,32 @@ namespace netcore
     void CoreDriverRecvThread::run()
     {
         qDebug("CoreDriverRecvThread::run()");
-        while(isRunning())
+        m_running = true;
+        while(m_running)
         {
             m_driver->internalThreadRecvFunction();
             usleep(100); //100us sleep
         }
         //Execute event loop
         exec();
+
+        qDebug("CoreDriverRecvThread::run() - done");
+    }
+
+    void CoreDriverRecvThread::stop()
+    {
+        //This should be called from another thread
+        Q_ASSERT(QThread::currentThread() != this);
+        m_running = false;
+        quit();
+        wait();
+
+        qDebug("CoreDriverRecvThread::stop() quit&wait ok");
     }
 
 
     CoreDriverSendThread::CoreDriverSendThread(CoreDriver *parent)
-        : QThread(parent), m_driver(parent)
+        : QThread(parent), m_driver(parent), m_running(false)
     {
         Q_ASSERT(m_driver != NULL);
     }
@@ -48,13 +62,27 @@ namespace netcore
     void CoreDriverSendThread::run()
     {
         qDebug("CoreDriverSendThread::run()");
-        while(isRunning())
+        m_running = true;
+        while(m_running)
         {
             m_driver->internalThreadSendFunction();
             usleep(100); //100us sleep
         }
+
         //Execute event loop
         exec();
+
+        qDebug("CoreDriverSendThread::run() - done");
+    }
+
+    void CoreDriverSendThread::stop()
+    {
+        //This should called from another thread
+        Q_ASSERT(QThread::currentThread() != this);
+        m_running = false;
+        quit();
+        wait();
+        qDebug("CoreDriverSendThread::stop() quit&wait ok");
     }
 
 
@@ -96,10 +124,8 @@ namespace netcore
 
     void CoreDriver::stop()
     {
-        m_sendWorkerThread->quit();
-        m_sendWorkerThread->wait();
-        m_recvWorkerThread->quit();
-        m_sendWorkerThread->wait();
+        m_sendWorkerThread->stop();
+        m_recvWorkerThread->stop();
     }
 
     bool CoreDriver::pushRecvMessage(CoreMessage *message)

@@ -47,6 +47,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="m_stopButton">
+       <property name="text">
+        <string>Stop</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
   </widget>

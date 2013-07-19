@@ -35,9 +35,11 @@ namespace netcore
 
     public:
         CoreDriverRecvThread(CoreDriver *parent);
+        void stop();
         virtual void run();
     protected:
         CoreDriver *m_driver;
+        bool m_running;
     };
 
     class  CoreDriverSendThread : public QThread
@@ -46,9 +48,11 @@ namespace netcore
 
     public:
         CoreDriverSendThread(CoreDriver *parent);
+        void stop();
         virtual void run();
     protected:
         CoreDriver *m_driver;
+        bool m_running;
     };
 
     class CoreDriver : public QObject
