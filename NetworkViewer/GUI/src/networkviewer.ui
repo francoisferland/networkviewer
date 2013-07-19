@@ -41,9 +41,9 @@
       <widget class="QTreeView" name="m_treeView"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="m_startButton">
        <property name="text">
-        <string>PushButton</string>
+        <string>Start</string>
        </property>
       </widget>
      </item>

@@ -24,6 +24,7 @@
 #include <QThread>
 #include <QQueue>
 #include <QMutex>
+#include <QSemaphore>
 
 namespace netcore
 {
@@ -55,7 +56,7 @@ namespace netcore
         bool m_running;
     };
 
-    class CoreDriver : public QObject
+    class CoreDriver : public QThread
     {
 
         Q_OBJECT
@@ -89,6 +90,9 @@ namespace netcore
 
         virtual void terminate() = 0;
 
+        //Thread running
+        virtual void run();
+
         //state
         virtual CoreDriverState state() = 0;
 
@@ -116,8 +120,8 @@ namespace netcore
     protected:
 
         //Driver internals
-        virtual bool internalThreadRecvFunction() = 0;
-        virtual bool internalThreadSendFunction() = 0;
+        virtual CoreDriverState internalThreadRecvFunction() = 0;
+        virtual CoreDriverState internalThreadSendFunction() = 0;
         bool pushRecvMessage(CoreMessage *message);
         CoreMessage* pullRecvMessage();
         bool pushSendMessage(CoreMessage *message);
@@ -134,7 +138,9 @@ namespace netcore
     private:
 
         QMutex m_recvMutex;
+        QSemaphore m_recvSemaphore;
         QMutex m_sendMutex;      
+        QSemaphore m_sendSemaphore;
         CoreDriverSendThread *m_sendWorkerThread;
         CoreDriverRecvThread *m_recvWorkerThread;
         QQueue<CoreMessage*> m_sendQueue;

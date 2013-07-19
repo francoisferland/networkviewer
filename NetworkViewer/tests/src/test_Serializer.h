@@ -77,7 +77,7 @@ namespace netcore
         }
 
     protected:
-        virtual bool internalThreadRecvFunction()
+        virtual CoreDriverState  internalThreadRecvFunction()
         {
             //Will fill queue
             //qDebug("myDriver::internalThreadRecvFunction()");
@@ -88,10 +88,10 @@ namespace netcore
                     delete message;
             }
 
-            return true;
+            return CoreDriver::DRIVER_OK;
         }
 
-        virtual bool internalThreadSendFunction()
+        virtual CoreDriverState  internalThreadSendFunction()
         {
             //qDebug("myDriver::internalThreadSendFunction()");
             //Will send every message on the queue
@@ -112,7 +112,7 @@ namespace netcore
                 //Delete message
                 delete message;
             }
-            return true;
+            return CoreDriver::DRIVER_OK;
         }
 
         mySerializer ser;

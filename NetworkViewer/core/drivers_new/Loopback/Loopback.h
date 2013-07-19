@@ -50,12 +50,18 @@ namespace netcore
         //state
         virtual CoreDriver::CoreDriverState state();
 
+    protected slots:
+
+        void timeout();
+
 
     protected:
 
-        virtual bool internalThreadRecvFunction();
-        virtual bool internalThreadSendFunction();
+        virtual CoreDriverState internalThreadRecvFunction();
+        virtual CoreDriverState internalThreadSendFunction();
         static CoreDriverInfo internalInfo();
+
+        QTimer *m_timer;
 
 
     };

@@ -27,12 +27,39 @@ namespace netcore
 
     void CoreDriverRecvThread::run()
     {
-        qDebug("CoreDriverRecvThread::run()");
+        qDebug() << "CoreDriverRecvThread::run()" << " thread: " << QThread::currentThread();
         m_running = true;
         while(m_running)
         {
-            m_driver->internalThreadRecvFunction();
-            usleep(100); //100us sleep
+            CoreDriver::CoreDriverState state = m_driver->internalThreadRecvFunction();
+
+            switch(state)
+            {
+                case CoreDriver::DRIVER_BUS:
+                    usleep(1000);
+                break;
+
+                case CoreDriver::DRIVER_OK:
+                    //Everything went well
+                break;
+
+                case CoreDriver::DRIVER_FAIL:
+                    usleep(1000);
+                break;
+
+                case CoreDriver::DRIVER_UNDERFLOW:
+                    usleep(1000);
+                break;
+
+                case CoreDriver::DRIVER_OVERFLOW:
+                    usleep(1000);
+                break;
+
+                case CoreDriver::DRIVER_NOT_INITIALIZED:
+                    usleep(1000);
+                break;
+            }
+
         }
         //Execute event loop
         exec();
@@ -61,13 +88,40 @@ namespace netcore
 
     void CoreDriverSendThread::run()
     {
-        qDebug("CoreDriverSendThread::run()");
+        qDebug() << "CoreDriverSendThread::run()" << " thread: " << QThread::currentThread();
         m_running = true;
         while(m_running)
         {
-            m_driver->internalThreadSendFunction();
-            this->eventDispatcher();
-            usleep(100); //100us sleep
+
+            CoreDriver::CoreDriverState state = m_driver->internalThreadSendFunction();
+
+            switch(state)
+            {
+                case CoreDriver::DRIVER_BUS:
+                    usleep(1000);
+                break;
+
+                case CoreDriver::DRIVER_OK:
+                    //Everything went well...
+                break;
+
+                case CoreDriver::DRIVER_FAIL:
+                    usleep(1000);
+                break;
+
+                case CoreDriver::DRIVER_UNDERFLOW:
+                    usleep(100);
+                break;
+
+                case CoreDriver::DRIVER_OVERFLOW:
+                    usleep(100);
+                break;
+
+                case CoreDriver::DRIVER_NOT_INITIALIZED:
+                    usleep(1000);
+                break;
+            }
+
         }
 
         //Execute event loop
@@ -88,11 +142,13 @@ namespace netcore
 
 
     CoreDriver::CoreDriver(QObject *parent, int maxRecvQueueSize, int maxSendQueueSize)
-        : QObject(parent),
+        : QThread(parent),
           m_maxRecvQueueSize(maxRecvQueueSize),
           m_maxSendQueueSize(maxSendQueueSize),
           m_sendMutex(QMutex::Recursive),
+          m_sendSemaphore(0),
           m_recvMutex(QMutex::Recursive),
+          m_recvSemaphore(0),
           m_sendWorkerThread(NULL),
           m_recvWorkerThread(NULL)
     {
@@ -115,11 +171,14 @@ namespace netcore
             delete m_recvQueue.front();
             m_recvQueue.pop_front();
         }
-
     }
 
     void CoreDriver::start()
     {
+
+        Q_ASSERT(QThread::currentThread() != this);
+
+        qDebug("CoreDriver::start()");
         if (m_sendWorkerThread == NULL)
         {
             m_sendWorkerThread = new CoreDriverSendThread(this);
@@ -141,10 +200,20 @@ namespace netcore
         {
             qWarning("CoreDriver::start() - recvWorkerThread already started");
         }
+
+        if(!QThread::isRunning())
+        {
+            moveToThread(this);
+            //Start own thread
+            QThread::start();
+        }
+
     }
 
     void CoreDriver::stop()
     {
+        Q_ASSERT(QThread::currentThread() != this);
+
         if (m_sendWorkerThread)
         {
             m_sendWorkerThread->stop();
@@ -157,32 +226,14 @@ namespace netcore
             m_recvWorkerThread->deleteLater();
         }
 
-    }
-
-    bool CoreDriver::pushRecvMessage(CoreMessage *message)
-    {
-        QMutexLocker lock(&m_recvMutex);
-
-        if (message && m_recvQueue.size() < m_maxRecvQueueSize)
+        if (QThread::isRunning())
         {
-            m_recvQueue.push_back(message);
-            return true;
+            QThread::quit();
+            QThread::wait();
         }
 
-        return false;
-    }
-
-    bool CoreDriver::pushSendMessage(CoreMessage *message)
-    {
-        QMutexLocker lock(&m_sendMutex);
-
-        if (message && m_sendQueue.size() < m_maxSendQueueSize)
-        {
-            m_sendQueue.push_back(message);
-            return true;
-        }
-
-        return false;
+        //Go back to caller's thread
+        //moveToThread(QThread::currentThread());
     }
 
     bool CoreDriver::sendMessage(CoreMessage *message)
@@ -195,20 +246,23 @@ namespace netcore
         QMutexLocker lock(&m_recvMutex);
         CoreMessage *message = NULL;
 
-        if (m_recvQueue.size() > 0)
+        if (m_recvQueue.size() > 0 && m_recvSemaphore.tryAcquire(1,100))
         {
             message = m_recvQueue.front();
             m_recvQueue.pop_front();
         }
-
         return message;
     }
 
     QList<CoreMessage*> CoreDriver::recvAllMessages()
     {
          QMutexLocker lock(&m_recvMutex);
-         QList<CoreMessage*> myList = m_recvQueue;
-         m_recvQueue.clear();
+         QList<CoreMessage*> myList;
+         if (m_recvSemaphore.tryAcquire(m_recvQueue.size()))
+         {
+            myList = m_recvQueue;
+            m_recvQueue.clear();
+         }
          return myList;
     }
 
@@ -249,11 +303,12 @@ namespace netcore
         m_maxRecvQueueSize = size;
     }
 
+    //Driver internal
     CoreMessage* CoreDriver::pullRecvMessage()
     {
         QMutexLocker lock(&m_recvMutex);
         CoreMessage *message = NULL;
-        if (m_recvQueue.size() > 0)
+        if (m_recvQueue.size() > 0 && m_recvSemaphore.tryAcquire(1,100))
         {
             message = m_recvQueue.front();
             m_recvQueue.pop_front();
@@ -261,16 +316,45 @@ namespace netcore
         return message;
     }
 
+    //Driver internal
     CoreMessage* CoreDriver::pullSendMessage()
     {
         QMutexLocker lock(&m_sendMutex);
         CoreMessage *message = NULL;
-        if (m_sendQueue.size() > 0)
+        if (m_sendQueue.size() > 0 && m_sendSemaphore.tryAcquire(1,100))
         {
             message = m_sendQueue.front();
             m_sendQueue.pop_front();
         }
         return message;
+    }
+
+    //Driver internal
+    bool CoreDriver::pushRecvMessage(CoreMessage *message)
+    {
+        QMutexLocker lock(&m_recvMutex);
+
+        if (message && m_recvQueue.size() < m_maxRecvQueueSize)
+        {
+            m_recvSemaphore.release(1);
+            m_recvQueue.push_back(message);
+            return true;
+        }
+        return false;
+    }
+
+    //Driver internal
+    bool CoreDriver::pushSendMessage(CoreMessage *message)
+    {
+        QMutexLocker lock(&m_sendMutex);
+
+        if (message && m_sendQueue.size() < m_maxSendQueueSize)
+        {
+            m_sendSemaphore.release(1);
+            m_sendQueue.push_back(message);
+            return true;
+        }
+        return false;
     }
 
     void CoreDriver::sendThreadDestroyed()
@@ -283,6 +367,18 @@ namespace netcore
     {
         qDebug("CoreDriver::recvThreadDestroyed()");
         m_recvWorkerThread = NULL;
+    }
+
+    void CoreDriver::run()
+    {
+        CoreDriverInfo driverInfo = info();
+
+        qDebug() << "CoreDriver::run() running : " << driverInfo.m_name << " thread: " << QThread::currentThread();
+
+        //Execute event loop
+        exec();
+
+        qDebug() << "CoreDriver::run() done : " << driverInfo.m_name << " thread: " << QThread::currentThread();
     }
 
 }//namespace netcore

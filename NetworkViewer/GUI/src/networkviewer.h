@@ -16,27 +16,19 @@ public:
     {
         m_ui.setupUi(this);
         setWindowTitle(QString("NetworkViewer-") + QString(NETWORKVIEWER_VERSION));
-        connect(m_ui.pushButton,SIGNAL(clicked()),this,SLOT(onButtonClicked()));
+        connect(m_ui.m_startButton,SIGNAL(clicked()),this,SLOT(onStartButtonClicked()));
         connect(m_ui.m_stopButton,SIGNAL(clicked()),this,SLOT(onStopButtonClicked()));
 
         m_driver = netcore::CoreDriverFactoryBase::create("Loopback",QStringList(),NULL);
-
-        if (m_driver)
-        {
-            m_driver->start();
-        }
-
     }
 
 public slots:
 
-    void onButtonClicked()
+    void onStartButtonClicked()
     {
-        if (!m_view)
+        if (m_driver)
         {
-            m_view = new NetworkView(m_ui.m_centerWidget);
-            connect(m_view,SIGNAL(destroyed()),this,SLOT(onNetworkViewDestroyed()));
-            m_view->show();
+            m_driver->start();
         }
     }
 

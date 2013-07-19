@@ -34,9 +34,12 @@ namespace netcore
                 Loopback::internalInfo(),new CoreDriverFactory<Loopback>());
 
     Loopback::Loopback(QObject *parent)
-        : CoreDriver(parent)
+        : CoreDriver(parent), m_timer(NULL)
     {
 
+        m_timer = new QTimer(this);
+        connect(m_timer,SIGNAL(timeout()),this,SLOT(timeout()));
+        m_timer->start(1000);
     }
 
     CoreDriverInfo Loopback::internalInfo()
@@ -65,16 +68,21 @@ namespace netcore
         return CoreDriver::DRIVER_OK;
     }
 
-    bool Loopback::internalThreadRecvFunction()
+    CoreDriver::CoreDriverState Loopback::internalThreadRecvFunction()
     {
-        qDebug("Loopback::internalThreadRecvFunction()");
-        return true;
+        //qDebug("Loopback::internalThreadRecvFunction()");
+        return CoreDriver::DRIVER_UNDERFLOW;
     }
 
-    bool Loopback::internalThreadSendFunction()
+    CoreDriver::CoreDriverState Loopback::internalThreadSendFunction()
     {
-        qDebug("Loopback::internalThreadSendFunction()");
-        return true;
+        //qDebug("Loopback::internalThreadSendFunction()");
+        return CoreDriver::DRIVER_UNDERFLOW;
     }
 
+
+    void Loopback::timeout()
+    {
+        qDebug() << "Loopback::timeout() current thread : " << QThread::currentThread();
+    }
 }
