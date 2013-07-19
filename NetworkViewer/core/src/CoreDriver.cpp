@@ -123,6 +123,7 @@ namespace netcore
         if (m_sendWorkerThread == NULL)
         {
             m_sendWorkerThread = new CoreDriverSendThread(this);
+            connect(m_sendWorkerThread,SIGNAL(destroyed()),this,SLOT(sendThreadDestroyed()));
             m_sendWorkerThread->start();
         }
         else
@@ -133,6 +134,7 @@ namespace netcore
         if (m_recvWorkerThread == NULL)
         {
             m_recvWorkerThread = new CoreDriverRecvThread(this);
+            connect(m_recvWorkerThread,SIGNAL(destroyed()),this,SLOT(recvThreaddestroyed()));
             m_recvWorkerThread->start();
         }
         else
@@ -144,14 +146,17 @@ namespace netcore
     void CoreDriver::stop()
     {
         if (m_sendWorkerThread)
+        {
             m_sendWorkerThread->stop();
-
-        m_sendWorkerThread = NULL;
+            m_sendWorkerThread->deleteLater();
+        }
 
         if (m_recvWorkerThread)
+        {
             m_recvWorkerThread->stop();
+            m_recvWorkerThread->deleteLater();
+        }
 
-        m_recvWorkerThread = NULL;
     }
 
     bool CoreDriver::pushRecvMessage(CoreMessage *message)
@@ -276,7 +281,7 @@ namespace netcore
 
     void CoreDriver::recvThreaddestroyed()
     {
-        qDebug("CoreDriver::recvThreaddestroyed()");
+        qDebug("CoreDriver::recvThreadDestroyed()");
         m_recvWorkerThread = NULL;
     }
 
