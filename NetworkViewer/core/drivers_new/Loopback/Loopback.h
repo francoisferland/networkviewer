@@ -47,7 +47,7 @@ namespace netcore
 
         //Driver startup and terminate
         virtual void startup();
-        virtual void terminate();
+        virtual void shutdown();
 
 
         //state

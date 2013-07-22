@@ -382,7 +382,7 @@ namespace netcore
         exec();
 
         //Signal the driver we are terminating
-        terminate();
+        shutdown();
 
         qDebug() << "CoreDriver::run() done : " << driverInfo.m_name << " thread: " << QThread::currentThread();
     }
@@ -392,9 +392,9 @@ namespace netcore
         qDebug("CoreDriver::startup() - Doing nothing.");
     }
 
-    void CoreDriver::terminate()
+    void CoreDriver::shutdown()
     {
-        qDebug("CoreDriver::terminate() - Doing nothing.");
+        qDebug("CoreDriver::shutdown() - Doing nothing.");
     }
 
 

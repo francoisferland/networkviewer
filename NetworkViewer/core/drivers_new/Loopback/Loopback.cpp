@@ -60,9 +60,9 @@ namespace netcore
         qDebug("Loopback::startup()");
     }
 
-    void Loopback::terminate()
+    void Loopback::shutdown()
     {
-        qDebug("Loopback::terminate()");
+        qDebug("Loopback::shutdown()");
     }
 
     CoreDriver::CoreDriverState Loopback::state()
