@@ -88,10 +88,11 @@ namespace netcore
         //Init & config
         virtual CoreDriverState initialize(QStringList args) = 0;
 
-        virtual void terminate() = 0;
+        //Thread startup and terminate
+        virtual void startup();
+        virtual void terminate();
 
-        //Thread running
-        virtual void run();
+
 
         //state
         virtual CoreDriverState state() = 0;
@@ -136,6 +137,9 @@ namespace netcore
         void recvThreaddestroyed();
 
     private:
+
+        //Thread running
+        virtual void run();
 
         QMutex m_recvMutex;
         QSemaphore m_recvSemaphore;

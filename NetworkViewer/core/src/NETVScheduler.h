@@ -18,6 +18,7 @@
 #define _NETV_SCHEDULER_H_
 
 #include <QObject>
+#include <QTimer>
 
 namespace netcore
 {
@@ -30,10 +31,15 @@ namespace netcore
 
         NETVScheduler(NETVDriverManager *manager);
 
+    protected slots:
+        void timeout();
+
     protected:
 
 
         NETVDriverManager *m_manager;
+        QTimer *m_timer;
+
     };
 
 

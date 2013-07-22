@@ -25,8 +25,12 @@ namespace netcore
     class NETVDriverManager : public CoreDriverManager
     {
         Q_OBJECT
+
     public:
-        NETVDriverManager(CoreDriver* driver);
+        NETVDriverManager(CoreDriver* driver, QObject* parent=NULL);
+        virtual void startup();
+        virtual void shutdown();
+        virtual void process(CoreMessage* message);
 
     protected:
 

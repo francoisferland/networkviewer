@@ -19,27 +19,59 @@
 #define _CORE_DRIVER_MANAGER_H_
 
 #include <QObject>
+#include <QThread>
 #include "CoreDriver.h"
 
 namespace netcore
 {
 
-    class CoreDriverManager : public QObject
+    class CoreDriverManager;
+    class CoreDriverManagerReader : public QThread
     {
+        Q_OBJECT
+
+        public:
+
+        CoreDriverManagerReader(CoreDriverManager* manager);
+        virtual void run();
+
+        public slots:
+
+        void managerThreadStarted();
+        void managerThreadFinished();
+
+    protected:
+
+        bool m_running;
+        CoreDriverManager *m_manager;
+    };
+
+
+    /**
+     * @brief The CoreDriverManager class
+     *
+     *
+     */
+    class CoreDriverManager : public QThread
+    {
+        friend class CoreDriverManagerReader;
+
         Q_OBJECT
 
     public:
 
-        CoreDriverManager(CoreDriver *driver);
+        CoreDriverManager(CoreDriver *driver, QObject *parent=NULL);
+
+        //Thread stuff
+        virtual void startup() = 0;
+        virtual void shutdown() = 0;
+        virtual void process(CoreMessage* message) = 0;
+        virtual void run();
 
     protected:
-
         CoreDriver *m_driver;
+        CoreDriverManagerReader m_reader;
     };
-
-
-
-
 
 } //namespace netcore
 

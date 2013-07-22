@@ -34,12 +34,9 @@ namespace netcore
                 Loopback::internalInfo(),new CoreDriverFactory<Loopback>());
 
     Loopback::Loopback(QObject *parent)
-        : CoreDriver(parent), m_timer(NULL)
+        : CoreDriver(parent)
     {
 
-        m_timer = new QTimer(this);
-        connect(m_timer,SIGNAL(timeout()),this,SLOT(timeout()));
-        m_timer->start(1000);
     }
 
     CoreDriverInfo Loopback::internalInfo()
@@ -58,9 +55,14 @@ namespace netcore
         return CoreDriver::DRIVER_OK;
     }
 
+    void Loopback::startup()
+    {
+        qDebug("Loopback::startup()");
+    }
+
     void Loopback::terminate()
     {
-
+        qDebug("Loopback::terminate()");
     }
 
     CoreDriver::CoreDriverState Loopback::state()
@@ -71,13 +73,29 @@ namespace netcore
     CoreDriver::CoreDriverState Loopback::internalThreadRecvFunction()
     {
         //qDebug("Loopback::internalThreadRecvFunction()");
+
+        //Read device
+        //Should push recv messages
         return CoreDriver::DRIVER_UNDERFLOW;
     }
 
     CoreDriver::CoreDriverState Loopback::internalThreadSendFunction()
     {
         //qDebug("Loopback::internalThreadSendFunction()");
-        return CoreDriver::DRIVER_UNDERFLOW;
+        //Should write messages to bus...
+
+        //Get message to send
+        CoreMessage *message = pullSendMessage();
+
+        if (message)
+        {
+
+            return CoreDriver::DRIVER_OK;
+        }
+        else
+        {
+            return CoreDriver::DRIVER_UNDERFLOW;
+        }
     }
 
 

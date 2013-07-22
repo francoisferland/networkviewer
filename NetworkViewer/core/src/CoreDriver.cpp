@@ -203,7 +203,6 @@ namespace netcore
 
         if(!QThread::isRunning())
         {
-            moveToThread(this);
             //Start own thread
             QThread::start();
         }
@@ -231,9 +230,6 @@ namespace netcore
             QThread::quit();
             QThread::wait();
         }
-
-        //Go back to caller's thread
-        //moveToThread(QThread::currentThread());
     }
 
     bool CoreDriver::sendMessage(CoreMessage *message)
@@ -246,7 +242,8 @@ namespace netcore
         QMutexLocker lock(&m_recvMutex);
         CoreMessage *message = NULL;
 
-        if (m_recvQueue.size() > 0 && m_recvSemaphore.tryAcquire(1,100))
+        //Make sure we wait on semaphore when empty
+        if (m_recvSemaphore.tryAcquire(1,100) && m_recvQueue.size() > 0)
         {
             message = m_recvQueue.front();
             m_recvQueue.pop_front();
@@ -258,7 +255,8 @@ namespace netcore
     {
          QMutexLocker lock(&m_recvMutex);
          QList<CoreMessage*> myList;
-         if (m_recvSemaphore.tryAcquire(m_recvQueue.size()))
+
+         if (m_recvSemaphore.tryAcquire(m_recvQueue.size(),100))
          {
             myList = m_recvQueue;
             m_recvQueue.clear();
@@ -308,7 +306,9 @@ namespace netcore
     {
         QMutexLocker lock(&m_recvMutex);
         CoreMessage *message = NULL;
-        if (m_recvQueue.size() > 0 && m_recvSemaphore.tryAcquire(1,100))
+
+        //Make sure we wait on semaphore if empty
+        if (m_recvSemaphore.tryAcquire(1,100) && m_recvQueue.size() > 0)
         {
             message = m_recvQueue.front();
             m_recvQueue.pop_front();
@@ -375,10 +375,27 @@ namespace netcore
 
         qDebug() << "CoreDriver::run() running : " << driverInfo.m_name << " thread: " << QThread::currentThread();
 
+        //Signal the driver we are starting
+        startup();
+
         //Execute event loop
         exec();
 
+        //Signal the driver we are terminating
+        terminate();
+
         qDebug() << "CoreDriver::run() done : " << driverInfo.m_name << " thread: " << QThread::currentThread();
     }
+
+    void CoreDriver::startup()
+    {
+        qDebug("CoreDriver::startup() - Doing nothing.");
+    }
+
+    void CoreDriver::terminate()
+    {
+        qDebug("CoreDriver::terminate() - Doing nothing.");
+    }
+
 
 }//namespace netcore

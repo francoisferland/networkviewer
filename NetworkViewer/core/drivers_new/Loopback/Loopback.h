@@ -45,7 +45,10 @@ namespace netcore
         //Init & config
         virtual CoreDriver::CoreDriverState initialize(QStringList args);
 
+        //Driver startup and terminate
+        virtual void startup();
         virtual void terminate();
+
 
         //state
         virtual CoreDriver::CoreDriverState state();
@@ -60,10 +63,6 @@ namespace netcore
         virtual CoreDriverState internalThreadRecvFunction();
         virtual CoreDriverState internalThreadSendFunction();
         static CoreDriverInfo internalInfo();
-
-        QTimer *m_timer;
-
-
     };
 
 }//namespace netcore

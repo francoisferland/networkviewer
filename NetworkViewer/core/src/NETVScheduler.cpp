@@ -16,3 +16,26 @@
  */
 
 #include "NETVScheduler.h"
+#include "NETVDriverManager.h"
+
+namespace netcore
+{
+
+     NETVScheduler::NETVScheduler(NETVDriverManager *manager)
+         : QObject(NULL), m_manager(manager), m_timer(NULL)
+     {
+         Q_ASSERT(m_manager != NULL);
+
+         //Events will be managed by the thread
+         moveToThread(m_manager);
+
+         m_timer = new QTimer(this);
+         connect(m_timer,SIGNAL(timeout()),this,SLOT(timeout()));
+         m_timer->start(1000);
+     }
+
+     void NETVScheduler::timeout()
+     {
+         qDebug() << "NETVScheduler::timeout()" << " Thread: " << QThread::currentThread() << m_manager;
+     }
+}

@@ -5,6 +5,7 @@
 #include "NetworkView.h"
 #include "CoreDriver.h"
 #include "CoreDriverFactory.h"
+#include "NETVDriverManager.h"
 
 class NetworkViewer : public QMainWindow
 {
@@ -20,6 +21,7 @@ public:
         connect(m_ui.m_stopButton,SIGNAL(clicked()),this,SLOT(onStopButtonClicked()));
 
         m_driver = netcore::CoreDriverFactoryBase::create("Loopback",QStringList(),NULL);
+        m_manager = new netcore::NETVDriverManager(m_driver,this);
     }
 
 public slots:
@@ -29,6 +31,7 @@ public slots:
         if (m_driver)
         {
             m_driver->start();
+            m_manager->start();
         }
     }
 
@@ -37,6 +40,7 @@ public slots:
         if (m_driver)
         {
             m_driver->stop();
+            m_manager->quit();
         }
 
     }
@@ -50,6 +54,7 @@ protected:
 
     Ui::networkviewer m_ui;
     netcore::CoreDriver *m_driver;
+    netcore::CoreDriverManager *m_manager;
     NetworkView *m_view;
 
 };

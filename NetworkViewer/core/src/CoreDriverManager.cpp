@@ -19,8 +19,74 @@
 namespace netcore
 {
 
+    CoreDriverManagerReader::CoreDriverManagerReader(CoreDriverManager* manager)
+        :   QThread(NULL), m_manager(manager), m_running(false)
+    {
+        qDebug("CoreDriverManagerReader::CoreDriverManagerReader(CoreDriverManager* manager = %p)",m_manager);
+        Q_ASSERT(m_manager != NULL);
+    }
 
 
+    void CoreDriverManagerReader::managerThreadStarted()
+    {
+        qDebug("CoreDriverManagerReader::managerThreadStarted()");
+        if (!isRunning())
+        {
+            start();
+        }
+    }
+
+    void CoreDriverManagerReader::managerThreadFinished()
+    {
+        qDebug("CoreDriverManagerReader::managerThreadFinished()");
+        if (isRunning())
+        {
+            m_running = false;
+            quit();
+            wait();
+        }
+    }
+
+
+    void CoreDriverManagerReader::run()
+    {
+        m_running = true;
+        qDebug("CoreDriverManagerReader::run() - starting!");
+        while(m_running)
+        {
+            //Will wait for semaphore, max 100ms
+            CoreMessage* message = m_manager->m_driver->recvMessage();
+            if (message)
+            {
+                m_manager->process(message);
+            }
+        }
+        qDebug("CoreDriverManagerReader::run() - done!");
+    }
+
+
+
+    CoreDriverManager::CoreDriverManager(CoreDriver *driver, QObject *parent)
+        : QThread(parent), m_driver(driver), m_reader(this)
+    {
+        Q_ASSERT(m_driver != NULL);
+
+        connect(this,SIGNAL(started()),&m_reader,SLOT(managerThreadStarted()));
+        connect(this,SIGNAL(finished()),&m_reader,SLOT(managerThreadFinished()));
+
+    }
+
+    void CoreDriverManager::run()
+    {
+        qDebug() << "CoreDriverManager::run() starting" << " Thread: " << QThread::currentThread();
+
+        startup();
+
+        //Execute event loop
+        exec();
+
+        shutdown();
+    }
 
 
 } //namespace netcore
