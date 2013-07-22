@@ -38,6 +38,11 @@ namespace netcore
         CoreDriverRecvThread(CoreDriver *parent);
         void stop();
         virtual void run();
+
+    public slots:
+        void parentStarted();
+        void parentFinished();
+
     protected:
         CoreDriver *m_driver;
         bool m_running;
@@ -51,6 +56,11 @@ namespace netcore
         CoreDriverSendThread(CoreDriver *parent);
         void stop();
         virtual void run();
+
+    public slots:
+        void parentStarted();
+        void parentFinished();
+
     protected:
         CoreDriver *m_driver;
         bool m_running;
@@ -131,10 +141,6 @@ namespace netcore
         int m_maxSendQueueSize;
         int m_maxRecvQueueSize;
 
-    private slots:
-
-        void sendThreadDestroyed();
-        void recvThreaddestroyed();
 
     private:
 
@@ -145,8 +151,8 @@ namespace netcore
         QSemaphore m_recvSemaphore;
         QMutex m_sendMutex;      
         QSemaphore m_sendSemaphore;
-        CoreDriverSendThread *m_sendWorkerThread;
-        CoreDriverRecvThread *m_recvWorkerThread;
+        CoreDriverSendThread m_sendWorkerThread;
+        CoreDriverRecvThread m_recvWorkerThread;
         QQueue<CoreMessage*> m_sendQueue;
         QQueue<CoreMessage*> m_recvQueue;
 

@@ -78,6 +78,16 @@ namespace netcore
         qDebug("CoreDriverRecvThread::stop() quit&wait ok");
     }
 
+    void CoreDriverRecvThread::parentStarted()
+    {
+        start();
+    }
+
+    void CoreDriverRecvThread::parentFinished()
+    {
+        stop();
+    }
+
 
     CoreDriverSendThread::CoreDriverSendThread(CoreDriver *parent)
         : QThread(parent), m_driver(parent), m_running(false)
@@ -140,6 +150,15 @@ namespace netcore
         qDebug("CoreDriverSendThread::stop() quit&wait ok");
     }
 
+    void CoreDriverSendThread::parentStarted()
+    {
+        start();
+    }
+
+    void CoreDriverSendThread::parentFinished()
+    {
+        stop();
+    }
 
     CoreDriver::CoreDriver(QObject *parent, int maxRecvQueueSize, int maxSendQueueSize)
         : QThread(parent),
@@ -149,10 +168,15 @@ namespace netcore
           m_sendSemaphore(0),
           m_recvMutex(QMutex::Recursive),
           m_recvSemaphore(0),
-          m_sendWorkerThread(NULL),
-          m_recvWorkerThread(NULL)
+          m_sendWorkerThread(this),
+          m_recvWorkerThread(this)
     {
 
+        //Worker thread signals
+        connect(this,SIGNAL(started()),&m_sendWorkerThread,SLOT(parentStarted()));
+        connect(this,SIGNAL(finished()),&m_sendWorkerThread,SLOT(parentFinished()));
+        connect(this,SIGNAL(started()),&m_recvWorkerThread,SLOT(parentStarted()));
+        connect(this,SIGNAL(finished()),&m_recvWorkerThread,SLOT(parentFinished()));
     }
 
     CoreDriver::~CoreDriver()
@@ -175,61 +199,20 @@ namespace netcore
 
     void CoreDriver::start()
     {
-
         Q_ASSERT(QThread::currentThread() != this);
 
         qDebug("CoreDriver::start()");
-        if (m_sendWorkerThread == NULL)
-        {
-            m_sendWorkerThread = new CoreDriverSendThread(this);
-            connect(m_sendWorkerThread,SIGNAL(destroyed()),this,SLOT(sendThreadDestroyed()));
-            m_sendWorkerThread->start();
-        }
-        else
-        {
-            qWarning("CoreDriver::start() - sendWorkerThread already started");
-        }
 
-        if (m_recvWorkerThread == NULL)
-        {
-            m_recvWorkerThread = new CoreDriverRecvThread(this);
-            connect(m_recvWorkerThread,SIGNAL(destroyed()),this,SLOT(recvThreaddestroyed()));
-            m_recvWorkerThread->start();
-        }
-        else
-        {
-            qWarning("CoreDriver::start() - recvWorkerThread already started");
-        }
-
-        if(!QThread::isRunning())
-        {
-            //Start own thread
-            QThread::start();
-        }
-
+        //Start own thread
+        QThread::start();
     }
 
     void CoreDriver::stop()
     {
         Q_ASSERT(QThread::currentThread() != this);
+        quit();
+        wait();
 
-        if (m_sendWorkerThread)
-        {
-            m_sendWorkerThread->stop();
-            m_sendWorkerThread->deleteLater();
-        }
-
-        if (m_recvWorkerThread)
-        {
-            m_recvWorkerThread->stop();
-            m_recvWorkerThread->deleteLater();
-        }
-
-        if (QThread::isRunning())
-        {
-            QThread::quit();
-            QThread::wait();
-        }
     }
 
     bool CoreDriver::sendMessage(CoreMessage *message)
@@ -355,18 +338,6 @@ namespace netcore
             return true;
         }
         return false;
-    }
-
-    void CoreDriver::sendThreadDestroyed()
-    {
-        qDebug("CoreDriver::sendThreadDestroyed()");
-        m_sendWorkerThread = NULL;
-    }
-
-    void CoreDriver::recvThreaddestroyed()
-    {
-        qDebug("CoreDriver::recvThreadDestroyed()");
-        m_recvWorkerThread = NULL;
     }
 
     void CoreDriver::run()
