@@ -32,6 +32,52 @@ namespace netcore
 {
     class Loopback : public CoreDriver
     {
+        class VirtualModule
+        {
+
+        public:
+
+
+            static const int NB_SINE_VARIABLES=4;
+            static const int NB_TEMP_VARIABLES=10;
+            static const int NB_VARIABLES=(NB_SINE_VARIABLES + NB_TEMP_VARIABLES);
+
+            VirtualModule(int id)
+                : module_id(id)
+            {
+                project_id = 0;
+                code_version = 1;
+                table_version = 2;
+                device_id = 0;
+                state = NETV_NORMAL_MODE_ID;
+                boot_delay = 0;
+                for (unsigned int i = 0 ; i < NB_VARIABLES; i++)
+                {
+                    variable[i] = 0;
+                }
+            }
+
+            int module_id;
+            int project_id;
+            int code_version;
+            int table_version;
+            int device_id;
+            int state;
+            int boot_delay;
+
+            union {
+
+                struct {
+                    double variable[NB_VARIABLES];
+                };
+
+                unsigned char data[NB_VARIABLES *sizeof(double)];
+
+            };
+
+        };
+
+
         friend class LoopbackDriverRegistry;
 
         Q_OBJECT;
@@ -63,6 +109,10 @@ namespace netcore
         virtual CoreDriverState internalThreadRecvFunction();
         virtual CoreDriverState internalThreadSendFunction();
         static CoreDriverInfo internalInfo();
+        void processMessage(const NETVMessage* message);
+
+        QMutex m_mutex;
+        QList<VirtualModule> m_moduleList;
     };
 
 }//namespace netcore

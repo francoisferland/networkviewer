@@ -18,6 +18,7 @@
 #define _NETV_MESSAGE_H_
 
 #include "CANMessage.h"
+#include "NETV_define.h"
 
 namespace netcore
 {
@@ -37,7 +38,14 @@ namespace netcore
 
         void setEID(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest);
 
-        virtual CoreMessage* clone();
+        virtual CoreMessage* clone() const;
+
+        //Getters...
+        quint8 getPriority() const;
+        quint8 getType() const;
+        quint8 getBootFlags() const;
+        quint8 getCommand() const;
+        quint8 getDestination() const;
 
     protected:
 

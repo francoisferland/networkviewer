@@ -57,7 +57,7 @@ namespace netcore
         m_eid |= (((quint32)dest) & 0x000000FF);
     }
 
-    CoreMessage* NETVMessage::clone()
+    CoreMessage* NETVMessage::clone() const
     {
         return new NETVMessage(*this);
     }
@@ -70,6 +70,31 @@ namespace netcore
     bool NETVMessage::deserialize(CoreDeserializer &des, QIODevice &dev)
     {
         return des.deserialize(*this,dev);
+    }
+
+    quint8 NETVMessage::getPriority() const
+    {
+        return (quint8) ((m_eid & 0x1C000000) >> 26);
+    }
+
+    quint8 NETVMessage::getType() const
+    {
+        return (quint8) ((m_eid & 0x03FC0000) >> 18);
+    }
+
+    quint8 NETVMessage::getBootFlags() const
+    {
+        return (quint8) ((m_eid & 0x00030000) >> 16);
+    }
+
+    quint8 NETVMessage::getCommand() const
+    {
+        return (quint8) ((m_eid & 0x0000FF00) >> 8);
+    }
+
+    quint8 NETVMessage::getDestination() const
+    {
+        return (quint8) ((m_eid & 0x000000FF));
     }
 
 }//namespace netcore

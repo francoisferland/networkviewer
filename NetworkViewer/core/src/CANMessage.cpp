@@ -65,6 +65,12 @@ namespace netcore
         m_flags = flags;
     }
 
+    void CANMessage::clearFlags(quint32 flags)
+    {
+        quint32 mask = ~flags;
+        m_flags &= mask;
+    }
+
     bool CANMessage::setPayload(const QByteArray &data)
     {
         m_data = data;
@@ -159,7 +165,7 @@ namespace netcore
         return MaxPayloadSize;
     }
 
-    CoreMessage* CANMessage::clone()
+    CoreMessage* CANMessage::clone() const
     {
         return new CANMessage(*this);
     }

@@ -30,7 +30,11 @@ namespace netcore
         NETVDriverManager(CoreDriver* driver, QObject* parent=NULL);
         virtual void startup();
         virtual void shutdown();
-        virtual void process(CoreMessage* message);
+        virtual void process(const CoreMessage* message);
+
+        //NETV specifics
+        void sendAliveRequest();
+        void requestVariable(NETVVariable *variable);
 
     protected:
 

@@ -51,7 +51,7 @@ namespace netcore
         ///Max data size
         virtual int maxPayloadSize() const = 0;
         ///Cloning message
-        virtual CoreMessage* clone() = 0;
+        virtual CoreMessage* clone() const = 0;
 
         ///Overloaded function to set data, will call setData(const QByteArray &data)
         virtual bool setSerializedData(const char* data, int size);

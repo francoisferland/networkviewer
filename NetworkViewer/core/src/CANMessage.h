@@ -54,10 +54,11 @@ namespace netcore
         ///Max data size
         virtual int maxPayloadSize() const;
         ///Cloning message
-        virtual CoreMessage* clone();
+        virtual CoreMessage* clone() const;
 
         //Setters
         void setFlags(quint32 flags);
+        void clearFlags(quint32 flags);
         bool setPayload(const QByteArray &data);
 
         //Getters

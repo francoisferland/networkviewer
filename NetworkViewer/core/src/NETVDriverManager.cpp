@@ -17,6 +17,7 @@
 
 
 #include "NETVDriverManager.h"
+#include "NETVMessage.h"
 
 namespace netcore
 {
@@ -44,9 +45,36 @@ namespace netcore
         }
     }
 
-    void NETVDriverManager::process(CoreMessage* message)
+    void NETVDriverManager::process(const CoreMessage* message)
     {
+        //This is called from the CoreManager's thread...
         qDebug() << "NETVDriverManager::process(CoreMessage* message)" << " Thread: " << QThread::currentThread();
     }
+
+    void NETVDriverManager::sendAliveRequest()
+    {
+        qDebug() << "NETVDriverManager::sendAliveRequest() " << " Thread : "<<QThread::currentThread();
+
+        char empty[8] = {0};
+        NETVMessage *message = new NETVMessage(NETV_PRIORITY_MEDIUM,
+                                               NETV_TYPE_EVENTS,
+                                               0,
+                                               NETV_EVENTS_CMD_ALIVE,
+                                               NETV_ADDRESS_BROADCAST,
+                                               CANMessage::RTRFlag | CANMessage::ExtendedFlag,
+                                               QByteArray(empty,8));
+
+        if (m_driver->sendMessage(message))
+        {
+            qDebug("m_driver->pushSendMessage(message) OK!");
+        }
+
+    }
+
+    void NETVDriverManager::requestVariable(NETVVariable *variable)
+    {
+
+    }
+
 
 } //namespace netcore

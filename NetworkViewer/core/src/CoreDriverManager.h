@@ -65,7 +65,7 @@ namespace netcore
         //Thread stuff
         virtual void startup() = 0;
         virtual void shutdown() = 0;
-        virtual void process(CoreMessage* message) = 0;
+        virtual void process(const CoreMessage* message) = 0;
         virtual void run();
 
     protected:

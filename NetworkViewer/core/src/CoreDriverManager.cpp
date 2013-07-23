@@ -59,6 +59,7 @@ namespace netcore
             if (message)
             {
                 m_manager->process(message);
+                delete message;
             }
         }
         qDebug("CoreDriverManagerReader::run() - done!");
