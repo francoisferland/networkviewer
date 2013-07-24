@@ -19,14 +19,50 @@
 #include "NETVDriverManager.h"
 #include "NETVMessage.h"
 #include <QMutexLocker>
+#include <QBuffer>
+#include "CoreSerializer.h"
 
 namespace netcore
 {
+
+    class DebugSerializer : public CoreSerializer
+    {
+        //Convert a message to a series of bytes
+        virtual bool serialize(const CoreMessage &message, QIODevice &dev)
+        {
+            return true;
+        }
+
+        virtual bool serialize(const CANMessage &message, QIODevice &dev)
+        {
+
+           return true;
+        }
+
+        virtual bool serialize(const NETVMessage &message, QIODevice &dev)
+        {
+            qDebug("NETVMessage : eid = %u, flags = %u",message.eid(),message.flags());
+            qDebug("priority: %u type: %u command: %u dest: %u payloadSize: %i",message.getPriority(),message.getType(),message.getCommand(), message.getDestination(), message.payloadSize());
+            qDebug() << message.payload();
+            return true;
+        }
+    };
+
+
 
     NETVDriverManager::NETVDriverManager(CoreDriver* driver, QObject *parent)
         : CoreDriverManager(driver, parent), m_scheduler(NULL), m_mutex(QMutex::Recursive)
     {
 
+    }
+
+    NETVDriverManager::~NETVDriverManager()
+    {
+        //Remove all modules
+        while(m_modules.size() > 0)
+        {
+            removeModule(m_modules.front());
+        }
     }
 
     void NETVDriverManager::startup()
@@ -50,7 +86,125 @@ namespace netcore
     {
         //This is called from the CoreManager's thread...
         qDebug() << "NETVDriverManager::process(CoreMessage* message)" << " Thread: " << QThread::currentThread();
+        DebugSerializer ser;
+        QBuffer buf;
+        const_cast<CoreMessage*>(message)->serialize(ser,buf);
+        process(dynamic_cast<const NETVMessage*>(message));
     }
+
+    void NETVDriverManager::process(const NETVMessage* message)
+    {
+
+        qDebug("NETVDriverManager::process(const NETVMessage* message = %p)",message);
+        if (message == NULL)
+            return;
+
+        //We are called by another thread
+        QMutexLocker lock(&m_mutex);
+
+        //qDebug("NETVInterfaceManager::processCANMessage(const NETV_MESSAGE &msg)");
+        //NETVDevice::printMessage(msg,std::cout);
+        if (!message->isRemote())
+        {
+            qDebug("message is not remote");
+
+            //WILL HANDLE ONLY REQUEST TYPE
+            if (message->getType() == NETV_TYPE_REQUEST_DATA)
+            {
+
+                //NETVDevice::printMessage(msg,std::cout);
+
+                //Let's see to which module it belongs...
+                //Update the variable if it fits...
+                for(unsigned int mod = 0; mod < m_modules.size(); mod++)
+                {
+                    NETVModule *module = m_modules[mod];
+
+                    NETVModuleConfiguration *conf = module->getConfiguration();
+                    Q_ASSERT(conf);
+
+                    if (conf->getDeviceID() == message->getDestination())
+                    {
+                        for(int i =0; i < conf->size(); i++)
+                        {
+                            //Need to check the offset and the memory type
+                            if ((*conf)[i]->getOffset() == message->getCommand() && (*conf)[i]->getMemType() == (NETVVariable::VARIABLE_MEMORY_TYPE) (message->getBootFlags() >> 1))
+                            {
+                                //FOUND IT
+                                //UPDATING VALUE
+                                (*conf)[i]->setValue(message->payload(),false,message->timestamp());
+                                break;
+                            }
+                        }
+                    }
+                }
+            }//type == REQUEST_DATA
+            else if (message->getType() == NETV_TYPE_EVENTS)
+            {
+                if (message->getCommand() == NETV_EVENTS_CMD_ALIVE && message->payloadSize() == 8)
+                {
+                    //qDebug("ALIVE REQUEST ANSWERED...");
+                    QByteArray data = message->payload();
+
+
+                    int module_state = data[0];
+                    int project_id = data[1];
+                    int module_id = data[2];
+                    int code_version = data[3];
+                    int table_version = data[4];
+                    int boot_delay = data[5];
+                    int devID = (((int) data[7]) << 8) | (int) data[6];
+
+                    //Look for already existing modules...
+                    bool found = false;
+                    for (unsigned int mod = 0; mod < m_modules.size(); mod++)
+                    {
+                        NETVModule *module = m_modules[mod];
+
+                        if (module->getConfiguration()->getDeviceID() == module_id)
+                        {
+                            //Update module state
+                            module->getConfiguration()->setModuleState(module_state);
+
+                            found = true;
+
+                            //Update time
+                            module->setUpdateTime(QTime::currentTime());
+
+                            //Module previously deactivated?
+                            if (!module->active())
+                            {
+                                module->setActive(true);
+
+                                if (m_scheduler)
+                                {
+                                    m_scheduler->addModule(module);
+                                }
+
+                                emit moduleActive(module,true);
+                            }
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        qDebug("Inserting new module %i",module_id);
+
+                        //fill configuration information...
+                        NETVModuleConfiguration conf(project_id, code_version, devID, module_state, table_version, module_id);
+
+                        //The module will belong to the manager's thread
+                        NETVModule *module = new NETVModule(conf,NULL);
+                        module->moveToThread(this);
+
+                        //Add module
+                        addModule(module);
+                    }
+                }
+            }//type == EVENTS
+        } // NOT REMOTE
+    }
+
 
     void NETVDriverManager::sendAliveRequest()
     {
@@ -75,7 +229,7 @@ namespace netcore
     void NETVDriverManager::requestVariable(NETVVariable *variable)
     {
 
-        //qDebug("NETVInterfaceManager::requestVariable(ModuleVariable *variable = %p)",variable);
+        //qDebug("NETVInterfaceManager::requestVariable(NETVVariable *variable = %p)",variable);
         Q_ASSERT(variable);
         NETVModule *module = getModule(variable->getDeviceID());
         Q_ASSERT(module);
@@ -173,7 +327,7 @@ namespace netcore
                 emit moduleAdded(module);
 
                 //Connect user write
-                connect(module,SIGNAL(variableWrite(ModuleVariable*)),this,SLOT(writeVariable(ModuleVariable*)));
+                connect(module,SIGNAL(variableWrite(NETVVariable*)),this,SLOT(writeVariable(NETVVariable*)));
 
                 //Add module to scheduling
                 if (m_scheduler)
@@ -216,7 +370,7 @@ namespace netcore
 
     void NETVDriverManager::writeVariable(NETVVariable *variable)
     {
-        //qDebug("NETVInterfaceManager::writeVariable(ModuleVariable *variable = %p)",variable);
+        //qDebug("NETVInterfaceManager::writeVariable(NETVVariable *variable = %p)",variable);
         Q_ASSERT(variable);
 
         if (variable->getMemType() < NETVVariable::SCRIPT_VARIABLE && variable->getOffset() >= 0)

@@ -27,6 +27,7 @@ namespace netcore
     }
 
 
+
     void CoreDriverManagerReader::managerThreadStarted()
     {
         qDebug("CoreDriverManagerReader::managerThreadStarted()");
@@ -76,6 +77,16 @@ namespace netcore
         connect(this,SIGNAL(finished()),&m_reader,SLOT(managerThreadFinished()));
 
     }
+
+    CoreDriverManager::~CoreDriverManager()
+    {
+        if (isRunning())
+        {
+            quit();
+            wait();
+        }
+    }
+
 
     void CoreDriverManager::run()
     {

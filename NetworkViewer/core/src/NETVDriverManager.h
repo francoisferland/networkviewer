@@ -28,11 +28,15 @@ namespace netcore
 
     public:
         NETVDriverManager(CoreDriver* driver, QObject* parent=NULL);
+        virtual ~NETVDriverManager();
+
         virtual void startup();
         virtual void shutdown();
 
         //Called from read thread...
         virtual void process(const CoreMessage* message);
+
+        virtual void process(const NETVMessage* message);
 
         //NETV specifics
         void sendAliveRequest();

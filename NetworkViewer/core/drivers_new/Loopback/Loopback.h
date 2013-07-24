@@ -57,6 +57,38 @@ namespace netcore
                 }
             }
 
+            VirtualModule(const VirtualModule &cpy)
+            {
+                module_id = cpy.module_id;
+                project_id = cpy.project_id;
+                code_version = cpy.code_version;
+                table_version = cpy.table_version;
+                device_id = cpy.device_id;
+                state = cpy.state;
+                boot_delay = cpy.boot_delay;
+                for (unsigned int i = 0 ; i < NB_VARIABLES; i++)
+                {
+                    variable[i] = cpy.variable[i];
+                }
+            }
+
+            VirtualModule& operator= (const VirtualModule &cpy)
+            {
+                module_id = cpy.module_id;
+                project_id = cpy.project_id;
+                code_version = cpy.code_version;
+                table_version = cpy.table_version;
+                device_id = cpy.device_id;
+                state = cpy.state;
+                boot_delay = cpy.boot_delay;
+                for (unsigned int i = 0 ; i < NB_VARIABLES; i++)
+                {
+                    variable[i] = cpy.variable[i];
+                }
+                return *this;
+            }
+
+
             int module_id;
             int project_id;
             int code_version;

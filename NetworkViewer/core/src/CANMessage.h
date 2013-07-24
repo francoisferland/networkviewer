@@ -68,6 +68,9 @@ namespace netcore
         bool isError() const;
         bool isRemote() const;
         bool isValid() const;
+        quint32 eid() const;
+        quint32 flags() const;
+
 
     protected:
         quint32 m_eid;

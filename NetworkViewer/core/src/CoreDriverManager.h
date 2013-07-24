@@ -33,6 +33,7 @@ namespace netcore
         public:
 
         CoreDriverManagerReader(CoreDriverManager* manager);
+
         virtual void run();
 
         public slots:
@@ -61,6 +62,7 @@ namespace netcore
     public:
 
         CoreDriverManager(CoreDriver *driver, QObject *parent=NULL);
+        virtual ~CoreDriverManager();
 
         //Thread stuff
         virtual void startup() = 0;

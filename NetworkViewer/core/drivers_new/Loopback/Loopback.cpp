@@ -176,6 +176,9 @@ namespace netcore
                     //Clear remote request flag
                     answer->clearFlags(CANMessage::RTRFlag);
 
+                    //Set destination
+                    answer->setDestination(m_moduleList[i].module_id);
+
                     QByteArray data;
 
                     //Fill data bytes

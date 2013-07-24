@@ -89,22 +89,22 @@ namespace netcore
 
     bool CANMessage::isExtended() const
     {
-        return (m_flags | ExtendedFlag);
+        return (m_flags & ExtendedFlag);
     }
 
     bool CANMessage::isError() const
     {
-        return (m_flags | ErrorFlag);
+        return (m_flags & ErrorFlag);
     }
 
     bool CANMessage::isRemote() const
     {
-        return (m_flags | RTRFlag);
+        return (m_flags & RTRFlag);
     }
 
     bool CANMessage::isValid() const
     {
-        return !(m_flags | InvalidFlag);
+        return !(m_flags & InvalidFlag);
     }
 
     bool CANMessage::validityCheck()
@@ -181,5 +181,14 @@ namespace netcore
         return des.deserialize(*this,dev);
     }
 
+    quint32 CANMessage::eid() const
+    {
+        return m_eid;
+    }
+
+    quint32 CANMessage::flags() const
+    {
+        return m_flags;
+    }
 
 } //namespace netcore
