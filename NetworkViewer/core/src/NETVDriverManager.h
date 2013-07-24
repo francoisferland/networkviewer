@@ -30,15 +30,43 @@ namespace netcore
         NETVDriverManager(CoreDriver* driver, QObject* parent=NULL);
         virtual void startup();
         virtual void shutdown();
+
+        //Called from read thread...
         virtual void process(const CoreMessage* message);
 
         //NETV specifics
         void sendAliveRequest();
         void requestVariable(NETVVariable *variable);
+        NETVModule *getModule(unsigned int deviceID);
+        NETVScheduler* getScheduler();
+        QList<NETVModule*> getModules();
+
+    public slots:
+
+        bool addModule(NETVModule *module);
+        bool removeModule(NETVModule *module);
+
+    signals:
+
+        void moduleAdded(NETVModule *module);
+        void moduleRemoved(NETVModule *module);
+        void moduleActive(NETVModule *module, bool active);
+
+    protected slots:
+
+        void writeVariable(NETVVariable *variable);
+        void watchdogTimeout();
 
     protected:
 
+
         NETVScheduler *m_scheduler;
+        ///All modules on this interface
+        QList<NETVModule*> m_modules;
+        ///Watchdog timer
+        QTimer *m_watchdogTimer;
+        ///Mutex
+        QMutex m_mutex;
     };
 
 } //namespace netcore

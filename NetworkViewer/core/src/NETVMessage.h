@@ -28,6 +28,8 @@ namespace netcore
 
     public:
 
+        NETVMessage();
+
         NETVMessage(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest, quint32 flags, QByteArray payload);
 
         NETVMessage(const NETVMessage &cpy);
@@ -46,6 +48,13 @@ namespace netcore
         quint8 getBootFlags() const;
         quint8 getCommand() const;
         quint8 getDestination() const;
+
+        //Setters...
+        void setPriority(quint8 priority);
+        void setType(quint8 type);
+        void setBootFlags(quint8 bootflags);
+        void setCommand(quint8 command);
+        void setDestination(quint8 dest);
 
     protected:
 

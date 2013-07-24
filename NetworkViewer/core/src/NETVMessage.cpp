@@ -19,6 +19,13 @@
 
 namespace netcore
 {
+
+    NETVMessage::NETVMessage()
+        : CANMessage(0,CANMessage::ExtendedFlag, QByteArray())
+    {
+        m_protocolType = CoreProtocols::NETV_CAN;
+    }
+
     NETVMessage::NETVMessage(quint8 priority, quint8 type, quint8 boot_flags, quint8 command, quint8 dest, quint32 flags, QByteArray payload)
         :    CANMessage(0,CANMessage::ExtendedFlag | flags, payload)
     {
@@ -96,6 +103,32 @@ namespace netcore
     {
         return (quint8) ((m_eid & 0x000000FF));
     }
+
+    void NETVMessage::setPriority(quint8 priority)
+    {
+        m_eid  |= (((quint32)priority << 26) & 0x1C000000);
+    }
+
+    void NETVMessage::setType(quint8 type)
+    {
+        m_eid  |= (((quint32)type << 18) & 0x03FC0000);
+    }
+
+    void NETVMessage::setBootFlags(quint8 bootflags)
+    {
+        m_eid  |= (((quint32)bootflags << 16) & 0x00030000);
+    }
+
+    void NETVMessage::setCommand(quint8 command)
+    {
+        m_eid  |= (((quint32)command << 8) & 0x0000FF00);
+    }
+
+    void NETVMessage::setDestination(quint8 dest)
+    {
+        m_eid |= (((quint32)dest) & 0x000000FF);
+    }
+
 
 }//namespace netcore
 
