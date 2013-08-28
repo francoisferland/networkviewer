@@ -171,7 +171,7 @@ void write_variable_interface(const ModuleConfiguration &conf, QTextStream &out,
             break;
 
         default:
-            qWarning("write_variable_interface - unhandled type : ",var->getType());
+            qWarning("write_variable_interface - unhandled type : %i",var->getType());
             break;
 
         }
@@ -339,7 +339,7 @@ void read_variable_interface(const ModuleConfiguration &conf, QTextStream &out, 
                 break;
 
             default:
-                qWarning("read_variable_interface - unhandled type : ",var->getType());
+                qWarning("read_variable_interface - unhandled type : %i",var->getType());
                 break;
 
             }
@@ -409,7 +409,7 @@ void print_documentation(ModuleConfiguration &conf, QTextStream &out)
             break;
 
         default:
-            qWarning("print_documentation - unhandled type : ",var->getType());
+            qWarning("print_documentation - unhandled type : %i",var->getType());
         break;
         }
 
