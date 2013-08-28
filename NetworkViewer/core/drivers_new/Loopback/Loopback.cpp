@@ -164,8 +164,12 @@ namespace netcore
         }
         else if (message->getType() == NETV_TYPE_EVENTS)
         {
+
+            qDebug("Events received...");
+
             if (message->getCommand() == NETV_EVENTS_CMD_ALIVE)
             {
+                qDebug("Alive received...");
                 m_mutex.lock();
 
                 //process virtual modules alive request

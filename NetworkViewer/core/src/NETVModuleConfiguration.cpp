@@ -591,10 +591,10 @@ namespace netcore
 
         //Verify if we have a configuration
         //Get the root element
-        QDomElement e = doc.documentElement(); // <NETVModuleConfiguration> element
-        if(e.tagName() != "NETVModuleConfiguration")
+        QDomElement e = doc.documentElement(); // <ModuleConfiguration> or <NETVModuleConfiguration> element
+        if(e.tagName() != "ModuleConfiguration" && e.tagName() != "NETVModuleConfiguration")
         {
-            qDebug() <<"No NETVModuleConfiguration found. Element is "<< e.tagName();
+            qDebug() <<"No ModuleConfiguration found. Element is "<< e.tagName();
             return false;
         }
 
@@ -625,10 +625,10 @@ namespace netcore
         {
             e = n.toElement(); // try to convert the node to an element.
 
-
             if(!e.isNull())
             {
-                if(e.tagName() == "NETVVariable")
+                //Allow "ModuleVariable or NETVVariable" for compatibility with older versions
+                if(e.tagName() == "ModuleVariable" || (e.tagName() == "NETVVariable"))
                 {
                     //Creating variable from XML
                     NETVVariable *var = new NETVVariable(e);

@@ -121,7 +121,7 @@ namespace netcore
 
     bool NETVVariable::loadXML(QDomElement &element)
     {
-        if(element.tagName() == "NETVVariable")
+        if(element.tagName() == "NETVVariable" || element.tagName() == "ModuleVariable")
         {
             //Get all the content...
             /*
