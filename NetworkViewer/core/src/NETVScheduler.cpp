@@ -25,7 +25,8 @@ namespace netcore
          : QObject(NULL),
            m_manager(manager),
            m_schedulerTimer(NULL),
-           m_aliveTimer(NULL)
+           m_aliveTimer(NULL),
+           m_mutex(QMutex::Recursive)
      {
          Q_ASSERT(m_manager != NULL);
 
@@ -46,6 +47,8 @@ namespace netcore
      void NETVScheduler::schedulerUpdate()
      {
 
+         Q_ASSERT(m_manager == QThread::currentThread());
+         QMutexLocker lock(&m_mutex);
          //qDebug("NETVScheduler::schedulerUpdate() nbVar : %i",m_variableScheduleList.size());
 
          //How many variables should we update at once?
@@ -76,6 +79,7 @@ namespace netcore
 
      void NETVScheduler::addModule(NETVModule* module)
      {
+         QMutexLocker lock(&m_mutex);
          //qDebug("NETVScheduler::addModule %p, conf size: %i",module,module->getConfiguration()->size());
 
          if (!m_modules.contains(module))
@@ -102,6 +106,8 @@ namespace netcore
 
      void NETVScheduler::removeModule(NETVModule* module)
      {
+
+         QMutexLocker lock(&m_mutex);
          //qDebug("NETVScheduler::removeModule(NETVModule* module = %p",module);
 
          //Remove variables for scheduling
@@ -123,6 +129,7 @@ namespace netcore
 
      void NETVScheduler::schedulerAliveRequest()
      {
+         Q_ASSERT(m_manager == QThread::currentThread());
          if (m_manager)
          {
              m_manager->sendAliveRequest();
@@ -131,6 +138,7 @@ namespace netcore
 
      void NETVScheduler::addScheduledVariable(NETVVariable *var)
      {
+         QMutexLocker lock(&m_mutex);
          if (!m_variableScheduleList.contains(var) && var->getMemType() < NETVVariable::SCRIPT_VARIABLE)
          {
              qDebug() << "Adding (NEW) variable for scheduling:"<<var->getName()<<" device id: "<<var->getDeviceID();
@@ -148,6 +156,7 @@ namespace netcore
 
      void NETVScheduler::removeScheduledVariable(NETVVariable *var, bool disconnect_)
      {
+         QMutexLocker lock(&m_mutex);
          if (m_variableScheduleList.contains(var))
          {
              qDebug() << "Removing (OLD) variable for scheduling:"<<var->getName()<<" device id: "<<var->getDeviceID();

@@ -102,13 +102,10 @@ void NETVInterfaceManager::sendAliveRequest()
 
 void NETVInterfaceManager::requestVariable(ModuleVariable *variable)
 {
-
     //qDebug("NETVInterfaceManager::requestVariable(ModuleVariable *variable = %p)",variable);
     Q_ASSERT(variable);
-    NetworkModule *module = getModule(variable->getDeviceID());
-    Q_ASSERT(module);
 
-    if (module->active() && variable->getMemType() < ModuleVariable::SCRIPT_VARIABLE && variable->getOffset() >= 0 )
+    if (variable->getMemType() < ModuleVariable::SCRIPT_VARIABLE && variable->getOffset() >= 0 )
     {
 
         //Building NETV request...

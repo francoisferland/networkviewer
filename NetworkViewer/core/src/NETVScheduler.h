@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QTimer>
 #include "NETVModule.h"
+#include <QMutex>
 
 namespace netcore
 {
@@ -118,6 +119,8 @@ namespace netcore
         QTimer *m_aliveTimer;
         ///The scheduled variables (round robin)
         QList<NETVVariable*> m_variableScheduleList;
+        ///Mutex protecting the list of modules and variables
+        QMutex m_mutex;
 
     };
 

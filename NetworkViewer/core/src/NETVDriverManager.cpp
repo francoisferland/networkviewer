@@ -79,6 +79,7 @@ namespace netcore
         if (m_scheduler)
         {
             delete m_scheduler;
+            m_scheduler = NULL;
         }
     }
 
@@ -231,10 +232,9 @@ namespace netcore
 
         //qDebug("NETVInterfaceManager::requestVariable(NETVVariable *variable = %p)",variable);
         Q_ASSERT(variable);
-        NETVModule *module = getModule(variable->getDeviceID());
-        Q_ASSERT(module);
 
-        if (module->active() && variable->getMemType() < NETVVariable::SCRIPT_VARIABLE && variable->getOffset() >= 0 )
+
+        if (variable->getMemType() < NETVVariable::SCRIPT_VARIABLE && variable->getOffset() >= 0 )
         {
 
             //Building NETV request...
