@@ -238,7 +238,7 @@ namespace netcore
         {
 
             //Building NETV request...
-            NETVMessage *message;
+            NETVMessage *message = new NETVMessage();
 
             message->setPriority(NETV_PRIORITY_HIGHEST);
             message->setType(NETV_TYPE_REQUEST_DATA);
