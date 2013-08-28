@@ -6,6 +6,7 @@
 #include "CoreDriver.h"
 #include "CoreDriverFactory.h"
 #include "NETVDriverManager.h"
+#include "NETVModuleView.h"
 
 class NetworkViewer : public QMainWindow
 {
@@ -19,6 +20,7 @@ public:
         setWindowTitle(QString("NetworkViewer-") + QString(NETWORKVIEWER_VERSION));
         connect(m_ui.m_startButton,SIGNAL(clicked()),this,SLOT(onStartButtonClicked()));
         connect(m_ui.m_stopButton,SIGNAL(clicked()),this,SLOT(onStopButtonClicked()));
+        connect(m_ui.m_moduleViewButton,SIGNAL(clicked()),this,SLOT(onNETVModuleViewButtonClicked()));
 
         m_driver = netcore::CoreDriverFactoryBase::create("Loopback",QStringList(),NULL);
         m_manager = new netcore::NETVDriverManager(m_driver,this);
@@ -45,6 +47,15 @@ public slots:
 
     }
 
+    void onNETVModuleViewButtonClicked()
+    {
+        qDebug("onNETVModuleViewButtonClicked()");
+        QList<netcore::CoreDriverManager*> myList;
+        myList.push_back(m_manager);
+        m_moduleView = new netvgui::NETVModuleView(this,myList);
+        m_moduleView->show();
+    }
+
     void onNetworkViewDestroyed()
     {
         m_view = NULL;
@@ -56,7 +67,7 @@ protected:
     netcore::CoreDriver *m_driver;
     netcore::CoreDriverManager *m_manager;
     NetworkView *m_view;
-
+    netvgui::NETVModuleView *m_moduleView;
 };
 
 #endif
