@@ -51,7 +51,7 @@ namespace netcore
 
 
     NETVDriverManager::NETVDriverManager(CoreDriver* driver, QObject *parent)
-        : CoreDriverManager(driver, parent), m_scheduler(NULL), m_mutex(QMutex::Recursive)
+        : CoreDriverManager(driver, parent), m_scheduler(NULL), m_mutex(QMutex::Recursive), m_watchdogTimer(NULL)
     {
 
     }
@@ -71,15 +71,29 @@ namespace netcore
         //Create scheduler in the manager's thread
         m_scheduler = new NETVScheduler(this);
 
+        //Watch for modules alive over time
+        m_watchdogTimer = new QTimer(this);
+        connect(m_watchdogTimer,SIGNAL(timeout()),this,SLOT(watchdogTimeout()));
+        m_watchdogTimer->start(1000);
+
     }
 
     void NETVDriverManager::shutdown()
     {
+        delete m_watchdogTimer;
+        m_watchdogTimer = NULL;
+
         qDebug("NETVDriverManager::shutdown()");
         if (m_scheduler)
         {
             delete m_scheduler;
             m_scheduler = NULL;
+        }
+
+        //Remove all modules
+        while(m_modules.size() > 0)
+        {
+            removeModule(m_modules.front());
         }
     }
 
