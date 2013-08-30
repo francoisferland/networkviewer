@@ -15,21 +15,21 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
         switch (type) {
         case QtDebugMsg:
-            typeMessage += "[DEBUG] ";
+            typeMessage += "<span style=\"color: green\">[DEBUG]</span> ";
             break;
         case QtWarningMsg:
-            typeMessage += "[WARNING] ";
+            typeMessage += "<span style=\"color: yellow\">[WARNING]</span> ";
             break;
         case QtCriticalMsg:
-            typeMessage += "[CRITICAL] ";
+            typeMessage += "<span style=\"color: red\">[CRITICAL]</span> ";
             break;
         case QtFatalMsg:
-            typeMessage += "[FATAL] ";
+            typeMessage += "<span style=\"color: red\">[FATAL]</span> ";
             abort();
             break;
         }
 
-        QString contextStr = QString("(") + context.file + "," + context.line + "," + context.function + ")";
+        QString contextStr = QString("<span style=\"color: blue\">(") + context.file + "," + context.line + "," + context.function + ")</span>";
 
 
         app->emitDebugInfo(typeMessage + contextStr + " - " + msg);
