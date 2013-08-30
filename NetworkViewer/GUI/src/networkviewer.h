@@ -24,9 +24,27 @@ public:
 
         m_driver = netcore::CoreDriverFactoryBase::create("Loopback",QStringList(),NULL);
         m_manager = new netcore::NETVDriverManager(m_driver,this);
+
+        connect(m_ui.m_clearLogButton,SIGNAL(clicked()),this,SLOT(onClearLogButtonClicked()));
+        connect(m_ui.m_filterRegEx,SIGNAL(textChanged(QString)),this,SLOT(onFilterChanged(QString)));
     }
 
 public slots:
+
+    void onDebugInfo(QString info)
+    {
+        QRegExp exp(m_filterString);
+        if (info.contains(exp))
+        {
+            m_ui.m_textEdit->append(info);
+        }
+    }
+
+    void onClearLogButtonClicked()
+    {
+        m_ui.m_textEdit->clear();
+    }
+
 
     void onStartButtonClicked()
     {
@@ -61,6 +79,11 @@ public slots:
         m_view = NULL;
     }
 
+    void onFilterChanged(QString value)
+    {
+        m_filterString = value;
+    }
+
 protected:
 
     Ui::networkviewer m_ui;
@@ -68,6 +91,67 @@ protected:
     netcore::CoreDriverManager *m_manager;
     NetworkView *m_view;
     netvgui::NETVModuleView *m_moduleView;
+    QString m_filterString;
 };
+
+
+
+class NetworkViewerApp : public QApplication
+{
+
+    friend void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg);
+
+    Q_OBJECT
+
+public:
+    NetworkViewerApp(int argc, char* argv[])
+        : QApplication(argc,argv), m_networkviewer(NULL)
+    {
+
+
+
+    }
+
+    void init()
+    {
+        //Scan for all drivers (from bin/drivers_new)
+        netcore::CoreDriverFactoryBase::scanDrivers(QCoreApplication::applicationDirPath() + "/drivers_new");
+
+
+        netcore::CoreDriverFactoryBase::CoreDriverFactoryMap driverMap = netcore::CoreDriverFactoryBase::registeredDrivers();
+
+        for (netcore::CoreDriverFactoryBase::CoreDriverFactoryMap::iterator iter = driverMap.begin(); iter != driverMap.end(); iter++)
+        {
+            qDebug() << iter.key();
+        }
+
+        //Debug display
+        m_networkviewer = new NetworkViewer(NULL);
+        connect(this,SIGNAL(debugInfo(QString)),m_networkviewer,SLOT(onDebugInfo(QString)));
+        m_networkviewer->show();
+    }
+
+signals:
+    void debugInfo(QString info);
+
+public slots:
+
+    void displayDebug(QString info)
+    {
+
+    }
+
+protected:
+
+    void emitDebugInfo(QString info)
+    {
+        emit debugInfo(info);
+    }
+
+    NetworkViewer *m_networkviewer;
+
+};
+
+
 
 #endif

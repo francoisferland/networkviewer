@@ -34,7 +34,7 @@ namespace netcore
 
     public:
 
-        //Visitor pattern for serialization / deserialization
+        ///Visitor pattern for serialization / deserialization
         virtual bool serialize(CoreSerializer& ser, QIODevice &dev) = 0;
         virtual bool deserialize(CoreDeserializer &des, QIODevice &dev) = 0;
 
@@ -62,7 +62,7 @@ namespace netcore
         CoreMessage();
 
 
-    };
-}
+    }; //class CoreMessage
+} //namespace netcore
 
 #endif //_CORE_MESSAGE_H_
