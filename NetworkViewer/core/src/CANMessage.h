@@ -45,14 +45,7 @@ namespace netcore
         virtual bool serialize(CoreSerializer& ser, QIODevice &dev);
         virtual bool deserialize(CoreDeserializer &des, QIODevice &dev);
 
-        ///Message serialized form, needs to be implemented
-        virtual QByteArray serializedData();
-        ///Set message data from serialized form
-        virtual bool setSerializedData(const QByteArray &data);
-        ///Clear message
-        virtual void clear();
-        ///Max data size
-        virtual int maxPayloadSize() const;
+
         ///Cloning message
         virtual CoreMessage* clone() const;
 
@@ -70,6 +63,7 @@ namespace netcore
         bool isValid() const;
         quint32 eid() const;
         quint32 flags() const;
+        int maxPayloadSize() const;
 
 
     protected:

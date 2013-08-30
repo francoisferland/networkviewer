@@ -30,21 +30,6 @@ namespace netcore
 
     }
 
-    bool CoreMessage::setSerializedData(const char* data, int size)
-    {
-        return setSerializedData(QByteArray(data,size));
-    }
-
-    int CoreMessage::serialize(QIODevice &dev)
-    {
-        return dev.write(serializedData());
-    }
-
-    bool CoreMessage::unserialize(QIODevice &dev)
-    {
-        return setSerializedData(dev.readAll());
-    }
-
     CoreProtocols::CORE_PROTOCOL_TYPE CoreMessage::protocolType() const
     {
         return m_protocolType;

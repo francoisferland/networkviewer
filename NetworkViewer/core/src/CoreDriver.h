@@ -98,9 +98,7 @@ namespace netcore
         //Init & config
         virtual CoreDriverState initialize(QStringList args) = 0;
 
-        //Thread startup and terminate
-        virtual void startup();
-        virtual void shutdown();
+
 
 
 
@@ -129,6 +127,11 @@ namespace netcore
 
 
     protected:
+
+
+        //Thread startup and terminate
+        virtual void startup();
+        virtual void shutdown();
 
         //Driver internals
         virtual CoreDriverState internalThreadRecvFunction() = 0;

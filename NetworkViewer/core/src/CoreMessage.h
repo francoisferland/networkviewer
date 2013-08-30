@@ -40,34 +40,19 @@ namespace netcore
 
         virtual ~CoreMessage();
 
-        int size();
-
-        ///Message serialized form, needs to be implemented
-        virtual QByteArray serializedData() = 0;
-        ///Set message data from serialized form
-        virtual bool setSerializedData(const QByteArray &data) = 0;
-        ///Clear message
-        virtual void clear() = 0;
-        ///Max data size
-        virtual int maxPayloadSize() const = 0;
         ///Cloning message
         virtual CoreMessage* clone() const = 0;
 
-        ///Overloaded function to set data, will call setData(const QByteArray &data)
-        virtual bool setSerializedData(const char* data, int size);
-        int serialize(QIODevice &dev);
-        bool unserialize(QIODevice &dev);
 
         CoreProtocols::CORE_PROTOCOL_TYPE protocolType() const;
         int interfaceID() const;
-
         void setInterfaceID(int id);
         QDateTime timestamp() const;
         void setTimestamp(const QDateTime &datetime);
 
     protected:
-        CoreMessage(QDateTime timestamp, CoreProtocols::CORE_PROTOCOL_TYPE id, int interfaceID = -1);
 
+        CoreMessage(QDateTime timestamp, CoreProtocols::CORE_PROTOCOL_TYPE id, int interfaceID = -1);
 
         QDateTime m_timestamp;
         CoreProtocols::CORE_PROTOCOL_TYPE m_protocolType;

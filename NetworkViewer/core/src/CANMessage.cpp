@@ -121,45 +121,6 @@ namespace netcore
         return retval;
     }
 
-    QByteArray CANMessage::serializedData()
-    {
-        QBuffer buf;
-        buf.write((char*) &m_eid, sizeof(m_eid));
-        buf.write((char*) &m_flags, sizeof(m_flags));
-        int size = m_data.size();
-        buf.write((char*) &size,sizeof(size));
-        buf.write(m_data);
-        return buf.data();
-    }
-
-
-    bool CANMessage::setSerializedData(const QByteArray &data)
-    {
-        QByteArray array(data);
-        QBuffer buf(&array);
-
-        buf.read((char*) &m_eid,sizeof(m_eid));
-        buf.read((char*) &m_flags,sizeof(m_flags));
-
-        int size = 0;
-        buf.read((char*) &size, sizeof(size));
-
-        m_data = buf.read(size);
-
-        if (m_data.size() == size)
-        {
-            return validityCheck();
-        }
-
-        return false;
-    }
-
-
-    void CANMessage::clear()
-    {
-        m_data.resize(0);
-    }
-
     int CANMessage::maxPayloadSize() const
     {
         return MaxPayloadSize;
