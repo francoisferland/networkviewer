@@ -100,6 +100,12 @@ namespace netcore
         void schedulerAliveRequest();
 
         /**
+            Called by m_watchdogTimer (periodic)
+            to determine if there is a timeout on a module
+        */
+        void schedulerWatchdog();
+
+        /**
             Called when a variable changes its activation state
             \param state the state of activation
             \param var the variable pointer
@@ -117,6 +123,8 @@ namespace netcore
         QList<NETVModule*> m_modules;
         ///The alive timer
         QTimer *m_aliveTimer;
+        ///Watchdog timer
+        QTimer *m_watchdogTimer;
         ///The scheduled variables (round robin)
         QList<NETVVariable*> m_variableScheduleList;
         ///Mutex protecting the list of modules and variables

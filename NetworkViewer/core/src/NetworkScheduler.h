@@ -114,6 +114,8 @@ protected slots:
     */
     void variableActivated(bool activated, ModuleVariable *var);
 
+
+
 protected:
 
     ///The parent manager

@@ -51,7 +51,7 @@ namespace netcore
 
 
     NETVDriverManager::NETVDriverManager(CoreDriver* driver, QObject *parent)
-        : CoreDriverManager(driver, parent), m_scheduler(NULL), m_mutex(QMutex::Recursive), m_watchdogTimer(NULL)
+        : CoreDriverManager(driver, parent), m_scheduler(NULL), m_mutex(QMutex::Recursive)
     {
 
     }
@@ -67,21 +67,18 @@ namespace netcore
 
     void NETVDriverManager::startup()
     {
+        QMutexLocker lock(&m_mutex);
         qDebug("NETVDriverManager::startup()");
         //Create scheduler in the manager's thread
         m_scheduler = new NETVScheduler(this);
 
-        //Watch for modules alive over time
-        m_watchdogTimer = new QTimer(this);
-        connect(m_watchdogTimer,SIGNAL(timeout()),this,SLOT(watchdogTimeout()));
-        m_watchdogTimer->start(1000);
 
     }
 
     void NETVDriverManager::shutdown()
     {
-        delete m_watchdogTimer;
-        m_watchdogTimer = NULL;
+        QMutexLocker lock(&m_mutex);
+
 
         qDebug("NETVDriverManager::shutdown()");
         if (m_scheduler)
@@ -109,7 +106,7 @@ namespace netcore
 
     void NETVDriverManager::process(const NETVMessage* message)
     {
-
+        //This is called from the CoreManager's thread...
         qDebug("NETVDriverManager::process(const NETVMessage* message = %p)",message);
         if (message == NULL)
             return;
@@ -244,7 +241,7 @@ namespace netcore
     void NETVDriverManager::requestVariable(NETVVariable *variable)
     {
 
-        //qDebug("NETVInterfaceManager::requestVariable(NETVVariable *variable = %p)",variable);
+        qDebug("NETVInterfaceManager::requestVariable(NETVVariable *variable = %p Thread:%p)",variable,QThread::currentThread());
         Q_ASSERT(variable);
 
 
@@ -374,7 +371,8 @@ namespace netcore
                     m_scheduler->removeModule(module);
                 }
 
-                delete module;
+                //Will delete module in its own tread
+                module->deleteLater();
                 return true;
             }
         }
@@ -437,6 +435,7 @@ namespace netcore
 
     void NETVDriverManager::watchdogTimeout()
     {
+        qDebug("NETVDriverManager::watchdogTimeout() thread: %p , managerThread: %p",QThread::currentThread(),this);
         QMutexLocker lock(&m_mutex);
 
         //Scan for inactive modules

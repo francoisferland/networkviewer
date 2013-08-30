@@ -24,8 +24,9 @@ namespace netcore
      NETVScheduler::NETVScheduler(NETVDriverManager *manager)
          : QObject(NULL),
            m_manager(manager),
-           m_schedulerTimer(NULL),
+           m_schedulerTimer(NULL),           
            m_aliveTimer(NULL),
+           m_watchdogTimer(NULL),
            m_mutex(QMutex::Recursive)
      {
          Q_ASSERT(m_manager != NULL);
@@ -41,6 +42,13 @@ namespace netcore
          m_schedulerTimer = new QTimer(this);
          connect(m_schedulerTimer,SIGNAL(timeout()),this,SLOT(schedulerUpdate()));
          m_schedulerTimer->start(10);//10ms timer
+
+
+         m_watchdogTimer = new QTimer(this);
+         connect(m_watchdogTimer,SIGNAL(timeout()),this,SLOT(schedulerWatchdog()));
+         m_watchdogTimer->start(1000);
+
+
      }
 
 
@@ -79,6 +87,9 @@ namespace netcore
 
      void NETVScheduler::addModule(NETVModule* module)
      {
+         //Watch out this is called from the Read Tread of the
+         //CoreDriverManager
+
          QMutexLocker lock(&m_mutex);
          //qDebug("NETVScheduler::addModule %p, conf size: %i",module,module->getConfiguration()->size());
 
@@ -106,7 +117,7 @@ namespace netcore
 
      void NETVScheduler::removeModule(NETVModule* module)
      {
-
+         Q_ASSERT(m_manager == QThread::currentThread());
          QMutexLocker lock(&m_mutex);
          //qDebug("NETVScheduler::removeModule(NETVModule* module = %p",module);
 
@@ -228,5 +239,10 @@ namespace netcore
          }
      }
 
+     void NETVScheduler::schedulerWatchdog()
+     {
+         Q_ASSERT(m_manager == QThread::currentThread());
+         m_manager->watchdogTimeout();
+     }
 
 } //namespace netcore

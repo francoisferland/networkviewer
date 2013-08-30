@@ -64,13 +64,16 @@ namespace netcore
         CoreDriverManager(CoreDriver *driver, QObject *parent=NULL);
         virtual ~CoreDriverManager();
 
+
+
+    protected:
+
         //Thread stuff
         virtual void startup() = 0;
         virtual void shutdown() = 0;
         virtual void process(const CoreMessage* message) = 0;
         virtual void run();
 
-    protected:
         CoreDriver *m_driver;
         CoreDriverManagerReader m_reader;
     };
