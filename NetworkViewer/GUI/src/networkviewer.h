@@ -31,14 +31,38 @@ public:
 
 public slots:
 
-    void onDebugInfo(QString info)
+    void onDebugInfo(int type, QString msg)
     {
         QRegExp exp(m_filterString);
-        if (info.contains(exp))
+
+        QString typeString;
+
+        switch (type)
         {
-            m_ui.m_textEdit->append(info);
+        case QtDebugMsg:
+            typeString = "<span style=\"color: green\">[DEBUG]</span> ";
+            break;
+        case QtWarningMsg:
+            typeString = "<span style=\"color: yellow\">[WARNING]</span> ";
+            break;
+        case QtCriticalMsg:
+            typeString = "<span style=\"color: red\">[CRITICAL]</span> ";
+            break;
+        case QtFatalMsg:
+            typeString = "<span style=\"color: red\">[FATAL]</span> ";
+            break;
+        default:
+            typeString = "<span style=\"color: red\">[?]</span> ";
+            break;
+        }
+
+        if (msg.contains(exp))
+        {
+            m_ui.m_textEdit->append(typeString + msg);
         }
     }
+
+
 
     void onClearLogButtonClicked()
     {
@@ -127,25 +151,27 @@ public:
 
         //Debug display
         m_networkviewer = new NetworkViewer(NULL);
-        connect(this,SIGNAL(debugInfo(QString)),m_networkviewer,SLOT(onDebugInfo(QString)));
+        connect(this,SIGNAL(debugInfo(int,QString)),
+                m_networkviewer,SLOT(onDebugInfo(int,QString)),
+                Qt::QueuedConnection);
         m_networkviewer->show();
     }
 
 signals:
-    void debugInfo(QString info);
+    void debugInfo(int type, QString msg);
 
 public slots:
 
-    void displayDebug(QString info)
-    {
 
-    }
 
 protected:
 
-    void emitDebugInfo(QString info)
+
+
+    void emitDebugInfo(QtMsgType type, const QMessageLogContext &context, const QString &msg)
     {
-        emit debugInfo(info);
+        Q_UNUSED(context);
+        emit debugInfo((int)type,QString(msg));
     }
 
     NetworkViewer *m_networkviewer;

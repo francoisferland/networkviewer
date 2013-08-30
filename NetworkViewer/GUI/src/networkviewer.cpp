@@ -4,6 +4,8 @@
 //Test application
 #include <QApplication>
 
+
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
 
@@ -11,6 +13,7 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
     if (app)
     {
+        /*
         QString typeMessage;
 
         switch (type) {
@@ -33,6 +36,8 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 
         app->emitDebugInfo(typeMessage + contextStr + " - " + msg);
+        */
+        app->emitDebugInfo(type,context,msg);
     }
 }
 
@@ -40,8 +45,12 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 
 int main(int argc, char* argv[])
 {
+    qSetMessagePattern("%{type} %{threadid} %{message}");
     NetworkViewerApp app(argc,argv);
     app.init();
+
     qInstallMessageHandler(myMessageOutput);
+
+    //See also void qSetMessagePattern(const QString & pattern)
     return app.exec();
 }
