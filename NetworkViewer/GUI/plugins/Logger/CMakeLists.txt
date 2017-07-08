@@ -32,7 +32,7 @@ INCLUDE_DIRECTORIES(${PLUGIN_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_library(Logger SHARED ${Logger_SRCS} ${Logger_HEADERS} ${Logger_QRC_SRCS} ${Logger_MOC_SRCS} ${Logger_UI_SRCS}  )
 target_link_libraries(Logger ${PLUGIN_LIBRARIES})
-qt5_use_modules(Logger Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+qt5_use_modules(Logger Core Widgets Gui Xml Network)
 
 #Install directory
 INSTALL(TARGETS Logger DESTINATION plugins/Logger)

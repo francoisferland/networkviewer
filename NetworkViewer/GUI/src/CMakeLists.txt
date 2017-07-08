@@ -1,7 +1,5 @@
 #GUI/src
 
-
-
 find_package(Qt5Gui REQUIRED)
 
 #Include directories
@@ -69,7 +67,7 @@ QT5_WRAP_CPP(NetworkViewer_Base_MOC_SRCS ${NetworkViewer_Base_HEADERS})
 #NetworkViewer Base Library
 add_library(networkViewerBase SHARED ${NetworkViewer_Base_SRCS} ${NetworkViewer_Base_HEADERS} ${NetworkViewer_Base_MOC_SRCS} ${NetworkViewer_Base_UI_SRCS} ${SRCS_QRC})
 target_link_libraries(networkViewerBase networkViewerCore NETVModuleView)
-qt5_use_modules(networkViewerBase Core Widgets Gui OpenGL Xml Concurrent Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+qt5_use_modules(networkViewerBase Core Widgets Gui OpenGL Xml Concurrent Svg PrintSupport Network WebEngine)
 
 INSTALL(TARGETS networkViewerBase DESTINATION bin)
 INSTALL(TARGETS networkViewerBase DESTINATION lib)
@@ -88,13 +86,13 @@ INSTALL( FILES ${NetworkViewer_Base_UI_SRCS} DESTINATION include/ui)
 #NetworkViewer Executable
 add_executable(NetworkViewer WIN32 main.cpp)
 target_link_libraries(NetworkViewer networkViewerCore networkViewerBase NETVModuleView )
-qt5_use_modules(NetworkViewer Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+qt5_use_modules(NetworkViewer Core Widgets Gui)
 INSTALL(TARGETS NetworkViewer DESTINATION bin)
 
 #NetworkViewer Executable
 add_executable(networkviewer-test WIN32 networkviewer.cpp)
 target_link_libraries(networkviewer-test networkViewerCore networkViewerBase NETVModuleView )
-qt5_use_modules(networkviewer-test Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+qt5_use_modules(networkviewer-test Core Widgets Gui)
 INSTALL(TARGETS networkviewer-test DESTINATION bin)
 
 #subdirectories

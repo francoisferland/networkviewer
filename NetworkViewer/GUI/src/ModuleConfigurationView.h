@@ -22,8 +22,6 @@
 
 
 #include "NetworkModule.h"
-#include <QScriptEngine>
-#include <QScriptEngineAgent>
 #include <QTimer>
 #include <QTime>
 #include <QTableView>

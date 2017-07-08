@@ -1,3 +1,4 @@
 [submodule "NetworkViewer/GUI/qwt"]
 	path = NetworkViewer/GUI/qwt
 	url = https://github.com/openecosys/qwt.git
+	branch = qwt-6.1

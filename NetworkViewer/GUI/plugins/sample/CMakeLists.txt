@@ -31,7 +31,7 @@ INCLUDE_DIRECTORIES(${PLUGIN_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_library(SamplePlugin SHARED ${Plugin_SRCS} ${Plugin_HEADERS} ${Plugin_QRC_SRCS} ${Plugin_MOC_SRCS} ${Plugin_UI_SRCS}  )
 target_link_libraries(SamplePlugin ${PLUGIN_LIBRARIES})
-qt5_use_modules(SamplePlugin Core Widgets Gui OpenGL Concurrent Xml Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+qt5_use_modules(SamplePlugin Core Widgets Gui Xml Network)
 
 #Install directory
 INSTALL(TARGETS SamplePlugin DESTINATION plugins/sample)	

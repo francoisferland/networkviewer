@@ -41,7 +41,7 @@ QT5_WRAP_CPP(NETVModuleView_MOC_SRCS ${NETVModuleView_HEADERS})
 #NETVModuleView Library
 add_library(NETVModuleView SHARED ${NETVModuleView_SRCS} ${NETVModuleView_HEADERS} ${NETVModuleView_MOC_SRCS} ${NETVModuleView_UI_SRCS} ${NETVModuleView_QRC_SRCS})
 target_link_libraries(NETVModuleView networkViewerCore)
-qt5_use_modules(NETVModuleView Core Widgets Gui OpenGL Xml Concurrent Svg PrintSupport Script Network Declarative WebKit WebKitWidgets)
+qt5_use_modules(NETVModuleView Core Widgets Gui)
 
 INSTALL(TARGETS NETVModuleView DESTINATION bin)
 INSTALL(TARGETS NETVModuleView DESTINATION lib)

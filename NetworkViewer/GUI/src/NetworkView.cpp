@@ -22,7 +22,6 @@
 #include <QTime>
 #include "BasePlugin.h"
 #include <iostream>
-#include <QWebView>
 #include <QFileDialog>
 #include "PreferencesDialog.h"
 #include "BasePluginEvent.h"
@@ -442,6 +441,8 @@ NetworkModule* NetworkView::getModule(int module_id)
 void NetworkView::helpWindowRequest(QString url)
 {
     //Create MDI window
+    //TODO Replace by WebEngineView
+ /*
     QMdiSubWindow *subWindow = createSubWindow(url);
     QWebView *webview = new QWebView(this);
     webview->load(QUrl(url));
@@ -450,6 +451,7 @@ void NetworkView::helpWindowRequest(QString url)
     subWindow->resize(1024,768);
     subWindow->show();
     subWindow->raise();
+ */
 }
 
 QMdiSubWindow* NetworkView::createSubWindow(QString title)
