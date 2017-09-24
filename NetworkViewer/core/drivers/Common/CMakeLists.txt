@@ -1,37 +1,40 @@
 MESSAGE( STATUS "Buiding driver common base ...")
 
+add_definitions(-DDRIVERS_COMMON_LIBRARY)
+
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Widgets REQUIRED)
 
-SET(DriverCommon_SRCS
+SET(DriversCommon_SRCS
     SerialPortSelectionDialog.cpp
 )
 
-SET(DriverCommon_HEADERS 
+SET(DriversCommon_HEADERS
+    DriversCommon.h
     SerialPortSelectionDialog.h
 )
 
-SET(DriverCommon_UIS
+SET(DriversCommon_UIS
     SerialPortSelectionDialog.ui	
 )
 
-SET(DriverCommon_QRC 
+SET(DriversCommon_QRC
 	
 )
 
 # generate rules for building source files from the resources
-QT5_ADD_RESOURCES(DriverCommon_QRC_SRCS ${DriverCommon_QRC})
+QT5_ADD_RESOURCES(DriversCommon_QRC_SRCS ${DriversCommon_QRC})
 
 #This will generate ui_* for Qt
-QT5_WRAP_UI(DriverCommon_UI_SRCS ${DriverCommon_UIS})
+QT5_WRAP_UI(DriversCommon_UI_SRCS ${DriversCommon_UIS})
 
 #This will generate moc_* for Qt
-QT5_WRAP_CPP(DriverCommon_MOC_SRCS ${DriverCommon_HEADERS})
+QT5_WRAP_CPP(DriversCommon_MOC_SRCS ${DriversCommon_HEADERS})
 
 INCLUDE_DIRECTORIES(${DRIVER_INCLUDES} ${CMAKE_CURRENT_BINARY_DIR})
 
-add_library(DriverCommon SHARED ${DriverCommon_SRCS} ${DriverCommon_HEADERS} ${DriverCommon_QRC_SRCS} ${DriverCommon_MOC_SRCS} ${DriverCommon_UI_SRCS}  )
-target_link_libraries(DriverCommon networkViewerCore)
-qt5_use_modules(DriverCommon Core Network Xml XmlPatterns Widgets SerialPort)
+add_library(DriversCommon SHARED ${DriversCommon_SRCS} ${DriversCommon_HEADERS} ${DriversCommon_QRC_SRCS} ${DriversCommon_MOC_SRCS} ${DriversCommon_UI_SRCS}  )
+target_link_libraries(DriversCommon networkViewerCore)
+qt5_use_modules(DriversCommon Core Network Xml XmlPatterns Widgets SerialPort)
 
-INSTALL(TARGETS DriverCommon DESTINATION lib)
+INSTALL(TARGETS DriversCommon DESTINATION lib)

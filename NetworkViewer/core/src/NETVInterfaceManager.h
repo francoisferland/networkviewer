@@ -20,6 +20,7 @@
 #define _NETVINTERFACEMANAGER_H_
 
 #include <QObject>
+#include "Core.h"
 #include "NETVInterfaceHandler.h"
 #include "NetworkModule.h"
 #include "NetworkScheduler.h"
@@ -31,9 +32,9 @@
     \date July 15 2011
     \author Dominic
 */
-class NETVInterfaceManager : public QObject, public NETVMessageObserverIF
+class NETVCORE_EXPORT NETVInterfaceManager : public QObject, public NETVMessageObserverIF
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

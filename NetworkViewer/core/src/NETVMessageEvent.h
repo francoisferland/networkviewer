@@ -20,11 +20,12 @@
 #define _CAN_MESSAGE_EVENT_H_
 
 #include <QEvent>
+#include "Core.h"
 
 /**
     An user event that is used for signaling a new message from a thread to another thread with the Qt event system.
 */
-class NETVMessageEvent : public QEvent
+class NETVCORE_EXPORT NETVMessageEvent : public QEvent
 {
     public:
 

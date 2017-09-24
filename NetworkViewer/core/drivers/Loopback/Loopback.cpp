@@ -17,7 +17,9 @@
 #include <QDebug>
 #include <QCoreApplication>
 #include <QTime>
+#define _USE_MATH_DEFINES
 #include <math.h>
+
 
 static bool LOOPBACK_DEVICE_INIT = NETVDevice::registerDeviceFactory("Loopback",new NETVDevice::DeviceFactory<Loopback>("5","The number of virtual modules."));
 
@@ -40,7 +42,7 @@ NETVDevice::State Loopback::initialize(const char* args)
     int count = QString(args).toInt();
 
     //create virtual modules
-    for (unsigned int i= 0; i < count; i++)
+    for (auto i= 0; i < count; i++)
     {
         m_moduleList.push_back(VirtualModule(i));
     }
@@ -100,7 +102,7 @@ NETVDevice::State Loopback::sendMessage(NETV_MESSAGE &message)
             m_mutex.lock();
 
             //process virtual modules alive request
-            for(unsigned int i = 0; i < m_moduleList.size(); i++)
+            for(auto i = 0; i < m_moduleList.size(); i++)
             {
                 NETV_MESSAGE answer = message;
 
@@ -146,7 +148,7 @@ NETVDevice::State Loopback::sendMessage(NETV_MESSAGE &message)
     else if (message.msg_type == NETV_TYPE_BOOTLOADER)
     {
 
-        unsigned int device_id = message.msg_dest;
+       auto device_id = message.msg_dest;
 
         if (device_id < m_moduleList.size())
         {
@@ -230,7 +232,7 @@ void Loopback::timeout()
 
     double elapsed = m_time.elapsed() / 1000.0;
 
-    for (unsigned int i = 0; i < m_moduleList.size(); i++)
+    for (auto i = 0; i < m_moduleList.size(); i++)
     {
         for(unsigned int j = 0; j < VirtualModule::NB_SINE_VARIABLES; j++)
         {

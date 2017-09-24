@@ -26,8 +26,9 @@
 #include <QBuffer>
 #include <QTextStream>
 #include <QtDebug>
+#include "Core.h"
 
-class UserPreferences
+class NETVCORE_EXPORT UserPreferences
 {
 
 public:

@@ -20,6 +20,7 @@ QT5_WRAP_CPP(QWT_MOC_SRCS ${QWT_HEADERS})
 INCLUDE_DIRECTORIES(${QWT_SRC_DIR} plugins/ScopeView)
 
 #Build library
+add_definitions(-DQWT_MAKEDLL)
 add_library(qwt-wrap SHARED ${QWT_SRCS} ${QWT_MOC_SRCS} ${QWT_HEADERS})
 qt5_use_modules(qwt-wrap Core Widgets Gui OpenGL Concurrent Svg PrintSupport)
 
@@ -35,5 +36,6 @@ SET(NETWORKVIEWER_GENERATED_INCLUDE ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 
 #Subdirectories
+remove_definitions(-DQWT_MAKEDLL)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(plugins)

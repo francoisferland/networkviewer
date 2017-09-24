@@ -9,7 +9,7 @@ SET(DRIVER_INCLUDES
 )
 
 SET(DRIVER_LIBRARIES
-        DriverCommon
+        DriversCommon
 )
 
 SET(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/drivers)
@@ -23,7 +23,8 @@ ADD_SUBDIRECTORY(TcpRemoteClient)
 
 
 IF (NOT APPLE)
-    ADD_SUBDIRECTORY(PCAN)
+#32bits library removed.
+#ADD_SUBDIRECTORY(PCAN)
 ENDIF (NOT APPLE)
 
 IF(UNIX AND NOT APPLE)

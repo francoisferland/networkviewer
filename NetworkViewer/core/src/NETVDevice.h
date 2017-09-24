@@ -30,6 +30,7 @@
 #include <QDir>
 #include <QLibrary>
 #include <QIODevice>
+#include "Core.h"
 
 //TODO Remove this
 using namespace std;
@@ -46,7 +47,7 @@ using namespace std;
      \version Revision: 1.1
      \date 2007-01-11 19:21:20
 */
-typedef class _message
+typedef class NETVCORE_EXPORT _message
 {
 
 public:
@@ -107,7 +108,7 @@ public:
          if (msg_timestamp != msg_timestamp) return false;
          if (message.msg_data_length <= 8)
          {
-             for (unsigned int i = 0; i < message.msg_data_length; i++)
+             for (auto i = 0; i < message.msg_data_length; i++)
              {
                  if (msg_data[i] != message.msg_data[i]) return false;
              }
@@ -235,7 +236,7 @@ public:
      \version Revision: 1.1
      \date Date: 2007-01-11 19:21:20
 */
-typedef struct _filter
+typedef struct NETVCORE_EXPORT _filter
 {
               
      /** Default Constructor */
@@ -292,7 +293,7 @@ typedef struct _filter
      \version $Revision: 1.1 $
      \date $Date: 2007-01-11 19:21:20 $
 */
-typedef struct _mask
+typedef struct NETVCORE_EXPORT _mask
 {
      /** Default Constructor */
      _mask()
@@ -343,7 +344,7 @@ typedef struct _mask
 
 
 */
-class NETVDevice
+class NETVCORE_EXPORT NETVDevice
 {
 
     

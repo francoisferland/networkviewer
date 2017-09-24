@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include "Core.h"
 #include "NetworkModule.h"
 
 class NETVInterfaceManager;
@@ -30,9 +31,9 @@ class NETVInterfaceManager;
     Module responsible of making periodical queries for variables (simple implementation)
     \author Dominic Letourneau
 */
-class NetworkScheduler : public QObject
+class NETVCORE_EXPORT NetworkScheduler : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

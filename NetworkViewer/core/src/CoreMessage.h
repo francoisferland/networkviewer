@@ -18,6 +18,7 @@
 #ifndef _CORE_MESSAGE_H_
 #define _CORE_MESSAGE_H_
 
+#include "Core.h"
 #include "CoreProtocols.h"
 #include <QByteArray>
 #include <QDateTime>
@@ -27,7 +28,7 @@
 
 namespace netcore
 {
-    class CoreMessage
+    class NETVCORE_EXPORT CoreMessage
     {
         friend class CoreSerializer;
         friend class CoreDeserializer;

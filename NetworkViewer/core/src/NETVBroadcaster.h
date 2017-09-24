@@ -26,10 +26,11 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QTextStream>
+#include "Core.h"
 
-class NETVRemoteInfo : public QObject
+class NETVCORE_EXPORT NETVRemoteInfo : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 
@@ -80,9 +81,9 @@ public:
 
 
 
-class NETVBroadcaster : public QObject
+class NETVCORE_EXPORT NETVBroadcaster : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

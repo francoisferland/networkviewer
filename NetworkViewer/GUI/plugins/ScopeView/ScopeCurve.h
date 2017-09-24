@@ -43,7 +43,7 @@ public:
     virtual size_t size() const;
     virtual QRectF boundingRect() const;
     void setMaxItems(size_t count);
-    int getMaxItems();
+    size_t getMaxItems();
 
     void append(const QPointF &sample);
     void clear();

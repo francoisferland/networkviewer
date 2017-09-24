@@ -27,16 +27,16 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QDateTime>
-
+#include "Core.h"
 
 /**
 Data structure that holds the variable information.
 \author Dominic Letourneau
 */
-class ModuleVariable : public QObject 
+class NETVCORE_EXPORT ModuleVariable : public QObject
 {
 
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

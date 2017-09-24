@@ -20,6 +20,7 @@
 #ifndef _NETWORK_MODULE_H_
 #define _NETWORK_MODULE_H_
 
+#include "Core.h"
 #include "ModuleConfiguration.h"
 #include <QTime>
 
@@ -27,9 +28,9 @@
   The Network module will contain the module configuration and variables.
   \author Dominic Letourneau
 */
-class NetworkModule : public QObject
+class NETVCORE_EXPORT NetworkModule : public QObject
 {
-	Q_OBJECT;
+    Q_OBJECT
 	
 public:
 

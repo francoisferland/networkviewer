@@ -1,0 +1,9 @@
+#ifndef _NETWORKVIEWER_CORE_H_
+#define _NETWORKVIEWER_CORE_H_
+
+	#if defined(NETWORKVIEWER_CORE_LIBRARY)
+		#define NETVCORE_EXPORT Q_DECL_EXPORT
+	#else
+		#define NETVCORE_EXPORT Q_DECL_IMPORT
+	#endif
+#endif

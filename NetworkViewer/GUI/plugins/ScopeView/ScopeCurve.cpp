@@ -110,7 +110,7 @@ void ScopeCurveData::setMaxItems(size_t count)
     updateBoundaries();
 }
 
-int ScopeCurveData::getMaxItems()
+size_t ScopeCurveData::getMaxItems()
 {
     return m_maxItems;
 }
@@ -137,7 +137,7 @@ void ScopeCurveData::updateBoundaries()
         m_boundingRect.setRight(m_time.last());
 
         //Scan the array and adjust boudaries if necessary
-        for (unsigned int i = 0; i < m_values.size(); i++)
+        for (auto i = 0; i < m_values.size(); i++)
         {
             //Lowe value test
             if ( m_values[i] > m_boundingRect.bottom())

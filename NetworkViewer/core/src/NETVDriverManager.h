@@ -17,12 +17,13 @@
 #ifndef _NETV_DRIVER_MANAGER_H_
 #define _NETV_DRIVER_MANAGER_H_
 
+#include "Core.h"
 #include "CoreDriverManager.h"
 #include "NETVScheduler.h"
 
 namespace netcore
 {
-    class NETVDriverManager : public CoreDriverManager
+    class NETVCORE_EXPORT NETVDriverManager : public CoreDriverManager
     {
         friend class NETVScheduler;
 

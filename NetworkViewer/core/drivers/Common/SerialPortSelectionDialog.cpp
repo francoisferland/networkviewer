@@ -35,7 +35,7 @@ SerialPortSelectionDialog::SerialPortSelectionDialog(QWidget *parent)
     QList<QSerialPortInfo>	ports = QSerialPortInfo::availablePorts();
 
 
-    for (unsigned int i = 0; i < ports.size(); i++)
+    for (auto i = 0; i < ports.size(); i++)
     {
         if (i == 0)
         {

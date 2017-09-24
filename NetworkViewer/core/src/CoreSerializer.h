@@ -19,7 +19,7 @@
 
 #include <QIODevice>
 #include <QDebug>
-
+#include "Core.h"
 
 namespace netcore
 {
@@ -28,7 +28,7 @@ namespace netcore
     class NETVMessage;
     class CoreMessage;
 
-    class CoreSerializer
+    class NETVCORE_EXPORT CoreSerializer
     {
     public:
         //Convert a message to a series of bytes

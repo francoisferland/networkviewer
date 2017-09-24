@@ -128,7 +128,7 @@ namespace netcore
 
                 //Let's see to which module it belongs...
                 //Update the variable if it fits...
-                for(unsigned int mod = 0; mod < m_modules.size(); mod++)
+                for(auto mod = 0; mod < m_modules.size(); mod++)
                 {
                     NETVModule *module = m_modules[mod];
 
@@ -169,7 +169,7 @@ namespace netcore
 
                     //Look for already existing modules...
                     bool found = false;
-                    for (unsigned int mod = 0; mod < m_modules.size(); mod++)
+                    for (auto mod = 0; mod < m_modules.size(); mod++)
                     {
                         NETVModule *module = m_modules[mod];
 
@@ -295,7 +295,7 @@ namespace netcore
         QMutexLocker lock(&m_mutex);
         NETVModule* module = NULL;
 
-        for (unsigned int i = 0; i < m_modules.size(); i++)
+        for (auto i = 0; i < m_modules.size(); i++)
         {
             NETVModuleConfiguration *conf = m_modules[i]->getConfiguration();
 
@@ -439,7 +439,7 @@ namespace netcore
         QMutexLocker lock(&m_mutex);
 
         //Scan for inactive modules
-        for (unsigned int i = 0; i < m_modules.size(); i++)
+        for (auto i = 0; i < m_modules.size(); i++)
         {
             if (m_modules[i]->getUpdateTime().secsTo(QTime::currentTime()) > 5)
             {

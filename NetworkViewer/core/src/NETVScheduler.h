@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include "Core.h"
 #include "NETVModule.h"
 #include <QMutex>
 
@@ -26,7 +27,7 @@ namespace netcore
 {
     class NETVDriverManager;
 
-    class NETVScheduler : QObject
+    class NETVCORE_EXPORT NETVScheduler : QObject
     {
         Q_OBJECT
     public:

@@ -18,6 +18,7 @@
 #ifndef _CORE_DRIVER_MANAGER_H_
 #define _CORE_DRIVER_MANAGER_H_
 
+#include "Core.h"
 #include <QObject>
 #include <QThread>
 #include "CoreDriver.h"
@@ -26,7 +27,7 @@ namespace netcore
 {
 
     class CoreDriverManager;
-    class CoreDriverManagerReader : public QThread
+    class NETVCORE_EXPORT CoreDriverManagerReader : public QThread
     {
         Q_OBJECT
 
@@ -53,7 +54,7 @@ namespace netcore
      *
      *
      */
-    class CoreDriverManager : public QThread
+    class NETVCORE_EXPORT CoreDriverManager : public QThread
     {
         friend class CoreDriverManagerReader;
 

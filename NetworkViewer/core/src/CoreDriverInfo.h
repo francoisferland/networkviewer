@@ -18,6 +18,7 @@
 #ifndef _CORE_DRIVER_INFO_H_
 #define _CORE_DRIVER_INFO_H_
 
+#include "Core.h"
 #include <QStringList>
 #include <QDebug>
 
@@ -26,7 +27,7 @@ namespace netcore
     //Forward declaration
     class CoreDriverFactoryBase;
 
-    class CoreDriverInfo
+    class NETVCORE_EXPORT CoreDriverInfo
     {
     public:
         QString m_name;
@@ -116,7 +117,7 @@ namespace netcore
 
     };//class CoreDriverInfo
 
-    inline QDebug operator<< (QDebug d, const CoreDriverInfo &info)
+    inline NETVCORE_EXPORT QDebug operator<< (QDebug d, const CoreDriverInfo &info)
     {
         d << info.m_name << " " << info.m_major<<"."<<info.m_minor<<"."<<info.m_micro;
         d << "Description : "<< info.m_description;

@@ -2,6 +2,8 @@
 
 find_package(Qt5Gui REQUIRED)
 
+
+
 #Include directories
 INCLUDE_DIRECTORIES(
                 ${PROJECT_SOURCE_DIR}
@@ -84,13 +86,13 @@ INSTALL( FILES ${NetworkViewer_Base_UI_SRCS} DESTINATION include/ui)
 #APPLICATION
 
 #NetworkViewer Executable
-add_executable(NetworkViewer WIN32 main.cpp)
+add_executable(NetworkViewer main.cpp)
 target_link_libraries(NetworkViewer networkViewerCore networkViewerBase NETVModuleView )
 qt5_use_modules(NetworkViewer Core Widgets Gui)
 INSTALL(TARGETS NetworkViewer DESTINATION bin)
 
 #NetworkViewer Executable
-add_executable(networkviewer-test WIN32 networkviewer.cpp)
+add_executable(networkviewer-test networkviewer.cpp)
 target_link_libraries(networkviewer-test networkViewerCore networkViewerBase NETVModuleView )
 qt5_use_modules(networkviewer-test Core Widgets Gui)
 INSTALL(TARGETS networkviewer-test DESTINATION bin)

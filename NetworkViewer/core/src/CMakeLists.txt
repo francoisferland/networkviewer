@@ -1,5 +1,7 @@
 find_package(Qt5Core)
 
+add_definitions(-DNETWORKVIEWER_CORE_LIBRARY)
+
 SET(NETV_CORE_SRCS
     CoreDriver.cpp
     CoreDriverFactory.cpp
@@ -29,6 +31,7 @@ SET(NETV_CORE_SRCS
 )
 
 SET(NETV_CORE_HEADERS
+    Core.h
     CoreDriverInfo.h
     CoreDriver.h
     CoreDriverFactory.h

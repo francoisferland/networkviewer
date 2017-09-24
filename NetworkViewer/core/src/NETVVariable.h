@@ -25,6 +25,7 @@
 #include <QVariant>
 #include <QByteArray>
 #include <QDateTime>
+#include "Core.h"
 
 namespace netcore
 {
@@ -34,7 +35,7 @@ namespace netcore
     Data structure that holds the variable information.
     \author Dominic Letourneau
     */
-    class NETVVariable : public QObject
+    class NETVCORE_EXPORT NETVVariable : public QObject
     {
 
         Q_OBJECT;

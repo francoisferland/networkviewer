@@ -23,13 +23,14 @@
 #include <QDir>
 #include <QStringList>
 #include <QAbstractItemModel>
+#include "Core.h"
 
 /**
   A ModuleConfiguration holds all the information of the module and contains a list of \ref ModuleVariable.
   \author Dominic Letourneau
   \date Dec 2009
 */
-class ModuleConfiguration : public QAbstractItemModel
+class  NETVCORE_EXPORT ModuleConfiguration : public QAbstractItemModel
 {
 
     Q_OBJECT;

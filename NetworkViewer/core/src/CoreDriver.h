@@ -17,6 +17,7 @@
 #ifndef _CORE_DRIVER_H_
 #define _CORE_DRIVER_H_
 
+#include "Core.h"
 #include "CoreProtocols.h"
 #include "CoreMessage.h"
 #include "CoreDriverInfo.h"
@@ -30,7 +31,7 @@ namespace netcore
 {
     class CoreDriver;
 
-    class CoreDriverRecvThread : public QThread
+    class NETVCORE_EXPORT CoreDriverRecvThread : public QThread
     {
         Q_OBJECT
 
@@ -48,7 +49,7 @@ namespace netcore
         bool m_running;
     };
 
-    class  CoreDriverSendThread : public QThread
+    class  NETVCORE_EXPORT CoreDriverSendThread : public QThread
     {
         Q_OBJECT
 
@@ -66,7 +67,7 @@ namespace netcore
         bool m_running;
     };
 
-    class CoreDriver : public QThread
+    class NETVCORE_EXPORT CoreDriver : public QThread
     {
 
         Q_OBJECT

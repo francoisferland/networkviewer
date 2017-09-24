@@ -17,6 +17,7 @@
 #ifndef _CORE_DRIVER_FACTORY_H_
 #define _CORE_DRIVER_FACTORY_H_
 
+#include "Core.h"
 #include "CoreDriverInfo.h"
 #include <QStringList>
 #include <QMap>
@@ -28,7 +29,7 @@
 
 namespace netcore
 {
-    class CoreDriverFactoryBase
+    class NETVCORE_EXPORT CoreDriverFactoryBase
     {
 
     public:

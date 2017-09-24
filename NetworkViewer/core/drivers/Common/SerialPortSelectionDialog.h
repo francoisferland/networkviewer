@@ -21,12 +21,12 @@
 
 #include <QDialog>
 #include <QSerialPortInfo>
-
+#include "DriversCommon.h"
 #include "ui_SerialPortSelectionDialog.h"
 
-class SerialPortSelectionDialog : public QDialog, public Ui::SerialPortSelectionDialog
+class DRIVERS_COMMON_EXPORT SerialPortSelectionDialog : public QDialog, public Ui::SerialPortSelectionDialog
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

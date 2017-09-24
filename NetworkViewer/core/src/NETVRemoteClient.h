@@ -20,11 +20,12 @@
 #define _NETV_REMOTE_CLIENT_H_
 
 #include <QTcpSocket>
+#include "Core.h"
 #include "NETVDevice.h"
 
-class NETVRemoteClient : public QTcpSocket
+class NETVCORE_EXPORT NETVRemoteClient : public QTcpSocket
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public :
 

@@ -17,12 +17,13 @@
 #ifndef _CORE_PROTOCOLS_H_
 #define _CORE_PROTOCOLS_H_
 
+#include "Core.h"
 #include <QString>
 #include <QDebug>
 
 namespace netcore
 {
-    class CoreProtocols
+    class NETVCORE_EXPORT CoreProtocols
     {
     public:
         typedef enum {RAW_CAN, NETV_CAN, RAW_ETHERNET, NETV_ETHERNET, RAW_SERIAL, NETV_SERIAL} CORE_PROTOCOL_TYPE;

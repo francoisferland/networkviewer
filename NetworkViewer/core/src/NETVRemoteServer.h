@@ -20,6 +20,7 @@
 #define _NETV_REMOTE_SERVER_H_
 
 #include <QTcpServer>
+#include "Core.h"
 #include "NETVDevice.h"
 #include <QTcpSocket>
 #include <QList>
@@ -27,9 +28,9 @@
 #include "NETVInterfaceHandler.h"
 #include <QEvent>
 
-class NETVRemoteServer : public QTcpServer, public NETVMessageObserverIF
+class NETVCORE_EXPORT NETVRemoteServer : public QTcpServer, public NETVMessageObserverIF
 {
-    Q_OBJECT;
+    Q_OBJECT
 
 public:
 

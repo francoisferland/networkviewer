@@ -23,6 +23,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QSemaphore>
+#include "Core.h"
 #include "NETVDevice.h"
 #include <QCoreApplication>
 #include <QTimer>
@@ -38,7 +39,7 @@
     \author Dominic Letourneau
     \date 22/05/2008
 */
-class NETVMessageObserverIF
+class NETVCORE_EXPORT NETVMessageObserverIF
 {
     public:
     ///notify function for new messages
@@ -52,9 +53,9 @@ class NETVMessageObserverIF
     \author Dominic Letourneau
     \date 22/05/2008
 */
-class NETVInterfaceHandler : public QObject
+class NETVCORE_EXPORT NETVInterfaceHandler : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
     public:
 
@@ -66,7 +67,7 @@ class NETVInterfaceHandler : public QObject
     /**
         This working thread is responsible of reading NETV messages from the device
     */
-    class NETVRecvThread : public QThread
+    class NETVCORE_EXPORT NETVRecvThread : public QThread
     {
         public:
 
@@ -94,7 +95,7 @@ class NETVInterfaceHandler : public QObject
     /**
         This working thread is responsible of writing NETV messages to the device
     */
-    class NETVSendThread : public QThread
+    class NETVCORE_EXPORT NETVSendThread : public QThread
     {
         public:
         ///Constructor taking the NETVInterfaceHandler pointer

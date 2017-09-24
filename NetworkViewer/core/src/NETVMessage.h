@@ -17,13 +17,14 @@
 #ifndef _NETV_MESSAGE_H_
 #define _NETV_MESSAGE_H_
 
+#include "Core.h"
 #include "CANMessage.h"
 #include "NETV_define.h"
 
 namespace netcore
 {
 
-    class NETVMessage : public CANMessage
+    class NETVCORE_EXPORT NETVMessage : public CANMessage
     {
 
     public:

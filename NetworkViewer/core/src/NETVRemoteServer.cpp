@@ -110,7 +110,7 @@ void NETVRemoteServer::readyReadSocket(void)
     //qDebug("void NETVRemoteServer::readyReadSocket(void)");
 
     //Read from all sockets if avilable
-    for (unsigned int i = 0; i < m_socketList.size(); i++)
+    for (auto i = 0; i < m_socketList.size(); i++)
     {
         while (m_socketList[i]->bytesAvailable() > 0)
         {
@@ -123,7 +123,7 @@ void NETVRemoteServer::readyReadSocket(void)
                     //Let's find which interface it belongs...
                     //This can be optimized ?
                     //FIXME Sending to all interface since we don't know from which interface it comes from
-                    for (unsigned int j = 0; j <  m_managerList.size(); j++)
+                    for (auto j = 0; j <  m_managerList.size(); j++)
                     {
                         m_managerList[j]->getInterfaceHandler()->pushNETVMessage(msg);
                     }

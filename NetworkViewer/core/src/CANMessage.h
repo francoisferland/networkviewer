@@ -18,11 +18,12 @@
 #ifndef _CAN_MESSAGE_H_
 #define _CAN_MESSAGE_H_
 
+#include "Core.h"
 #include "CoreMessage.h"
 
 namespace netcore
 {
-    class CANMessage : public CoreMessage
+    class NETVCORE_EXPORT CANMessage : public CoreMessage
     {
     public:
         static const quint32 MaxPayloadSize = 8;

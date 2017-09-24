@@ -18,6 +18,7 @@
 #ifndef _NETV_MODULE_CONFIGURATION_H_
 #define _NETV_MODULE_CONFIGURATION_H_
 
+#include "Core.h"
 #include "NETVVariable.h"
 #include <QDir>
 #include <QStringList>
@@ -31,10 +32,10 @@ namespace netcore
       \author Dominic Letourneau
       \date Dec 2009
     */
-    class NETVModuleConfiguration : public QAbstractItemModel
+    class NETVCORE_EXPORT NETVModuleConfiguration : public QAbstractItemModel
     {
 
-        Q_OBJECT;
+        Q_OBJECT
 
     public:
 

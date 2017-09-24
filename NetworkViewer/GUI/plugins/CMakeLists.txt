@@ -14,7 +14,6 @@ SET (PLUGIN_LIBRARIES
 	networkViewerBase
 )
 
-
 SET (LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin/plugins)
 
 ADD_SUBDIRECTORY(sample)

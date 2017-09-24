@@ -19,6 +19,7 @@
 
 #include "NETVModuleConfiguration.h"
 #include <QTime>
+#include "Core.h"
 
 namespace netcore
 {
@@ -28,9 +29,9 @@ namespace netcore
       The Network module will contain the module configuration and variables.
       \author Dominic Letourneau
     */
-    class NETVModule : public QObject
+    class NETVCORE_EXPORT NETVModule : public QObject
     {
-        Q_OBJECT;
+        Q_OBJECT
 
     public:
 

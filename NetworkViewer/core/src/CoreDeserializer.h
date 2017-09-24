@@ -17,6 +17,7 @@
 #ifndef _CORE_DESERIALIZER_H_
 #define _CORE_DESERIALIZER_H_
 
+#include "Core.h"
 #include <QIODevice>
 
 namespace netcore
@@ -26,7 +27,7 @@ namespace netcore
     class NETVMessage;
     class CoreMessage;
 
-    class CoreDeserializer
+    class NETVCORE_EXPORT CoreDeserializer
     {
     public:
         //Convert a series of bytes to a message
