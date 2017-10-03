@@ -115,7 +115,7 @@ QScriptValue createPseudoModuleFunction(QScriptContext *context, QScriptEngine *
     {
         if (context->argumentCount() == 1)
         {
-            int module_id = context->argument(0).toInt32();            
+            int module_id = context->argument(0).toInt32();
             return engine->newVariant(myScriptEngine->createPseudoModule(module_id));
         }
     }
@@ -145,37 +145,37 @@ QScriptValue addScriptVariableFunction(QScriptContext *context, QScriptEngine *e
 ScriptEngine::ScriptEngine(NetworkView *view)
     : BasePlugin(view), m_startTime(QTime::currentTime()), m_running(false), m_cycle(0)
 {
-	qDebug("ScriptEngine::ScriptEngine(NetworkView *view = %p)",view);
+    qDebug("ScriptEngine::ScriptEngine(NetworkView *view = %p)",view);
 
-	//Setup UI
-	m_ui.setupUi(this);
+    //Setup UI
+    m_ui.setupUi(this);
 
-        //m_ui.m_textEditScript;
-        //m_ui.m_textEditMessages
-        Highlighter *highlighter = new Highlighter(m_ui.m_textEditScript->document());
+    //m_ui.m_textEditScript;
+    //m_ui.m_textEditMessages
+    Highlighter *highlighter = new Highlighter(m_ui.m_textEditScript->document());
 
-        //update all variables
-        updateEngineVariables();
+    //update all variables
+    updateEngineVariables();
 
-        //Connect modules add/remove
-        connect(m_view,SIGNAL(moduleAdded(NetworkModule*)),this,SLOT(moduleAdded(NetworkModule*)));
-        connect(m_view,SIGNAL(moduleRemoved(NetworkModule*)),this,SLOT(moduleRemoved(NetworkModule*)));
+    //Connect modules add/remove
+    connect(m_view,SIGNAL(moduleAdded(NetworkModule*)),this,SLOT(moduleAdded(NetworkModule*)));
+    connect(m_view,SIGNAL(moduleRemoved(NetworkModule*)),this,SLOT(moduleRemoved(NetworkModule*)));
 
-        //Connect buttons
-        connect(m_ui.m_runButton,SIGNAL(clicked()),this,SLOT(runButtonClicked()));
-        connect(m_ui.m_loadButton,SIGNAL(clicked()),this,SLOT(loadButtonClicked()));
-	connect(m_ui.m_saveButton,SIGNAL(clicked()),this,SLOT(saveButtonClicked()));
-        connect(m_ui.helpButton,SIGNAL(clicked()),this,SLOT(helpButtonClicked()));
-
-
-	//Create timer
-	m_timer = new QTimer(this);
-	connect(m_timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
+    //Connect buttons
+    connect(m_ui.m_runButton,SIGNAL(clicked()),this,SLOT(runButtonClicked()));
+    connect(m_ui.m_loadButton,SIGNAL(clicked()),this,SLOT(loadButtonClicked()));
+    connect(m_ui.m_saveButton,SIGNAL(clicked()),this,SLOT(saveButtonClicked()));
+    connect(m_ui.helpButton,SIGNAL(clicked()),this,SLOT(helpButtonClicked()));
 
 
+    //Create timer
+    m_timer = new QTimer(this);
+    connect(m_timer,SIGNAL(timeout()),this,SLOT(timerUpdate()));
 
-        //Period update
-        connect(m_ui.spinBox,SIGNAL(valueChanged(int)),this,SLOT(updatePeriod(int)));
+
+
+    //Period update
+    connect(m_ui.spinBox,SIGNAL(valueChanged(int)),this,SLOT(updatePeriod(int)));
 
 }
 
@@ -222,7 +222,7 @@ void ScriptEngine::timerUpdate()
             QStringList backtrace = m_scriptEngine.uncaughtExceptionBacktrace();
             for (int i = 0; i < backtrace.size(); i++)
             {
-               m_ui.m_textEditMessages->append("<span style=""color:blue"">" + backtrace[i] + "</span>");
+                m_ui.m_textEditMessages->append("<span style=""color:blue"">" + backtrace[i] + "</span>");
             }
 
 
@@ -255,17 +255,17 @@ void ScriptEngine::loadButtonClicked()
     if (!m_running)
     {
         QString fileName = QFileDialog::getOpenFileName(NULL, "Open Script File",
-                                                         m_lastPath,
-                                                         "JavaScript (*.js)");
+                                                        m_lastPath,
+                                                        "JavaScript (*.js)");
         if (fileName.size() > 0)
         {
-                qDebug() << "Loading script :" << fileName;
-                m_lastPath = fileName;
+            qDebug() << "Loading script :" << fileName;
+            m_lastPath = fileName;
 
-                QFile file(fileName);
-                file.open(QIODevice::ReadOnly);
-                m_ui.m_textEditScript->setText(file.readAll());
-                file.close();
+            QFile file(fileName);
+            file.open(QIODevice::ReadOnly);
+            m_ui.m_textEditScript->setText(file.readAll());
+            file.close();
 
         }
     }
@@ -280,20 +280,20 @@ void ScriptEngine::loadButtonClicked()
 
 void ScriptEngine::saveButtonClicked()
 {
-	if (!m_running)
+    if (!m_running)
     {
         QString fileName = QFileDialog::getSaveFileName(NULL, "Save Script File",
-														m_lastPath,
-														"JavaScript (*.js)");
+                                                        m_lastPath,
+                                                        "JavaScript (*.js)");
         if (fileName.size() > 0)
         {
-			qDebug() << "Saving script :" << fileName;
-			m_lastPath = fileName;
-			QFile file(fileName);
-			file.open(QIODevice::WriteOnly);
-			QByteArray array = m_ui.m_textEditScript->toPlainText().toUtf8();
-			file.write(array.data(),array.size());
-			file.close();
+            qDebug() << "Saving script :" << fileName;
+            m_lastPath = fileName;
+            QFile file(fileName);
+            file.open(QIODevice::WriteOnly);
+            QByteArray array = m_ui.m_textEditScript->toPlainText().toUtf8();
+            file.write(array.data(),array.size());
+            file.close();
         }
     }
     else
@@ -301,10 +301,10 @@ void ScriptEngine::saveButtonClicked()
         QMessageBox msgBox;
         msgBox.setText("Stop the script before saving.");
         msgBox.exec();
-		
+
     }
-	
-	
+
+
 }
 
 void ScriptEngine::runButtonClicked()
@@ -458,26 +458,26 @@ void ScriptEngine::updateEngineVariables(bool modulesOnly)
 
         for (int i = 0; i < config->size(); i++)
         {
-                //Making the variable available to the script engine
-                ModuleVariable *var = (*config)[i];
-                Q_ASSERT(var);
-                QScriptValue objectValue = m_scriptEngine.newQObject(var,QScriptEngine::QtOwnership, QScriptEngine::SkipMethodsInEnumeration);
+            //Making the variable available to the script engine
+            ModuleVariable *var = (*config)[i];
+            Q_ASSERT(var);
+            QScriptValue objectValue = m_scriptEngine.newQObject(var,QScriptEngine::QtOwnership, QScriptEngine::SkipMethodsInEnumeration);
 
-                objectValue.setProperty("name",var->getName(),QScriptValue::ReadOnly);
-                objectValue.setProperty("type",var->getType(),QScriptValue::ReadOnly);
-                objectValue.setProperty("DeviceID",var->getDeviceID(),QScriptValue::ReadOnly);
-                objectValue.setProperty("description",var->getDescription(),QScriptValue::ReadOnly);
-                objectValue.setProperty("offset",var->getOffset(),QScriptValue::ReadOnly);
-                objectValue.setProperty("memType",var->getMemType(),QScriptValue::ReadOnly);
-                objectValue.setProperty("activated",var->getActivated(),QScriptValue::ReadOnly);
-                objectValue.setProperty("index",i,QScriptValue::ReadOnly);
+            objectValue.setProperty("name",var->getName(),QScriptValue::ReadOnly);
+            objectValue.setProperty("type",var->getType(),QScriptValue::ReadOnly);
+            objectValue.setProperty("DeviceID",var->getDeviceID(),QScriptValue::ReadOnly);
+            objectValue.setProperty("description",var->getDescription(),QScriptValue::ReadOnly);
+            objectValue.setProperty("offset",var->getOffset(),QScriptValue::ReadOnly);
+            objectValue.setProperty("memType",var->getMemType(),QScriptValue::ReadOnly);
+            objectValue.setProperty("activated",var->getActivated(),QScriptValue::ReadOnly);
+            objectValue.setProperty("index",i,QScriptValue::ReadOnly);
 
 
-                //Variables indexing
-                variableArrayValue.setProperty(i,objectValue);
+            //Variables indexing
+            variableArrayValue.setProperty(i,objectValue);
 
-                //Module properties is each variable name
-                moduleObjectValue.setProperty(var->getName(),objectValue);
+            //Module properties is each variable name
+            moduleObjectValue.setProperty(var->getName(),objectValue);
         }
 
     }
@@ -506,8 +506,8 @@ void ScriptEngine::updatePeriod(int period)
     m_ui.m_textEditMessages->append("<b>Period changed to : " + QString::number(period) + " ms </b>");
 
     if (period > 0)
-        {m_ui.m_textEditMessages->append("<b>Timer Started.</b>");
-        m_timer->start();        
+    {m_ui.m_textEditMessages->append("<b>Timer Started.</b>");
+        m_timer->start();
     }
     else
     {
