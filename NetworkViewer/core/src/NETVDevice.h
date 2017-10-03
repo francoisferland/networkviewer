@@ -105,7 +105,7 @@ public:
          if (msg_boot != message.msg_boot) return false;
          if (msg_dest != message.msg_dest) return false;
          if (msg_data_length != message.msg_data_length) return false;
-         if (msg_timestamp != msg_timestamp) return false;
+         if (msg_timestamp != message.msg_timestamp) return false;
          if (message.msg_data_length <= 8)
          {
              for (auto i = 0; i < message.msg_data_length; i++)

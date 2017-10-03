@@ -20,7 +20,6 @@
 #include "NetworkView.h"
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QWebView>
 #include <QCoreApplication>
 #include "Highlighter.h"
 
