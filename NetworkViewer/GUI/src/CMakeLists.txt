@@ -69,7 +69,11 @@ QT5_WRAP_CPP(NetworkViewer_Base_MOC_SRCS ${NetworkViewer_Base_HEADERS})
 #NetworkViewer Base Library
 add_library(networkViewerBase SHARED ${NetworkViewer_Base_SRCS} ${NetworkViewer_Base_HEADERS} ${NetworkViewer_Base_MOC_SRCS} ${NetworkViewer_Base_UI_SRCS} ${SRCS_QRC})
 target_link_libraries(networkViewerBase networkViewerCore NETVModuleView)
-qt5_use_modules(networkViewerBase Core Widgets Gui OpenGL Xml Concurrent Svg PrintSupport Network WebEngine)
+qt5_use_modules(networkViewerBase Core Widgets Gui OpenGL Xml Concurrent Svg
+    PrintSupport Network
+    # WebEngine
+
+)
 
 INSTALL(TARGETS networkViewerBase DESTINATION bin)
 INSTALL(TARGETS networkViewerBase DESTINATION lib)

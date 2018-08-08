@@ -19,6 +19,7 @@
 #include <QTime>
 #include <math.h>
 #include <QDateTime>
+#include <unistd.h>
 
 static bool SOCKET_CAN_DEVICE_INIT = NETVDevice::registerDeviceFactory("SocketCAN",new NETVDevice::DeviceFactory<SocketCAN>("can0","The device to use."));
 

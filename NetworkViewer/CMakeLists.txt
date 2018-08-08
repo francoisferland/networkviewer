@@ -18,6 +18,8 @@ find_package(Qt5Core REQUIRED)
 #Very important to get .lib files
 SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 
+SET(CMAKE_CXX_STANDARD 11)
+
 #INSTALL PREFIX
 IF(WIN32)
 	MESSAGE( STATUS "Windows version: " ${CMAKE_SYSTEM})
